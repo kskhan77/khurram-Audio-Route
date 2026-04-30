@@ -11,10 +11,19 @@ namespace KhurramAudioRoute.Core
 {
     public partial class DeviceSelection : ObservableObject
     {
+        public const int MaxLatencyOffsetMs = 500;
+        public const int LatencyStepMs = 10;
+
         public AudioDevice Device { get; set; } = null!;
 
         [ObservableProperty]
         private bool _isSelected;
+
+        // Per-target playback delay in milliseconds. Used to align mirror sources that
+        // run on different transports (e.g. wired vs Bluetooth) so their output stays
+        // in phase. Positive values delay this target relative to the source.
+        [ObservableProperty]
+        private int _latencyOffsetMs;
     }
 
     public partial class AppAudioSession : ObservableObject

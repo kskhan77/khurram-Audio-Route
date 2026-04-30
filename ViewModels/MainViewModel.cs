@@ -155,10 +155,17 @@ namespace KhurramAudioRoute.ViewModels
                 var previousAdvancedExpanded = Devices
                     .Where(d => !string.IsNullOrWhiteSpace(d.Id))
                     .ToDictionary(d => d.Id!, d => d.IsAdvancedExpanded);
+                var previousLatencyOffsets = Devices
+                    .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                    .ToDictionary(
+                        d => d.Id!,
+                        d => d.DuplicateTargets
+                            .Where(t => !string.IsNullOrWhiteSpace(t.Device.Id))
+                            .ToDictionary(t => t.Device.Id!, t => t.LatencyOffsetMs));
 
                 var availableDevices = DeviceManager.GetRenderDevices();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
-                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded);
+                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded, previousLatencyOffsets);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
@@ -184,31 +191,40 @@ namespace KhurramAudioRoute.ViewModels
             IReadOnlyList<AudioDevice> devices,
             IReadOnlyDictionary<string, HashSet<string>>? previousSelections = null,
             IReadOnlyDictionary<string, float[]>? previousEqualizerSettings = null,
-            IReadOnlyDictionary<string, bool>? previousAdvancedExpanded = null)
+            IReadOnlyDictionary<string, bool>? previousAdvancedExpanded = null,
+            IReadOnlyDictionary<string, Dictionary<string, int>>? previousLatencyOffsets = null)
         {
             foreach (var source in devices)
             {
                 HashSet<string>? restoredTargetIds = null;
                 float[]? equalizerValues = null;
                 bool wasExpanded = false;
+                Dictionary<string, int>? latencyMap = null;
                 previousSelections?.TryGetValue(source.Id ?? string.Empty, out restoredTargetIds);
                 previousEqualizerSettings?.TryGetValue(source.Id ?? string.Empty, out equalizerValues);
                 previousAdvancedExpanded?.TryGetValue(source.Id ?? string.Empty, out wasExpanded);
+                previousLatencyOffsets?.TryGetValue(source.Id ?? string.Empty, out latencyMap);
 
                 source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
                     devices
                         .Where(target => target.Id != source.Id)
-                        .Select(target => new DeviceSelection
+                        .Select(target =>
                         {
-                            Device = target,
-                            IsSelected = restoredTargetIds?.Contains(target.Id ?? string.Empty) == true
+                            var selection = new DeviceSelection
+                            {
+                                Device = target,
+                                IsSelected = restoredTargetIds?.Contains(target.Id ?? string.Empty) == true
+                            };
+                            if (latencyMap != null && target.Id != null && latencyMap.TryGetValue(target.Id, out var ms))
+                                selection.LatencyOffsetMs = ms;
+                            return selection;
                         }));
 
                 if (equalizerValues != null && equalizerValues.Length > 0)
                     source.SetEqualizerGains(equalizerValues);
 
                 foreach (var target in source.DuplicateTargets)
-                    target.PropertyChanged += (_, e) => OnDuplicateTargetSelectionChanged(source, e);
+                    target.PropertyChanged += (_, e) => OnDuplicateTargetSelectionChanged(source, target, e);
 
                 source.PropertyChanged += (_, e) => OnOutputDevicePropertyChanged(source, e);
 
@@ -256,15 +272,24 @@ namespace KhurramAudioRoute.ViewModels
             }
         }
 
-        private void OnDuplicateTargetSelectionChanged(AudioDevice sourceDevice, PropertyChangedEventArgs e)
+        private void OnDuplicateTargetSelectionChanged(AudioDevice sourceDevice, DeviceSelection target, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(DeviceSelection.IsSelected))
+            if (e.PropertyName == nameof(DeviceSelection.IsSelected))
+            {
+                UpdateDuplicateStatus(sourceDevice);
+
+                if (sourceDevice.IsDuplicating)
+                    _ = ApplyDeviceDuplicateTargets(sourceDevice, false);
                 return;
+            }
 
-            UpdateDuplicateStatus(sourceDevice);
-
-            if (sourceDevice.IsDuplicating)
-                _ = ApplyDeviceDuplicateTargets(sourceDevice, false);
+            if (e.PropertyName == nameof(DeviceSelection.LatencyOffsetMs))
+            {
+                // Push live - no need to restart the stream. Only meaningful while
+                // duplication is running, but storing the value either way keeps the
+                // session in sync if the user later flips the target on.
+                DuplicationManager.SetTargetLatency(sourceDevice.Id, target.Device.Id, target.LatencyOffsetMs);
+            }
         }
 
         private static void UpdateDuplicateStatus(AudioDevice sourceDevice)
@@ -358,7 +383,22 @@ namespace KhurramAudioRoute.ViewModels
                 }
 
                 sourceDevice.IsDuplicating = true;
-                bool started = await Task.Run(() => DuplicationManager.StartDuplication(sourceDevice.Id, targetIds, sourceDevice.GetEqualizerGains()));
+                var latencyOffsets = sourceDevice.DuplicateTargets
+                    .Where(d => d.IsSelected && !string.IsNullOrWhiteSpace(d.Device.Id))
+                    .ToDictionary(d => d.Device.Id!, d => d.LatencyOffsetMs);
+
+                bool started = await Task.Run(() =>
+                {
+                    bool ok = DuplicationManager.StartDuplication(sourceDevice.Id, targetIds, sourceDevice.GetEqualizerGains());
+                    if (ok)
+                    {
+                        // Apply per-target latency after the targets exist; SetTargetLatency
+                        // also stores the value so newly added targets pick it up automatically.
+                        foreach (var (targetId, ms) in latencyOffsets)
+                            DuplicationManager.SetTargetLatency(sourceDevice.Id, targetId, ms);
+                    }
+                    return ok;
+                });
 
                 if (!started)
                 {

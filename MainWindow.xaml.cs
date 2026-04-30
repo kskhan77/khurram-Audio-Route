@@ -68,6 +68,49 @@ public partial class MainWindow : FluentWindow
         DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
     }
 
+    // Master output strip on the Applications page. DataContext is bound to MasterDevice
+    // (the system default), so the same handler shape as the per-device Outputs slider works.
+    private void OnMasterVolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (sender is not Slider slider || slider.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+            return;
+
+        if (!IsLoaded)
+            return;
+
+        DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
+    }
+
+    private void OnMasterMuteClicked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+            return;
+
+        DeviceManager.SetMasterMute(device.Id, !device.IsMuted);
+        device.IsMuted = !device.IsMuted;
+    }
+
+    // Mirror sync offset +/- buttons. Tag carries the DeviceSelection so the same
+    // handler works for every row in the MIRROR TO list.
+    private void OnIncreaseLatency(object sender, RoutedEventArgs e)
+        => AdjustTargetLatency(sender, +DeviceSelection.LatencyStepMs);
+
+    private void OnDecreaseLatency(object sender, RoutedEventArgs e)
+        => AdjustTargetLatency(sender, -DeviceSelection.LatencyStepMs);
+
+    private static void AdjustTargetLatency(object sender, int deltaMs)
+    {
+        if (sender is not FrameworkElement element)
+            return;
+
+        var selection = (element.Tag as DeviceSelection) ?? element.DataContext as DeviceSelection;
+        if (selection == null)
+            return;
+
+        int updated = selection.LatencyOffsetMs + deltaMs;
+        selection.LatencyOffsetMs = Math.Clamp(updated, 0, DeviceSelection.MaxLatencyOffsetMs);
+    }
+
     // ToggleSwitch in the Outputs Advanced panel: forwards the click to the
     // ToggleDeviceDuplicate command on the MainViewModel. The switch's IsChecked
     // is OneWay-bound to AudioDevice.IsDuplicating so the VM stays the source of truth.
@@ -275,4 +318,17 @@ public class SectionVisibilityConverter : IValueConverter
     {
         throw new NotImplementedException();
     }
+}
+
+/// <summary>
+/// Hides a panel until its DataContext is non-null. Used so the master output
+/// strip stays collapsed during the brief startup window before the default device is loaded.
+/// </summary>
+public class NullToCollapsedConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value == null ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
 }

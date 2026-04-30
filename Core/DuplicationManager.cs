@@ -18,14 +18,22 @@ namespace KhurramAudioRoute.Core
         public IWavePlayer Player { get; }
         public BufferedWaveProvider Buffer { get; }
         public EqualizerSampleProvider Equalizer { get; }
+        public DelaySampleProvider Delay { get; }
 
-        public DuplicationTarget(string deviceId, MMDevice device, IWavePlayer player, BufferedWaveProvider buffer, EqualizerSampleProvider equalizer)
+        public DuplicationTarget(
+            string deviceId,
+            MMDevice device,
+            IWavePlayer player,
+            BufferedWaveProvider buffer,
+            EqualizerSampleProvider equalizer,
+            DelaySampleProvider delay)
         {
             DeviceId = deviceId;
             Device = device;
             Player = player;
             Buffer = buffer;
             Equalizer = equalizer;
+            Delay = delay;
         }
 
         public void Dispose()
@@ -33,6 +41,86 @@ namespace KhurramAudioRoute.Core
             try { Player.Stop(); } catch { }
             try { Player.Dispose(); } catch { }
             try { Device.Dispose(); } catch { }
+        }
+    }
+
+    /// <summary>
+    /// Inserts up to N milliseconds of delay between source and output. Use it to
+    /// align mirror targets that run on different transports - a Bluetooth speaker
+    /// arrives ~150-300 ms later than a wired DAC, so delaying the wired side by
+    /// the same amount keeps the room in phase.
+    /// </summary>
+    public sealed class DelaySampleProvider : ISampleProvider
+    {
+        private readonly object _sync = new();
+        private readonly ISampleProvider _source;
+        private readonly int _channels;
+        private readonly int _sampleRate;
+        private readonly float[] _ringBuffer;
+        private int _writePos;
+        private int _delayInSamples;
+
+        public DelaySampleProvider(ISampleProvider source, int maxDelayMs)
+        {
+            _source = source;
+            WaveFormat = source.WaveFormat;
+            _channels = Math.Max(1, WaveFormat.Channels);
+            _sampleRate = WaveFormat.SampleRate;
+
+            int maxFrames = (int)((long)_sampleRate * Math.Max(1, maxDelayMs) / 1000);
+            _ringBuffer = new float[(maxFrames + 1) * _channels];
+        }
+
+        public WaveFormat WaveFormat { get; }
+
+        public int CurrentDelayMs
+        {
+            get
+            {
+                lock (_sync)
+                {
+                    return (int)((long)_delayInSamples * 1000 / Math.Max(1, _sampleRate * _channels));
+                }
+            }
+        }
+
+        public void SetDelayMs(int delayMs)
+        {
+            lock (_sync)
+            {
+                int requested = (int)((long)_sampleRate * Math.Max(0, delayMs) / 1000) * _channels;
+                int max = _ringBuffer.Length - _channels;
+                _delayInSamples = Math.Clamp(requested, 0, max);
+            }
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            int read = _source.Read(buffer, offset, count);
+            if (read <= 0)
+                return 0;
+
+            lock (_sync)
+            {
+                if (_delayInSamples == 0)
+                    return read;
+
+                int len = _ringBuffer.Length;
+                for (int i = 0; i < read; i++)
+                {
+                    float incoming = buffer[offset + i];
+                    _ringBuffer[_writePos] = incoming;
+
+                    int readIdx = _writePos - _delayInSamples;
+                    if (readIdx < 0) readIdx += len;
+                    buffer[offset + i] = _ringBuffer[readIdx];
+
+                    _writePos++;
+                    if (_writePos >= len) _writePos = 0;
+                }
+            }
+
+            return read;
         }
     }
 
@@ -115,11 +203,17 @@ namespace KhurramAudioRoute.Core
         private const int RetryDelayMs = 350;
         private const int MaxInitAttempts = 4;
         private const int TargetPlaybackLatencyMs = 45;
+        // Sized so the user can dial in enough delay to compensate for slow Bluetooth
+        // links without wasting RAM on a multi-second ring buffer per target.
+        private const int MaxDelayMs = 800;
         private static readonly TimeSpan TargetBufferDuration = TimeSpan.FromMilliseconds(180);
 
         private WasapiLoopbackCapture? _capture;
         private MMDevice? _sourceDevice;
         private readonly Dictionary<string, DuplicationTarget> _targets = new();
+        // Persists per-target latency across target add/remove so toggling a checkbox
+        // doesn't reset the user's sync setting for that device.
+        private readonly Dictionary<string, int> _targetLatencies = new();
         private readonly object _sync = new();
 
         public string SessionKey { get; }
@@ -221,13 +315,15 @@ namespace KhurramAudioRoute.Core
                         provider = new WdlResamplingSampleProvider(provider, player.OutputWaveFormat.SampleRate);
 
                     var equalizer = new EqualizerSampleProvider(provider, gains);
-                    provider = equalizer;
+                    var delay = new DelaySampleProvider(equalizer, MaxDelayMs);
+                    delay.SetDelayMs(_targetLatencies.TryGetValue(deviceId, out var ms) ? ms : 0);
+                    provider = delay;
 
                     player.Init(provider);
                     player.Play();
 
-                    Debug.WriteLine($"Duplication: player ready for device {deviceId} (attempt {attempt})");
-                    return new DuplicationTarget(deviceId, device, player, buffer, equalizer);
+                    Debug.WriteLine($"Duplication: player ready for device {deviceId} (attempt {attempt}, delay={delay.CurrentDelayMs}ms)");
+                    return new DuplicationTarget(deviceId, device, player, buffer, equalizer, delay);
                 }
                 catch (COMException ex) when (IsTransientWasapi(ex))
                 {
@@ -324,6 +420,25 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        public void SetTargetLatency(string targetDeviceId, int latencyMs)
+        {
+            int clamped = Math.Clamp(latencyMs, 0, MaxDelayMs);
+            lock (_sync)
+            {
+                _targetLatencies[targetDeviceId] = clamped;
+                if (_targets.TryGetValue(targetDeviceId, out var target))
+                    target.Delay.SetDelayMs(clamped);
+            }
+        }
+
+        public int GetTargetLatency(string targetDeviceId)
+        {
+            lock (_sync)
+            {
+                return _targetLatencies.TryGetValue(targetDeviceId, out var ms) ? ms : 0;
+            }
+        }
+
         public void Stop()
         {
             lock (_sync)
@@ -388,6 +503,25 @@ namespace KhurramAudioRoute.Core
 
             if (_sessions.TryGetValue(sourceDeviceId, out var session))
                 session.UpdateEqualizer(equalizerGains);
+        }
+
+        public static void SetTargetLatency(string? sourceDeviceId, string? targetDeviceId, int latencyMs)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId) || string.IsNullOrWhiteSpace(targetDeviceId))
+                return;
+
+            if (_sessions.TryGetValue(sourceDeviceId, out var session))
+                session.SetTargetLatency(targetDeviceId, latencyMs);
+        }
+
+        public static int GetTargetLatency(string? sourceDeviceId, string? targetDeviceId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId) || string.IsNullOrWhiteSpace(targetDeviceId))
+                return 0;
+
+            return _sessions.TryGetValue(sourceDeviceId, out var session)
+                ? session.GetTargetLatency(targetDeviceId)
+                : 0;
         }
     }
 }
