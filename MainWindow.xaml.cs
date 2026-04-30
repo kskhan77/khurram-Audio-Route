@@ -8,6 +8,7 @@ using System.Windows.Threading;
 using Wpf.Ui.Controls;
 using KhurramAudioRoute.Core;
 using KhurramAudioRoute.ViewModels;
+using KhurramAudioRoute.Tests;
 
 namespace KhurramAudioRoute;
 
@@ -106,6 +107,19 @@ public partial class MainWindow : FluentWindow
             return;
 
         ApplyEqualizerPreset(device, "Flat");
+    }
+
+    private void OnRunDiagnostics(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            AudioCoreTester.RunTests();
+            System.Windows.MessageBox.Show("Core integrity tests completed. Check the debug output for detailed results.", "Diagnostics", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Diagnostic test failed: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
     }
 
     private static void ApplyEqualizerPreset(AudioDevice device, string preset)

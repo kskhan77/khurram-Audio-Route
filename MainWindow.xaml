@@ -834,21 +834,65 @@
 
                     <StackPanel Visibility="{Binding CurrentSection, Converter={StaticResource SectionVisibilityConverter}, ConverterParameter=Tools}">
                         <Grid Margin="0,0,0,24">
-                            <TextBlock Text="Other Options" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="26" FontWeight="SemiBold"/>
+                            <TextBlock Text="Advanced Tools &amp; Diagnostics" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="26" FontWeight="SemiBold"/>
                         </Grid>
 
                         <UniformGrid Columns="2">
+                            <!-- Test Signal Card -->
+                            <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Audio Test Signal" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                            <TextBlock Text="Play pink noise to test EQ and surround positioning." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                        <ui:SymbolIcon Grid.Column="1" Symbol="MusicNote224" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="24"/>
+                                    </Grid>
+                                    
+                                    <ui:Button Command="{Binding ToggleTestToneCommand}" Padding="20,10" HorizontalAlignment="Left">
+                                        <ui:Button.Style>
+                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                <Setter Property="Content" Value="Start Test Tone"/>
+                                                <Setter Property="Appearance" Value="Primary"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTestTonePlaying}" Value="True">
+                                                        <Setter Property="Content" Value="Stop Test Tone"/>
+                                                        <Setter Property="Appearance" Value="Secondary"/>
+                                                        <Setter Property="Background" Value="#2B1618"/>
+                                                        <Setter Property="BorderBrush" Value="#6E3036"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:Button.Style>
+                                    </ui:Button>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Diagnostic Card -->
+                            <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
+                                <StackPanel>
+                                    <TextBlock Text="Engine Diagnostics" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Run integrity checks on EQ filters and device enumeration." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,8,0,16"/>
+                                    <ui:Button Content="Run Core Tests" Click="OnRunDiagnostics" Appearance="Secondary" Padding="14,8"/>
+                                </StackPanel>
+                            </Border>
+
                             <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
                                 <StackPanel>
                                     <TextBlock Text="Quick Refresh" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
                                     <TextBlock Text="Reload sessions, outputs, and microphone devices." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,8,0,16"/>
-                                    <ui:Button Content="Refresh All" Command="{Binding RefreshDataCommand}" Appearance="Primary" Padding="14,8"/>
+                                    <ui:Button Content="Refresh All Devices" Command="{Binding RefreshDataCommand}" Appearance="Secondary" Padding="14,8"/>
                                 </StackPanel>
                             </Border>
+
                             <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
                                 <StackPanel>
-                                    <TextBlock Text="Routing Notes" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
-                                    <TextBlock Text="Applications route individually. Device duplication will be handled from Outputs in the next step." Foreground="{StaticResource SonicOutlineBrush}" TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0"/>
+                                    <TextBlock Text="BASS Integration" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Researching high-end BASS library for professional 7.1/Atmos sync." Foreground="{StaticResource SonicOutlineBrush}" TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>
                         </UniformGrid>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using NAudio.Wave;
 
 namespace KhurramAudioRoute.ViewModels
 {
@@ -38,11 +39,70 @@ namespace KhurramAudioRoute.ViewModels
         [ObservableProperty]
         private DashboardSection currentSection = DashboardSection.Outputs;
 
+        [ObservableProperty]
+        private bool isTestTonePlaying;
+
+        private WasapiOut? _testToneOut;
         private readonly Dictionary<string, SemaphoreSlim> _duplicateLocks = new();
 
         public MainViewModel()
         {
             RefreshData();
+        }
+
+        [RelayCommand]
+        public void ToggleTestTone()
+        {
+            if (IsTestTonePlaying)
+            {
+                StopTestTone();
+            }
+            else
+            {
+                PlayTestTone();
+            }
+        }
+
+        private void PlayTestTone()
+        {
+            try
+            {
+                if (MasterDevice?.Id == null) return;
+
+                StopTestTone();
+
+                using var enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+                var device = enumerator.GetDevice(MasterDevice.Id);
+
+                _testToneOut = new WasapiOut(device, NAudio.CoreAudioApi.AudioClientShareMode.Shared, true, 50);
+                
+                // Use a rich signal: Pink Noise is great for testing EQ across the spectrum
+                var signal = new NAudio.Wave.SampleProviders.SignalGenerator(48000, 2)
+                {
+                    Type = NAudio.Wave.SampleProviders.SignalGeneratorType.Pink,
+                    Gain = 0.15 // Low volume so it's not jarring
+                };
+
+                _testToneOut.Init(signal);
+                _testToneOut.Play();
+                IsTestTonePlaying = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"PlayTestTone error: {ex.Message}");
+                StopTestTone();
+            }
+        }
+
+        private void StopTestTone()
+        {
+            IsTestTonePlaying = false;
+            if (_testToneOut != null)
+            {
+                try { _testToneOut.Stop(); } catch { }
+                try { _testToneOut.Dispose(); } catch { }
+                _testToneOut = null;
+            }
         }
 
         public void RefreshMeters()
