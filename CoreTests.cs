@@ -32,7 +32,7 @@ namespace KhurramAudioRoute.Tests
             
             var format = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
             var source = new SilenceProvider(format).ToSampleProvider();
-            var eq = new EqualizerSampleProvider(source, new float[] { 0, 0, 0, 0, 0 });
+            var eq = new EqualizerSampleProvider(source, new float[10]);
 
             float[] buffer = new float[1024];
             int read = eq.Read(buffer, 0, buffer.Length);
@@ -54,11 +54,13 @@ namespace KhurramAudioRoute.Tests
             Console.Write("Testing Equalizer Gain Response... ");
             
             var format = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
-            // Create a simple sine wave at 60Hz (our first band)
-            var sine = new SignalGenerator(44100, 1) { Frequency = 60, Gain = 0.5, Type = SignalGeneratorType.Sin };
+            // Sine at the first band's center (31Hz). 10-band layout puts 31Hz at index 0.
+            var sine = new SignalGenerator(44100, 1) { Frequency = 31, Gain = 0.5, Type = SignalGeneratorType.Sin };
             var source = sine;
-            
-            var eq = new EqualizerSampleProvider(source, new float[] { 10, 0, 0, 0, 0 }); // +10dB at 60Hz
+
+            var gains = new float[10];
+            gains[0] = 10f; // +10dB at 31Hz
+            var eq = new EqualizerSampleProvider(source, gains);
 
             float[] buffer = new float[1024];
             eq.Read(buffer, 0, buffer.Length);

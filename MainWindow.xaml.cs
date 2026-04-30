@@ -127,39 +127,23 @@ public partial class MainWindow : FluentWindow
         }
     }
 
+    // 10 ISO-octave bands: 31, 62, 125, 250, 500, 1k, 2k, 4k, 8k, 16k Hz.
+    private static readonly float[] PresetFlat = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private static readonly float[] PresetBass = { 7, 6, 4, 2, 0, -1, -2, -1, 0, 1 };
+    private static readonly float[] PresetVoice = { -4, -3, -1, 2, 4, 5, 4, 2, 0, -1 };
+    private static readonly float[] PresetBright = { -3, -2, -1, 0, 0, 1, 3, 5, 5, 4 };
+
     private static void ApplyEqualizerPreset(AudioDevice device, string preset)
     {
-        switch (preset)
+        float[] gains = preset switch
         {
-            case "Bass":
-                device.EqLow = 6f;
-                device.EqLowMid = 3f;
-                device.EqMid = 0f;
-                device.EqHighMid = -2f;
-                device.EqHigh = -1f;
-                break;
-            case "Voice":
-                device.EqLow = -3f;
-                device.EqLowMid = 1f;
-                device.EqMid = 4f;
-                device.EqHighMid = 3f;
-                device.EqHigh = 1f;
-                break;
-            case "Bright":
-                device.EqLow = -2f;
-                device.EqLowMid = 0f;
-                device.EqMid = 2f;
-                device.EqHighMid = 5f;
-                device.EqHigh = 4f;
-                break;
-            default:
-                device.EqLow = 0f;
-                device.EqLowMid = 0f;
-                device.EqMid = 0f;
-                device.EqHighMid = 0f;
-                device.EqHigh = 0f;
-                break;
-        }
+            "Bass" => PresetBass,
+            "Voice" => PresetVoice,
+            "Bright" => PresetBright,
+            _ => PresetFlat,
+        };
+
+        device.SetEqualizerGains(gains);
     }
 }
 

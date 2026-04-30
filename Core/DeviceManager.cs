@@ -86,43 +86,56 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _duplicateTargets, value);
         }
 
-        private float _eqLow = 0f;
-        public float EqLow
-        {
-            get => _eqLow;
-            set => SetProperty(ref _eqLow, value);
-        }
+        // 10-band ISO-octave graphic EQ. Centers and Q values must stay aligned with
+        // BassEngine.UpdateEqualizer and EqualizerSampleProvider so the loopback layer
+        // and the mirror path produce the same shape.
+        private float _eqBand0;
+        public float EqBand0 { get => _eqBand0; set => SetProperty(ref _eqBand0, value); }
 
-        private float _eqLowMid = 0f;
-        public float EqLowMid
-        {
-            get => _eqLowMid;
-            set => SetProperty(ref _eqLowMid, value);
-        }
+        private float _eqBand1;
+        public float EqBand1 { get => _eqBand1; set => SetProperty(ref _eqBand1, value); }
 
-        private float _eqMid = 0f;
-        public float EqMid
-        {
-            get => _eqMid;
-            set => SetProperty(ref _eqMid, value);
-        }
+        private float _eqBand2;
+        public float EqBand2 { get => _eqBand2; set => SetProperty(ref _eqBand2, value); }
 
-        private float _eqHighMid = 0f;
-        public float EqHighMid
-        {
-            get => _eqHighMid;
-            set => SetProperty(ref _eqHighMid, value);
-        }
+        private float _eqBand3;
+        public float EqBand3 { get => _eqBand3; set => SetProperty(ref _eqBand3, value); }
 
-        private float _eqHigh = 0f;
-        public float EqHigh
-        {
-            get => _eqHigh;
-            set => SetProperty(ref _eqHigh, value);
-        }
+        private float _eqBand4;
+        public float EqBand4 { get => _eqBand4; set => SetProperty(ref _eqBand4, value); }
+
+        private float _eqBand5;
+        public float EqBand5 { get => _eqBand5; set => SetProperty(ref _eqBand5, value); }
+
+        private float _eqBand6;
+        public float EqBand6 { get => _eqBand6; set => SetProperty(ref _eqBand6, value); }
+
+        private float _eqBand7;
+        public float EqBand7 { get => _eqBand7; set => SetProperty(ref _eqBand7, value); }
+
+        private float _eqBand8;
+        public float EqBand8 { get => _eqBand8; set => SetProperty(ref _eqBand8, value); }
+
+        private float _eqBand9;
+        public float EqBand9 { get => _eqBand9; set => SetProperty(ref _eqBand9, value); }
 
         public float[] GetEqualizerGains()
-            => new[] { EqLow, EqLowMid, EqMid, EqHighMid, EqHigh };
+            => new[] { EqBand0, EqBand1, EqBand2, EqBand3, EqBand4, EqBand5, EqBand6, EqBand7, EqBand8, EqBand9 };
+
+        public void SetEqualizerGains(float[] gains)
+        {
+            if (gains == null) return;
+            EqBand0 = gains.Length > 0 ? gains[0] : 0f;
+            EqBand1 = gains.Length > 1 ? gains[1] : 0f;
+            EqBand2 = gains.Length > 2 ? gains[2] : 0f;
+            EqBand3 = gains.Length > 3 ? gains[3] : 0f;
+            EqBand4 = gains.Length > 4 ? gains[4] : 0f;
+            EqBand5 = gains.Length > 5 ? gains[5] : 0f;
+            EqBand6 = gains.Length > 6 ? gains[6] : 0f;
+            EqBand7 = gains.Length > 7 ? gains[7] : 0f;
+            EqBand8 = gains.Length > 8 ? gains[8] : 0f;
+            EqBand9 = gains.Length > 9 ? gains[9] : 0f;
+        }
 
         public override string ToString() => Name ?? "Unknown Device";
     }

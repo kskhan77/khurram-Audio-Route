@@ -671,31 +671,56 @@
                                                                         </Style.Triggers>
                                                                     </Style>
                                                                 </Grid.Style>
-                                                                <UniformGrid Columns="5">
-                                                                    <StackPanel Margin="3,0">
-                                                                        <TextBlock Text="60Hz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
-                                                                        <TextBlock Text="{Binding EqLow, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLow, Mode=TwoWay}"/>
+                                                                <UniformGrid Columns="10">
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="31" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand0, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand0, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
                                                                     </StackPanel>
-                                                                    <StackPanel Margin="3,0">
-                                                                        <TextBlock Text="250Hz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
-                                                                        <TextBlock Text="{Binding EqLowMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLowMid, Mode=TwoWay}"/>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="62" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand1, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand1, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
                                                                     </StackPanel>
-                                                                    <StackPanel Margin="3,0">
-                                                                        <TextBlock Text="1kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
-                                                                        <TextBlock Text="{Binding EqMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqMid, Mode=TwoWay}"/>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="125" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand2, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand2, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
                                                                     </StackPanel>
-                                                                    <StackPanel Margin="3,0">
-                                                                        <TextBlock Text="4kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
-                                                                        <TextBlock Text="{Binding EqHighMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHighMid, Mode=TwoWay}"/>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="250" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand3, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand3, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
                                                                     </StackPanel>
-                                                                    <StackPanel Margin="3,0">
-                                                                        <TextBlock Text="12kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
-                                                                        <TextBlock Text="{Binding EqHigh, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHigh, Mode=TwoWay}"/>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="500" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand4, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand4, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="1k" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand5, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand5, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="2k" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand6, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand6, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="4k" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand7, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand7, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="8k" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand8, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand8, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="2,0">
+                                                                        <TextBlock Text="16k" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqBand9, StringFormat={}{0:+0.#;-0.#;0}}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Orientation="Vertical" Height="120" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqBand9, Mode=TwoWay}" Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
                                                                     </StackPanel>
                                                                 </UniformGrid>
                                                             </Grid>

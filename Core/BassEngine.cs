@@ -110,11 +110,13 @@ namespace KhurramAudioRoute.Core
                     mixerStream = BassMix.CreateMixerStream(48000, 2, BassFlags.Default | BassFlags.MixerNonStop);
                     _deviceStreams[deviceId] = mixerStream;
 
-                    // Initialize the EQ bands
-                    float[] centerFreqs = { 60, 230, 910, 4000, 14000 };
-                    int[] handles = new int[5];
+                    // 10-band ISO-octave graphic EQ. Bandwidth stays at 2.5 octaves to
+                    // keep the wide, "musical" feel from the previous 5-band layout -
+                    // narrower Q on 10 bands made each slider feel weak in testing.
+                    float[] centerFreqs = { 31f, 62f, 125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f };
+                    int[] handles = new int[centerFreqs.Length];
 
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < centerFreqs.Length; i++)
                     {
                         handles[i] = Bass.ChannelSetFX(mixerStream, EffectType.PeakEQ, 1);
                         var eq = new PeakEQParameters
@@ -122,7 +124,7 @@ namespace KhurramAudioRoute.Core
                             lBand = i,
                             fCenter = centerFreqs[i],
                             fBandwidth = 2.5f,
-                            fGain = gains[i]
+                            fGain = i < gains.Length ? gains[i] : 0f
                         };
                         Bass.FXSetParameters(handles[i], eq);
                     }

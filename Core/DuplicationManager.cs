@@ -38,7 +38,10 @@ namespace KhurramAudioRoute.Core
 
     public sealed class EqualizerSampleProvider : ISampleProvider
     {
-        private static readonly float[] BandFrequencies = { 60f, 250f, 1000f, 4000f, 12000f };
+        // 10-band ISO-octave layout aligned with BassEngine.UpdateEqualizer so the
+        // mirror EQ matches the global loopback layer.
+        private static readonly float[] BandFrequencies =
+            { 31f, 62f, 125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f };
         private readonly object _sync = new();
         private readonly ISampleProvider _source;
         private readonly int _channels;
@@ -348,7 +351,7 @@ namespace KhurramAudioRoute.Core
                 _sessions[sourceDeviceId] = session;
             }
 
-            bool ok = session.StartOrUpdate(sourceDeviceId, targetDeviceIds, equalizerGains ?? new float[5]);
+            bool ok = session.StartOrUpdate(sourceDeviceId, targetDeviceIds, equalizerGains ?? new float[10]);
             if (!ok)
             {
                 session.Stop();

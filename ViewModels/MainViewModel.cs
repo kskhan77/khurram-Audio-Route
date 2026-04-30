@@ -204,14 +204,8 @@ namespace KhurramAudioRoute.ViewModels
                             IsSelected = restoredTargetIds?.Contains(target.Id ?? string.Empty) == true
                         }));
 
-                if (equalizerValues != null && equalizerValues.Length >= 5)
-                {
-                    source.EqLow = equalizerValues[0];
-                    source.EqLowMid = equalizerValues[1];
-                    source.EqMid = equalizerValues[2];
-                    source.EqHighMid = equalizerValues[3];
-                    source.EqHigh = equalizerValues[4];
-                }
+                if (equalizerValues != null && equalizerValues.Length > 0)
+                    source.SetEqualizerGains(equalizerValues);
 
                 foreach (var target in source.DuplicateTargets)
                     target.PropertyChanged += (_, e) => OnDuplicateTargetSelectionChanged(source, e);
@@ -240,13 +234,25 @@ namespace KhurramAudioRoute.ViewModels
 
         private void OnOutputDevicePropertyChanged(AudioDevice sourceDevice, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(AudioDevice.EqLow)
-                or nameof(AudioDevice.EqLowMid)
-                or nameof(AudioDevice.EqMid)
-                or nameof(AudioDevice.EqHighMid)
-                or nameof(AudioDevice.EqHigh))
+            if (e.PropertyName is nameof(AudioDevice.EqBand0)
+                or nameof(AudioDevice.EqBand1)
+                or nameof(AudioDevice.EqBand2)
+                or nameof(AudioDevice.EqBand3)
+                or nameof(AudioDevice.EqBand4)
+                or nameof(AudioDevice.EqBand5)
+                or nameof(AudioDevice.EqBand6)
+                or nameof(AudioDevice.EqBand7)
+                or nameof(AudioDevice.EqBand8)
+                or nameof(AudioDevice.EqBand9))
             {
-                DuplicationManager.UpdateEqualizer(sourceDevice.Id, sourceDevice.GetEqualizerGains());
+                var gains = sourceDevice.GetEqualizerGains();
+
+                // Update both paths immediately so the slider reacts instantly instead
+                // of waiting for the 220 ms RefreshMeters tick to push gains into BASS.
+                if (!string.IsNullOrWhiteSpace(sourceDevice.Id))
+                    BassEngine.UpdateEqualizer(sourceDevice.Id, gains);
+
+                DuplicationManager.UpdateEqualizer(sourceDevice.Id, gains);
             }
         }
 
