@@ -62,6 +62,20 @@ public partial class MainWindow : FluentWindow
         DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
     }
 
+    // ToggleSwitch in the Outputs Advanced panel: forwards the click to the
+    // ToggleDeviceDuplicate command on the MainViewModel. The switch's IsChecked
+    // is OneWay-bound to AudioDevice.IsDuplicating so the VM stays the source of truth.
+    private void OnDuplicateToggleClicked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
+            return;
+        if (DataContext is not MainViewModel viewModel)
+            return;
+
+        if (viewModel.ToggleDeviceDuplicateCommand.CanExecute(device))
+            viewModel.ToggleDeviceDuplicateCommand.Execute(device);
+    }
+
     private void OnApplyEqPreset(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)

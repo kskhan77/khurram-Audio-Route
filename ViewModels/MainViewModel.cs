@@ -88,10 +88,13 @@ namespace KhurramAudioRoute.ViewModels
                     .ToDictionary(
                         d => d.Id!,
                         d => d.GetEqualizerGains());
+                var previousAdvancedExpanded = Devices
+                    .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                    .ToDictionary(d => d.Id!, d => d.IsAdvancedExpanded);
 
                 var availableDevices = DeviceManager.GetRenderDevices();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
-                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings);
+                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
@@ -116,14 +119,17 @@ namespace KhurramAudioRoute.ViewModels
         private void ConfigureDeviceDuplicateTargets(
             IReadOnlyList<AudioDevice> devices,
             IReadOnlyDictionary<string, HashSet<string>>? previousSelections = null,
-            IReadOnlyDictionary<string, float[]>? previousEqualizerSettings = null)
+            IReadOnlyDictionary<string, float[]>? previousEqualizerSettings = null,
+            IReadOnlyDictionary<string, bool>? previousAdvancedExpanded = null)
         {
             foreach (var source in devices)
             {
                 HashSet<string>? restoredTargetIds = null;
                 float[]? equalizerValues = null;
+                bool wasExpanded = false;
                 previousSelections?.TryGetValue(source.Id ?? string.Empty, out restoredTargetIds);
                 previousEqualizerSettings?.TryGetValue(source.Id ?? string.Empty, out equalizerValues);
+                previousAdvancedExpanded?.TryGetValue(source.Id ?? string.Empty, out wasExpanded);
 
                 source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
                     devices
@@ -149,7 +155,7 @@ namespace KhurramAudioRoute.ViewModels
                 source.PropertyChanged += (_, e) => OnOutputDevicePropertyChanged(source, e);
 
                 source.IsDuplicating = DuplicationManager.IsDuplicating(source.Id);
-                source.IsAdvancedExpanded = false;
+                source.IsAdvancedExpanded = wasExpanded;
                 UpdateDuplicateStatus(source);
             }
         }
