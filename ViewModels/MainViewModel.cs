@@ -10,6 +10,14 @@ using System.Windows;
 
 namespace KhurramAudioRoute.ViewModels
 {
+    public enum DashboardSection
+    {
+        Outputs,
+        Applications,
+        Microphones,
+        Tools
+    }
+
     public partial class MainViewModel : ObservableObject
     {
         [ObservableProperty]
@@ -19,7 +27,13 @@ namespace KhurramAudioRoute.ViewModels
         private ObservableCollection<AudioDevice> devices = new();
 
         [ObservableProperty]
+        private ObservableCollection<AudioDevice> microphones = new();
+
+        [ObservableProperty]
         private AudioDevice? _masterDevice;
+
+        [ObservableProperty]
+        private DashboardSection currentSection = DashboardSection.Outputs;
 
         public MainViewModel()
         {
@@ -30,6 +44,7 @@ namespace KhurramAudioRoute.ViewModels
         {
             SessionManager.UpdateSessionLevels(Sessions);
             DeviceManager.UpdateDeviceLevels(Devices);
+            DeviceManager.UpdateDeviceLevels(Microphones);
         }
 
         [RelayCommand]
@@ -57,7 +72,10 @@ namespace KhurramAudioRoute.ViewModels
             try
             {
                 var availableDevices = DeviceManager.GetRenderDevices();
+                var availableMicrophones = DeviceManager.GetCaptureDevices();
+                ConfigureDeviceDuplicateTargets(availableDevices);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
+                Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
 
                 var activeSessions = SessionManager.GetActiveSessions();
@@ -75,6 +93,96 @@ namespace KhurramAudioRoute.ViewModels
             {
                 Debug.WriteLine($"RefreshData error: {ex.Message}");
             }
+        }
+
+        private static void ConfigureDeviceDuplicateTargets(IReadOnlyList<AudioDevice> devices)
+        {
+            foreach (var source in devices)
+            {
+                source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
+                    devices
+                        .Where(target => target.Id != source.Id)
+                        .Select(target => new DeviceSelection
+                        {
+                            Device = target,
+                            IsSelected = false
+                        }));
+
+                source.IsDuplicating = false;
+                source.IsAdvancedExpanded = false;
+                source.DuplicateStatus = "No duplicate targets active";
+            }
+        }
+
+        [RelayCommand]
+        public void ShowOutputs() => CurrentSection = DashboardSection.Outputs;
+
+        [RelayCommand]
+        public void ShowApplications() => CurrentSection = DashboardSection.Applications;
+
+        [RelayCommand]
+        public void ShowMicrophones() => CurrentSection = DashboardSection.Microphones;
+
+        [RelayCommand]
+        public void ShowTools() => CurrentSection = DashboardSection.Tools;
+
+        [RelayCommand]
+        public async Task ToggleDeviceDuplicate(AudioDevice? sourceDevice)
+        {
+            if (sourceDevice?.Id == null) return;
+
+            if (sourceDevice.IsDuplicating)
+            {
+                await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                sourceDevice.IsDuplicating = false;
+                sourceDevice.DuplicateStatus = "No duplicate targets active";
+                return;
+            }
+
+            await ApplyDeviceDuplicateTargets(sourceDevice);
+        }
+
+        [RelayCommand]
+        public async Task ApplyDeviceDuplicateTargets(AudioDevice? sourceDevice)
+        {
+            if (sourceDevice?.Id == null) return;
+
+            var targetIds = sourceDevice.DuplicateTargets
+                .Where(d => d.IsSelected && d.Device.Id != sourceDevice.Id && !string.IsNullOrWhiteSpace(d.Device.Id))
+                .Select(d => d.Device.Id!)
+                .Distinct()
+                .ToList();
+
+            if (targetIds.Count == 0)
+            {
+                if (sourceDevice.IsDuplicating)
+                {
+                    await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                    sourceDevice.IsDuplicating = false;
+                }
+
+                sourceDevice.DuplicateStatus = "Select at least one target device";
+                MessageBox.Show(
+                    "Select at least one additional output device to mirror this source.",
+                    "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            sourceDevice.IsDuplicating = true;
+            bool started = await Task.Run(() => DuplicationManager.StartDuplication(sourceDevice.Id, targetIds));
+
+            if (!started)
+            {
+                sourceDevice.IsDuplicating = false;
+                sourceDevice.DuplicateStatus = "Could not start duplication";
+                MessageBox.Show(
+                    "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
+                    "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            sourceDevice.DuplicateStatus = $"Mirroring to {targetIds.Count} device(s)";
+            sourceDevice.IsAdvancedExpanded = true;
         }
 
         // Routes the session to its selected device, then mutes+unmutes to force the app's
@@ -115,20 +223,19 @@ namespace KhurramAudioRoute.ViewModels
         public async Task ToggleDuplicate(AppAudioSession? session)
         {
             if (session == null) return;
-
-            if (session.IsDuplicating)
-            {
-                await Task.Run(() => DuplicationManager.StopDuplication(session.ProcessId));
-                session.IsDuplicating = false;
-                return;
-            }
-
             var sourceDevice = session.SelectedTargetDevice;
             if (sourceDevice?.Id == null)
             {
                 MessageBox.Show(
                     "Select the source device in 'Route to' before duplicating.",
                     "Duplication", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (session.IsDuplicating)
+            {
+                await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                session.IsDuplicating = false;
                 return;
             }
 
@@ -161,7 +268,7 @@ namespace KhurramAudioRoute.ViewModels
 
                 // 3. Start loopback capture from source device + fan out to targets
                 //    (DuplicationSession.Start has its own settling delay + retry logic)
-                return DuplicationManager.StartDuplication(session.ProcessId, sourceDevice.Id, targetIds);
+                return DuplicationManager.StartDuplication(sourceDevice.Id, targetIds);
             });
 
             if (!started)

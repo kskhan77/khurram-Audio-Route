@@ -1,62 +1,50 @@
-# Khurram Audio Route Implementation Plan
+# Audio Router V2 Plan
 
-## Objective
-To replace the legacy, highly brittle C++ `audio-router` codebase with a modern, stable, and feature-rich application built in C# (.NET). The new application will resolve all Windows 11 compatibility issues related to audio session hooking and provide an extensible foundation for routing, duplication, and DSP (Digital Signal Processing).
+## Current Direction
+- `Applications` should be route-only.
+- `Outputs` should become the home for default-device management and future device duplication.
+- `Mic Devices` should show capture devices now and gain routing/monitoring later.
+- Advanced device controls like volume, EQ, and duplication should stay collapsed by default to save space.
 
-## Background & Motivation
-The current Audio Router relies on injecting DLLs into foreign processes and hooking internal WASAPI methods (like `IAudioClient::Initialize`). This approach is actively hostile to modern OS security features (especially in Windows 11) and modern app architectures (like UWP, Chrome, and Edge, which constantly spawn and kill sub-processes for media playback). 
+## Done
+- [x] Modernized the WPF shell into a dark dashboard layout.
+- [x] Added left navigation with `Outputs`, `Applications`, `Mic Devices`, and `Other Options`.
+- [x] Made `Outputs` the default page on startup.
+- [x] Restored `Applications` to route-only UI with per-app dropdown plus `Route` button.
+- [x] Added live application level meters and volume sliders.
+- [x] Added microphone device discovery and a separate mic page.
+- [x] Added compact output cards with explicit `Set Default` action.
+- [x] Added responsive startup sizing so the window opens around 60% of screen height.
+- [x] Added collapsed `Advanced` space on output cards for future volume, EQ, and duplicate controls.
+- [x] Fixed the XAML parse crash caused by the invalid `Equalizer24` symbol token.
 
-Fortunately, Windows 10 (1803+) and Windows 11 introduced undocumented COM interfaces (`IAudioPolicyConfig`) that allow seamless, OS-level, per-app routing without any injection. By moving to a modern C# stack, we can leverage these native APIs for simple routing, and use robust Managed Audio Libraries (like NAudio or CSCore) for complex loopback capture, duplication, and EQ.
+## In Progress
+- [ ] Output cards still have placeholder EQ controls.
+- [ ] Device duplication needs polish for per-target toggles and persistent state.
+- [ ] Device volume in the output advanced section is display-only.
 
-## Scope & Impact
-The new C# application will have the following feature scope:
-- **Core Routing:** Seamlessly move an application's audio output to a different device using native Windows APIs.
-- **Audio Duplication:** Capture an application's audio stream via WASAPI Loopback and play it back simultaneously across multiple audio devices.
-- **Microphone Routing:** Support for capturing input devices and routing them to virtual cables or output endpoints.
-- **Sound Controller (EQ):** Integrate basic DSP for equalizer adjustments per audio stream.
-- **Soundboard Feature:** Allow the user to play pre-loaded sound files over a specific output device or virtual cable.
-- **Portability:** Provide a fully self-contained `.exe` (via .NET Single-File Deployment) that does not require installation, while also offering an optional MSIX installer for those who want system tray integration and start menu shortcuts.
+## Next Task
+- [x] Implement device-level duplication from the `Outputs` page.
+- [x] Make source device and target devices explicit in the UI.
+- [x] Key duplication sessions by source device instead of app/process.
+- [ ] Allow one target device to be turned off without stopping the whole source session when other targets remain active.
 
-## Proposed Solution
-We will develop a modern **WPF (Windows Presentation Foundation) Application** targeting **.NET 8+**.
-1. **Routing Engine:** Use P/Invoke to consume the undocumented `IAudioPolicyConfig` interface (`{9119BD0D-2D89-41A4-BB09-29794029744E}`). This provides 100% reliable per-app routing on Windows 11 without any performance overhead or app crashing.
-2. **Duplication/Loopback Engine:** Use the **NAudio** library. When the user requests "Duplication", we will initialize a `WasapiLoopbackCapture` instance targeting the specific process (or the default render endpoint, filtered by process session), buffer the audio, and route it to multiple `WasapiOut` instances.
-3. **UI/UX:** A clean, modern WPF interface with a system tray component for quick access. 
-4. **DSP & Mixing:** NAudio provides excellent `ISampleProvider` interfaces to build an EQ pipeline and mix soundboard clips seamlessly into an outgoing audio stream.
+## After Next Task
+- [x] Replace the disabled `Duplicate` toggle with real mirror and duplicate actions.
+- [ ] Add writable output-device volume control.
+- [ ] Add output-device latency and buffer tuning options.
+- [ ] Add actual EQ or DSP pipeline if the advanced section remains part of the design.
+- [ ] Add optional persistent expanded and collapsed advanced-card state if needed.
 
-## Alternatives Considered
-- **Fixing the existing C++ Codebase:** Rejected. The DLL injection model is inherently flawed on modern Windows OS versions and will continue to break with every major Windows update.
-- **Using Virtual Audio Cables globally:** Rejected. This requires complex driver installations and system-wide changes, moving away from the requested portability goal.
+## Later
+- [ ] Add microphone routing and monitoring behavior.
+- [ ] Improve duplication latency and synchronization stability.
+- [ ] Add soundboard and utility tools if still wanted.
+- [ ] Add tray and minimize behavior plus packaging improvements.
 
-## Phased Implementation Plan
-
-### ✅ Phase 1: The Core Foundation (Routing & UI) - COMPLETED
-- [x] Initialize a new .NET 10 WPF project structure.
-- [x] Build the core UI (App list, Volume sliders, Device selection dropdowns).
-- [x] Implement the native Windows 11 Routing using `IAudioPolicyConfig` COM interop.
-- [x] Setup MVVM architecture with `CommunityToolkit.Mvvm`.
-
-### ✅ Phase 2: The Duplication Engine - COMPLETED
-- [x] Integrate the NAudio library.
-- [x] Implement the WASAPI Capture engine.
-- [x] Implement the multi-device playback engine.
-
-### 🚧 Phase 3: Advanced Audio (EQ & Mic) - NEXT
-- [ ] Implement `ISampleProvider` wrappers in NAudio to apply real-time Equalization.
-- [ ] Add support for routing and duplicating Microphone (Capture) inputs.
-- [ ] Implement per-process loopback (Visual Studio/Windows 11 SDK required for activation params).
-
-### 📅 Phase 4: Soundboard & Portability - FUTURE
-- [ ] Build the Soundboard UI for loading and triggering short audio files.
-- [ ] Implement Global Hotkeys for Soundboard.
-- [ ] Configure the .NET project for Single-File Deployment.
-- [ ] Implement System Tray "Minimize to tray" and persistence.
-
-## Verification & Testing
-- **Unit Testing:** Write C# unit tests for the configuration parser and the audio buffering logic.
-- **Integration Testing:** Test routing Chrome, Edge, and Spotify to separate output devices simultaneously to ensure Windows 11 compatibility.
-- **Latency Testing:** Measure the round-trip latency of the Duplication engine to ensure it remains under 50ms to prevent an echo effect.
-
-## Migration
-- The old C++ source tree will be retained in a `legacy/` directory for reference but will no longer be actively compiled. 
-- The new project will live in `src/KhurramAudioRoute/`.
+## Testing Checklist
+- [ ] Route Chrome to Device A and Edge to Device B.
+- [ ] Confirm both apps stay isolated when no duplication is active.
+- [ ] Duplicate Device A to Device C and confirm only Device A audio is mirrored.
+- [ ] Turn off one duplicate target and confirm other targets continue.
+- [ ] Validate default-device switching still works after duplication changes.

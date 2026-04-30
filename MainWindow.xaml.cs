@@ -30,6 +30,9 @@ public partial class MainWindow : FluentWindow
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        var workArea = SystemParameters.WorkArea;
+        Height = Math.Max(680, workArea.Height * 0.60);
+        Width = Math.Min(1350, workArea.Width * 0.82);
         _meterTimer.Start();
     }
 
@@ -136,6 +139,27 @@ public class ActivityBrushConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return value is bool active && active ? ActiveBrush : InactiveBrush;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// Shows a section only when the bound enum matches the requested section name.
+/// </summary>
+public class SectionVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null || parameter == null)
+            return Visibility.Collapsed;
+
+        return string.Equals(value.ToString(), parameter.ToString(), StringComparison.OrdinalIgnoreCase)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

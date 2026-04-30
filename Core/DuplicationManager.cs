@@ -1,6 +1,6 @@
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,49 +13,37 @@ namespace KhurramAudioRoute.Core
     public class DuplicationSession : IDisposable
     {
         private WasapiLoopbackCapture? _capture;
-        private MMDevice? _sourceDevice;           // kept alive until Stop()
+        private MMDevice? _sourceDevice;
         private readonly List<IWavePlayer> _players = new();
         private readonly List<BufferedWaveProvider> _buffers = new();
         private readonly List<MMDevice> _targetDevices = new();
 
-        public int ProcessId { get; }
-        public DuplicationSession(int pid) => ProcessId = pid;
+        public string SessionKey { get; }
 
-        // Right after a routing change, WASAPI clients on the affected endpoint can
-        // briefly fail with these HRESULTs. Both are transient and clear after a short wait.
-        // 0x88890004 = AUDCLNT_E_DEVICE_INVALIDATED
-        // 0x8889000F = AUDCLNT_E_ENDPOINT_CREATE_FAILED
+        public DuplicationSession(string sessionKey) => SessionKey = sessionKey;
+
         private static bool IsTransientWasapi(COMException ex)
             => (uint)ex.HResult == 0x88890004 || (uint)ex.HResult == 0x8889000F;
 
-        // Blocks while initializing (call from a background thread).
-        // Waits for devices to settle after routing, then retries transient WASAPI failures.
         public bool Start(string sourceDeviceId, IEnumerable<string> targetDeviceIds)
         {
             Stop();
-
-            // Give Windows audio engine time to settle after routing changes before
-            // opening any WASAPI clients — without this, devices are often invalidated.
             Thread.Sleep(600);
 
             try
             {
-                // Source-side init can race with routing changes the same way as targets,
-                // so wrap it in the same retry pattern.
                 for (int attempt = 1; attempt <= 4; attempt++)
                 {
                     try
                     {
-                        var enumerator = new MMDeviceEnumerator();
+                        using var enumerator = new MMDeviceEnumerator();
                         _sourceDevice = enumerator.GetDevice(sourceDeviceId);
-                        enumerator.Dispose();
-
                         _capture = new WasapiLoopbackCapture(_sourceDevice);
                         break;
                     }
                     catch (COMException ex) when (IsTransientWasapi(ex))
                     {
-                        Debug.WriteLine($"Duplication: source not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms…");
+                        Debug.WriteLine($"Duplication: source not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
                         try { _capture?.Dispose(); } catch { }
                         _capture = null;
                         try { _sourceDevice?.Dispose(); } catch { }
@@ -65,16 +53,15 @@ namespace KhurramAudioRoute.Core
                     }
                 }
 
-                foreach (var id in targetDeviceIds)
+                foreach (var id in targetDeviceIds.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct())
                 {
                     bool initialized = false;
                     for (int attempt = 1; attempt <= 4 && !initialized; attempt++)
                     {
                         try
                         {
-                            var devEnum = new MMDeviceEnumerator();
-                            var device = devEnum.GetDevice(id);
-                            devEnum.Dispose();
+                            using var deviceEnumerator = new MMDeviceEnumerator();
+                            var device = deviceEnumerator.GetDevice(id);
 
                             if (device == null || device.State != DeviceState.Active)
                             {
@@ -104,7 +91,7 @@ namespace KhurramAudioRoute.Core
                         }
                         catch (COMException ex) when (IsTransientWasapi(ex))
                         {
-                            Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms…");
+                            Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
                             Thread.Sleep(600);
                         }
                         catch (Exception ex)
@@ -128,8 +115,6 @@ namespace KhurramAudioRoute.Core
                         buf.AddSamples(e.Buffer, 0, e.BytesRecorded);
                 };
 
-                // StartRecording is where audioClient.Initialize() actually runs — also
-                // subject to the post-routing race, so retry it too.
                 for (int attempt = 1; attempt <= 4; attempt++)
                 {
                     try
@@ -139,19 +124,19 @@ namespace KhurramAudioRoute.Core
                     }
                     catch (COMException ex) when (IsTransientWasapi(ex))
                     {
-                        Debug.WriteLine($"Duplication: StartRecording not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms…");
+                        Debug.WriteLine($"Duplication: StartRecording not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
                         if (attempt == 4) throw;
                         Thread.Sleep(600);
                     }
                 }
 
-                Debug.WriteLine($"Duplication running: PID {ProcessId} → {_players.Count} device(s).");
+                Debug.WriteLine($"Duplication running: {SessionKey} -> {_players.Count} device(s).");
                 return true;
             }
             catch (Exception ex)
             {
                 uint hr = ex is COMException c ? (uint)c.HResult : 0;
-                Debug.WriteLine($"Duplication start failed PID {ProcessId}: 0x{hr:X} {ex.GetType().Name} - {ex.Message}");
+                Debug.WriteLine($"Duplication start failed {SessionKey}: 0x{hr:X} {ex.GetType().Name} - {ex.Message}");
                 Stop();
                 return false;
             }
@@ -163,16 +148,16 @@ namespace KhurramAudioRoute.Core
             try { _capture?.Dispose(); } catch { }
             _capture = null;
 
-            foreach (var p in _players)
+            foreach (var player in _players)
             {
-                try { p.Stop(); } catch { }
-                try { p.Dispose(); } catch { }
+                try { player.Stop(); } catch { }
+                try { player.Dispose(); } catch { }
             }
             _players.Clear();
             _buffers.Clear();
 
-            foreach (var d in _targetDevices)
-                try { d.Dispose(); } catch { }
+            foreach (var device in _targetDevices)
+                try { device.Dispose(); } catch { }
             _targetDevices.Clear();
 
             try { _sourceDevice?.Dispose(); } catch { }
@@ -184,32 +169,32 @@ namespace KhurramAudioRoute.Core
 
     public static class DuplicationManager
     {
-        private static readonly Dictionary<int, DuplicationSession> _sessions = new();
+        private static readonly Dictionary<string, DuplicationSession> _sessions = new();
 
-        // Returns false if no players could be initialized.
-        public static bool StartDuplication(int pid, string sourceDeviceId, IEnumerable<string> targetDeviceIds)
+        public static bool StartDuplication(string sourceDeviceId, IEnumerable<string> targetDeviceIds)
         {
-            if (_sessions.TryGetValue(pid, out var existing))
+            if (_sessions.TryGetValue(sourceDeviceId, out var existing))
                 existing.Stop();
 
-            var session = new DuplicationSession(pid);
-            _sessions[pid] = session;
+            var session = new DuplicationSession(sourceDeviceId);
+            _sessions[sourceDeviceId] = session;
             return session.Start(sourceDeviceId, targetDeviceIds);
         }
 
-        public static void StopDuplication(int pid)
+        public static void StopDuplication(string sourceDeviceId)
         {
-            if (_sessions.TryGetValue(pid, out var session))
+            if (_sessions.TryGetValue(sourceDeviceId, out var session))
             {
                 session.Stop();
-                _sessions.Remove(pid);
+                _sessions.Remove(sourceDeviceId);
             }
         }
 
         public static void StopAll()
         {
-            foreach (var s in _sessions.Values)
-                s.Stop();
+            foreach (var session in _sessions.Values)
+                session.Stop();
+
             _sessions.Clear();
         }
     }

@@ -1,18 +1,83 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace KhurramAudioRoute.Core
 {
-    public class AudioDevice
+    public partial class AudioDevice : ObservableObject
     {
-        public string? Id { get; set; }
-        public string? Name { get; set; }
-        public bool IsDefault { get; set; }
-        public float PeakValue { get; set; }
-        public float Volume { get; set; }
-        public bool IsMuted { get; set; }
+        private string? _id;
+        public string? Id
+        {
+            get => _id;
+            set => SetProperty(ref _id, value);
+        }
+
+        private string? _name;
+        public string? Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
+
+        private bool _isDefault;
+        public bool IsDefault
+        {
+            get => _isDefault;
+            set => SetProperty(ref _isDefault, value);
+        }
+
+        private float _peakValue;
+        public float PeakValue
+        {
+            get => _peakValue;
+            set => SetProperty(ref _peakValue, value);
+        }
+
+        private float _volume;
+        public float Volume
+        {
+            get => _volume;
+            set => SetProperty(ref _volume, value);
+        }
+
+        private bool _isMuted;
+        public bool IsMuted
+        {
+            get => _isMuted;
+            set => SetProperty(ref _isMuted, value);
+        }
+
+        private bool _isDuplicating;
+        public bool IsDuplicating
+        {
+            get => _isDuplicating;
+            set => SetProperty(ref _isDuplicating, value);
+        }
+
+        private bool _isAdvancedExpanded;
+        public bool IsAdvancedExpanded
+        {
+            get => _isAdvancedExpanded;
+            set => SetProperty(ref _isAdvancedExpanded, value);
+        }
+
+        private string _duplicateStatus = "No duplicate targets active";
+        public string DuplicateStatus
+        {
+            get => _duplicateStatus;
+            set => SetProperty(ref _duplicateStatus, value);
+        }
+
+        private ObservableCollection<DeviceSelection> _duplicateTargets = new();
+        public ObservableCollection<DeviceSelection> DuplicateTargets
+        {
+            get => _duplicateTargets;
+            set => SetProperty(ref _duplicateTargets, value);
+        }
 
         public override string ToString() => Name ?? "Unknown Device";
     }
@@ -74,6 +139,52 @@ namespace KhurramAudioRoute.Core
             {
                 System.Diagnostics.Debug.WriteLine($"Error in GetRenderDevices: {ex.Message}");
             }
+            return devices;
+        }
+
+        public static List<AudioDevice> GetCaptureDevices()
+        {
+            var devices = new List<AudioDevice>();
+            try
+            {
+                using var enumerator = new MMDeviceEnumerator();
+                var endpoints = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+
+                MMDevice? defaultDevice = null;
+                try { defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console); } catch { }
+
+                foreach (var endpoint in endpoints)
+                {
+                    float peak = 0;
+                    float vol = 1.0f;
+                    bool muted = false;
+                    try { peak = endpoint.AudioMeterInformation.MasterPeakValue; } catch { }
+                    try
+                    {
+                        vol = endpoint.AudioEndpointVolume.MasterVolumeLevelScalar;
+                        muted = endpoint.AudioEndpointVolume.Mute;
+                    }
+                    catch { }
+
+                    devices.Add(new AudioDevice
+                    {
+                        Id = endpoint.ID,
+                        Name = endpoint.FriendlyName,
+                        IsDefault = defaultDevice != null && endpoint.ID == defaultDevice.ID,
+                        PeakValue = peak,
+                        Volume = vol,
+                        IsMuted = muted
+                    });
+                    endpoint.Dispose();
+                }
+
+                defaultDevice?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetCaptureDevices: {ex.Message}");
+            }
+
             return devices;
         }
 
