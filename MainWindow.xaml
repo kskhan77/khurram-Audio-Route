@@ -838,6 +838,40 @@
                         </Grid>
 
                         <UniformGrid Columns="2">
+                            <!-- Test Signal Card -->
+                            <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Audio Test Signal" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                            <TextBlock Text="Uses BASS to verify high-end audio path &amp; DLLs." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                        <ui:SymbolIcon Grid.Column="1" Symbol="MusicNote224" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="24"/>
+                                    </Grid>
+                                    
+                                    <ui:Button Command="{Binding ToggleTestToneCommand}" Padding="20,10" HorizontalAlignment="Left">
+                                        <ui:Button.Style>
+                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                <Setter Property="Content" Value="Start Test Tone"/>
+                                                <Setter Property="Appearance" Value="Primary"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTestTonePlaying}" Value="True">
+                                                        <Setter Property="Content" Value="Stop Test Tone"/>
+                                                        <Setter Property="Appearance" Value="Secondary"/>
+                                                        <Setter Property="Background" Value="#2B1618"/>
+                                                        <Setter Property="BorderBrush" Value="#6E3036"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:Button.Style>
+                                    </ui:Button>
+                                </StackPanel>
+                            </Border>
+
                             <!-- Diagnostic Card -->
                             <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
                                 <StackPanel>

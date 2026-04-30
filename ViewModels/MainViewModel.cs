@@ -39,13 +39,81 @@ namespace KhurramAudioRoute.ViewModels
         [ObservableProperty]
         private DashboardSection currentSection = DashboardSection.Outputs;
 
+        [ObservableProperty]
+        private bool isTestTonePlaying;
+
         private readonly Dictionary<string, SemaphoreSlim> _duplicateLocks = new();
+
+        [RelayCommand]
+        public void ToggleTestTone()
+        {
+            if (IsTestTonePlaying)
+            {
+                StopTestTone();
+            }
+            else
+            {
+                PlayTestTone();
+            }
+        }
+
+        private void PlayTestTone()
+        {
+            try
+            {
+                if (MasterDevice?.Id == null)
+                {
+                    MessageBox.Show("Please select an output device first.", "Notice", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                StopTestTone();
+
+                bool ok = BassEngine.PlayTestTone(MasterDevice.Id);
+                if (ok)
+                {
+                    IsTestTonePlaying = true;
+                }
+                else
+                {
+                    // Check if DLLs are actually there first
+                    if (!BassEngine.CheckNativeDlls(out string missing))
+                    {
+                        MessageBox.Show($"BASS Engine files missing: {missing}\n\nPlease ensure bass.dll, bassmix.dll, and bass_fx.dll are in the 'Native' folder.", "Engine Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The audio engine failed to start on this device.\n\nCheck if the device is currently in use or try another output.", "Audio Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"PlayTestTone error: {ex.Message}");
+                StopTestTone();
+            }
+        }
+
+        private void StopTestTone()
+        {
+            IsTestTonePlaying = false;
+            BassEngine.StopTestTone();
+        }
 
         public void RefreshMeters()
         {
             SessionManager.UpdateSessionLevels(Sessions);
             DeviceManager.UpdateDeviceLevels(Devices);
             DeviceManager.UpdateDeviceLevels(Microphones);
+
+            // Apply BASS Equalizer to all output devices in real-time
+            foreach (var device in Devices)
+            {
+                if (!string.IsNullOrWhiteSpace(device.Id))
+                {
+                    BassEngine.UpdateEqualizer(device.Id, device.GetEqualizerGains());
+                }
+            }
         }
 
         [RelayCommand]
