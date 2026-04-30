@@ -1,4 +1,5 @@
 using NAudio.CoreAudioApi;
+using NAudio.Dsp;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
@@ -10,13 +11,113 @@ using System.Threading;
 
 namespace KhurramAudioRoute.Core
 {
+    public sealed class DuplicationTarget : IDisposable
+    {
+        public string DeviceId { get; }
+        public MMDevice Device { get; }
+        public IWavePlayer Player { get; }
+        public BufferedWaveProvider Buffer { get; }
+        public EqualizerSampleProvider Equalizer { get; }
+
+        public DuplicationTarget(string deviceId, MMDevice device, IWavePlayer player, BufferedWaveProvider buffer, EqualizerSampleProvider equalizer)
+        {
+            DeviceId = deviceId;
+            Device = device;
+            Player = player;
+            Buffer = buffer;
+            Equalizer = equalizer;
+        }
+
+        public void Dispose()
+        {
+            try { Player.Stop(); } catch { }
+            try { Player.Dispose(); } catch { }
+            try { Device.Dispose(); } catch { }
+        }
+    }
+
+    public sealed class EqualizerSampleProvider : ISampleProvider
+    {
+        private static readonly float[] BandFrequencies = { 60f, 250f, 1000f, 4000f, 12000f };
+        private readonly object _sync = new();
+        private readonly ISampleProvider _source;
+        private readonly int _channels;
+        private readonly int _sampleRate;
+        private readonly float[] _gains = new float[BandFrequencies.Length];
+        private BiQuadFilter[][] _filters;
+
+        public EqualizerSampleProvider(ISampleProvider source, float[]? gains = null)
+        {
+            _source = source;
+            WaveFormat = source.WaveFormat;
+            _channels = Math.Max(1, WaveFormat.Channels);
+            _sampleRate = WaveFormat.SampleRate;
+            _filters = CreateFilters();
+            UpdateGains(gains ?? new float[BandFrequencies.Length]);
+        }
+
+        public WaveFormat WaveFormat { get; }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            int samplesRead = _source.Read(buffer, offset, count);
+
+            lock (_sync)
+            {
+                for (int sampleIndex = 0; sampleIndex < samplesRead; sampleIndex++)
+                {
+                    int channel = sampleIndex % _channels;
+                    float sample = buffer[offset + sampleIndex];
+
+                    for (int band = 0; band < _filters[channel].Length; band++)
+                        sample = _filters[channel][band].Transform(sample);
+
+                    buffer[offset + sampleIndex] = sample;
+                }
+            }
+
+            return samplesRead;
+        }
+
+        public void UpdateGains(float[] gains)
+        {
+            lock (_sync)
+            {
+                for (int i = 0; i < _gains.Length; i++)
+                    _gains[i] = i < gains.Length ? gains[i] : 0f;
+
+                _filters = CreateFilters();
+            }
+        }
+
+        private BiQuadFilter[][] CreateFilters()
+        {
+            var filters = new BiQuadFilter[_channels][];
+            for (int channel = 0; channel < _channels; channel++)
+            {
+                filters[channel] = new BiQuadFilter[BandFrequencies.Length];
+                for (int band = 0; band < BandFrequencies.Length; band++)
+                {
+                    filters[channel][band] = BiQuadFilter.PeakingEQ(_sampleRate, BandFrequencies[band], 0.9f, _gains[band]);
+                }
+            }
+
+            return filters;
+        }
+    }
+
     public class DuplicationSession : IDisposable
     {
+        private const int DeviceSettleDelayMs = 350;
+        private const int RetryDelayMs = 350;
+        private const int MaxInitAttempts = 4;
+        private const int TargetPlaybackLatencyMs = 45;
+        private static readonly TimeSpan TargetBufferDuration = TimeSpan.FromMilliseconds(180);
+
         private WasapiLoopbackCapture? _capture;
         private MMDevice? _sourceDevice;
-        private readonly List<IWavePlayer> _players = new();
-        private readonly List<BufferedWaveProvider> _buffers = new();
-        private readonly List<MMDevice> _targetDevices = new();
+        private readonly Dictionary<string, DuplicationTarget> _targets = new();
+        private readonly object _sync = new();
 
         public string SessionKey { get; }
 
@@ -25,143 +126,211 @@ namespace KhurramAudioRoute.Core
         private static bool IsTransientWasapi(COMException ex)
             => (uint)ex.HResult == 0x88890004 || (uint)ex.HResult == 0x8889000F;
 
-        public bool Start(string sourceDeviceId, IEnumerable<string> targetDeviceIds)
+        private bool EnsureCapture(string sourceDeviceId)
         {
-            Stop();
-            Thread.Sleep(600);
+            if (_capture != null)
+                return true;
 
-            try
+            Thread.Sleep(DeviceSettleDelayMs);
+
+            for (int attempt = 1; attempt <= MaxInitAttempts; attempt++)
             {
-                for (int attempt = 1; attempt <= 4; attempt++)
+                try
                 {
-                    try
-                    {
-                        using var enumerator = new MMDeviceEnumerator();
-                        _sourceDevice = enumerator.GetDevice(sourceDeviceId);
-                        _capture = new WasapiLoopbackCapture(_sourceDevice);
-                        break;
-                    }
-                    catch (COMException ex) when (IsTransientWasapi(ex))
-                    {
-                        Debug.WriteLine($"Duplication: source not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
-                        try { _capture?.Dispose(); } catch { }
-                        _capture = null;
-                        try { _sourceDevice?.Dispose(); } catch { }
-                        _sourceDevice = null;
-                        if (attempt == 4) throw;
-                        Thread.Sleep(600);
-                    }
-                }
+                    using var enumerator = new MMDeviceEnumerator();
+                    _sourceDevice = enumerator.GetDevice(sourceDeviceId);
+                    _capture = new WasapiLoopbackCapture(_sourceDevice);
+                    _capture.DataAvailable += OnDataAvailable;
 
-                foreach (var id in targetDeviceIds.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct())
-                {
-                    bool initialized = false;
-                    for (int attempt = 1; attempt <= 4 && !initialized; attempt++)
+                    for (int startAttempt = 1; startAttempt <= MaxInitAttempts; startAttempt++)
                     {
                         try
                         {
-                            using var deviceEnumerator = new MMDeviceEnumerator();
-                            var device = deviceEnumerator.GetDevice(id);
-
-                            if (device == null || device.State != DeviceState.Active)
-                            {
-                                device?.Dispose();
-                                break;
-                            }
-
-                            var buffer = new BufferedWaveProvider(_capture!.WaveFormat)
-                            {
-                                DiscardOnBufferOverflow = true
-                            };
-
-                            var outDevice = new WasapiOut(device, AudioClientShareMode.Shared, true, 100);
-
-                            ISampleProvider provider = buffer.ToSampleProvider();
-                            if (_capture.WaveFormat.SampleRate != outDevice.OutputWaveFormat.SampleRate)
-                                provider = new WdlResamplingSampleProvider(provider, outDevice.OutputWaveFormat.SampleRate);
-
-                            outDevice.Init(provider);
-                            outDevice.Play();
-
-                            _buffers.Add(buffer);
-                            _players.Add(outDevice);
-                            _targetDevices.Add(device);
-                            initialized = true;
-                            Debug.WriteLine($"Duplication: player ready for device {id} (attempt {attempt})");
+                            _capture.StartRecording();
+                            break;
                         }
                         catch (COMException ex) when (IsTransientWasapi(ex))
                         {
-                            Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
-                            Thread.Sleep(600);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine($"Duplication: fatal error for {id}: {ex.Message}");
-                            break;
+                            Debug.WriteLine($"Duplication: StartRecording not ready 0x{(uint)ex.HResult:X} (attempt {startAttempt}/{MaxInitAttempts}), retrying in {RetryDelayMs}ms...");
+                            if (startAttempt == MaxInitAttempts) throw;
+                            Thread.Sleep(RetryDelayMs);
                         }
                     }
+
+                    return true;
+                }
+                catch (COMException ex) when (IsTransientWasapi(ex))
+                {
+                    Debug.WriteLine($"Duplication: source not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/{MaxInitAttempts}), retrying in {RetryDelayMs}ms...");
+                    ReleaseCapture();
+                    if (attempt == MaxInitAttempts)
+                        return false;
+                    Thread.Sleep(RetryDelayMs);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Duplication: source init failed for {sourceDeviceId}: {ex.Message}");
+                    ReleaseCapture();
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        private void OnDataAvailable(object? sender, WaveInEventArgs e)
+        {
+            DuplicationTarget[] targets;
+            lock (_sync)
+                targets = _targets.Values.ToArray();
+
+            foreach (var target in targets)
+                target.Buffer.AddSamples(e.Buffer, 0, e.BytesRecorded);
+        }
+
+        private DuplicationTarget? CreateTarget(string deviceId, float[] gains)
+        {
+            if (_capture == null)
+                return null;
+
+            for (int attempt = 1; attempt <= MaxInitAttempts; attempt++)
+            {
+                try
+                {
+                    using var enumerator = new MMDeviceEnumerator();
+                    var device = enumerator.GetDevice(deviceId);
+
+                    if (device == null || device.State != DeviceState.Active)
+                    {
+                        device?.Dispose();
+                        return null;
+                    }
+
+                    var buffer = new BufferedWaveProvider(_capture.WaveFormat)
+                    {
+                        DiscardOnBufferOverflow = true,
+                        BufferDuration = TargetBufferDuration
+                    };
+
+                    var player = new WasapiOut(device, AudioClientShareMode.Shared, true, TargetPlaybackLatencyMs);
+                    ISampleProvider provider = buffer.ToSampleProvider();
+                    if (_capture.WaveFormat.SampleRate != player.OutputWaveFormat.SampleRate)
+                        provider = new WdlResamplingSampleProvider(provider, player.OutputWaveFormat.SampleRate);
+
+                    var equalizer = new EqualizerSampleProvider(provider, gains);
+                    provider = equalizer;
+
+                    player.Init(provider);
+                    player.Play();
+
+                    Debug.WriteLine($"Duplication: player ready for device {deviceId} (attempt {attempt})");
+                    return new DuplicationTarget(deviceId, device, player, buffer, equalizer);
+                }
+                catch (COMException ex) when (IsTransientWasapi(ex))
+                {
+                    Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/{MaxInitAttempts}), retrying in {RetryDelayMs}ms...");
+                    Thread.Sleep(RetryDelayMs);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Duplication: fatal error for {deviceId}: {ex.Message}");
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        private void RemoveTargetInternal(string deviceId)
+        {
+            if (_targets.Remove(deviceId, out var target))
+                target.Dispose();
+        }
+
+        private void ReleaseCapture()
+        {
+            if (_capture != null)
+            {
+                try { _capture.DataAvailable -= OnDataAvailable; } catch { }
+                try { _capture.StopRecording(); } catch { }
+                try { _capture.Dispose(); } catch { }
+                _capture = null;
+            }
+
+            try { _sourceDevice?.Dispose(); } catch { }
+            _sourceDevice = null;
+        }
+
+        public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains)
+        {
+            var desiredTargets = targetDeviceIds
+                .Where(id => !string.IsNullOrWhiteSpace(id) && id != sourceDeviceId)
+                .Distinct()
+                .ToList();
+
+            if (desiredTargets.Count == 0)
+            {
+                Stop();
+                return false;
+            }
+
+            if (!EnsureCapture(sourceDeviceId))
+                return false;
+
+            lock (_sync)
+            {
+                foreach (var removedId in _targets.Keys.Except(desiredTargets).ToList())
+                    RemoveTargetInternal(removedId);
+            }
+
+            foreach (var targetId in desiredTargets)
+            {
+                lock (_sync)
+                {
+                    if (_targets.ContainsKey(targetId))
+                        continue;
                 }
 
-                if (_players.Count == 0)
+                var target = CreateTarget(targetId, equalizerGains);
+                if (target == null)
+                    continue;
+
+                lock (_sync)
+                    _targets[targetId] = target;
+            }
+
+            lock (_sync)
+            {
+                if (_targets.Count == 0)
                 {
-                    Debug.WriteLine("Duplication: no players initialized.");
                     Stop();
                     return false;
                 }
 
-                _capture!.DataAvailable += (_, e) =>
-                {
-                    foreach (var buf in _buffers)
-                        buf.AddSamples(e.Buffer, 0, e.BytesRecorded);
-                };
-
-                for (int attempt = 1; attempt <= 4; attempt++)
-                {
-                    try
-                    {
-                        _capture.StartRecording();
-                        break;
-                    }
-                    catch (COMException ex) when (IsTransientWasapi(ex))
-                    {
-                        Debug.WriteLine($"Duplication: StartRecording not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/4), retrying in 600ms...");
-                        if (attempt == 4) throw;
-                        Thread.Sleep(600);
-                    }
-                }
-
-                Debug.WriteLine($"Duplication running: {SessionKey} -> {_players.Count} device(s).");
+                Debug.WriteLine($"Duplication running: {SessionKey} -> {_targets.Count} device(s).");
                 return true;
             }
-            catch (Exception ex)
+        }
+
+        public void UpdateEqualizer(float[] equalizerGains)
+        {
+            lock (_sync)
             {
-                uint hr = ex is COMException c ? (uint)c.HResult : 0;
-                Debug.WriteLine($"Duplication start failed {SessionKey}: 0x{hr:X} {ex.GetType().Name} - {ex.Message}");
-                Stop();
-                return false;
+                foreach (var target in _targets.Values)
+                    target.Equalizer.UpdateGains(equalizerGains);
             }
         }
 
         public void Stop()
         {
-            try { _capture?.StopRecording(); } catch { }
-            try { _capture?.Dispose(); } catch { }
-            _capture = null;
-
-            foreach (var player in _players)
+            lock (_sync)
             {
-                try { player.Stop(); } catch { }
-                try { player.Dispose(); } catch { }
+                foreach (var target in _targets.Values)
+                    target.Dispose();
+                _targets.Clear();
             }
-            _players.Clear();
-            _buffers.Clear();
 
-            foreach (var device in _targetDevices)
-                try { device.Dispose(); } catch { }
-            _targetDevices.Clear();
-
-            try { _sourceDevice?.Dispose(); } catch { }
-            _sourceDevice = null;
+            ReleaseCapture();
         }
 
         public void Dispose() => Stop();
@@ -171,14 +340,22 @@ namespace KhurramAudioRoute.Core
     {
         private static readonly Dictionary<string, DuplicationSession> _sessions = new();
 
-        public static bool StartDuplication(string sourceDeviceId, IEnumerable<string> targetDeviceIds)
+        public static bool StartDuplication(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[]? equalizerGains = null)
         {
-            if (_sessions.TryGetValue(sourceDeviceId, out var existing))
-                existing.Stop();
+            if (!_sessions.TryGetValue(sourceDeviceId, out var session))
+            {
+                session = new DuplicationSession(sourceDeviceId);
+                _sessions[sourceDeviceId] = session;
+            }
 
-            var session = new DuplicationSession(sourceDeviceId);
-            _sessions[sourceDeviceId] = session;
-            return session.Start(sourceDeviceId, targetDeviceIds);
+            bool ok = session.StartOrUpdate(sourceDeviceId, targetDeviceIds, equalizerGains ?? new float[5]);
+            if (!ok)
+            {
+                session.Stop();
+                _sessions.Remove(sourceDeviceId);
+            }
+
+            return ok;
         }
 
         public static void StopDuplication(string sourceDeviceId)
@@ -196,6 +373,18 @@ namespace KhurramAudioRoute.Core
                 session.Stop();
 
             _sessions.Clear();
+        }
+
+        public static bool IsDuplicating(string? sourceDeviceId)
+            => !string.IsNullOrWhiteSpace(sourceDeviceId) && _sessions.ContainsKey(sourceDeviceId);
+
+        public static void UpdateEqualizer(string? sourceDeviceId, float[] equalizerGains)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId))
+                return;
+
+            if (_sessions.TryGetValue(sourceDeviceId, out var session))
+                session.UpdateEqualizer(equalizerGains);
         }
     }
 }

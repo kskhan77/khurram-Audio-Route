@@ -72,12 +72,57 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _duplicateStatus, value);
         }
 
+        private bool _isDuplicateBusy;
+        public bool IsDuplicateBusy
+        {
+            get => _isDuplicateBusy;
+            set => SetProperty(ref _isDuplicateBusy, value);
+        }
+
         private ObservableCollection<DeviceSelection> _duplicateTargets = new();
         public ObservableCollection<DeviceSelection> DuplicateTargets
         {
             get => _duplicateTargets;
             set => SetProperty(ref _duplicateTargets, value);
         }
+
+        private float _eqLow = 0f;
+        public float EqLow
+        {
+            get => _eqLow;
+            set => SetProperty(ref _eqLow, value);
+        }
+
+        private float _eqLowMid = 0f;
+        public float EqLowMid
+        {
+            get => _eqLowMid;
+            set => SetProperty(ref _eqLowMid, value);
+        }
+
+        private float _eqMid = 0f;
+        public float EqMid
+        {
+            get => _eqMid;
+            set => SetProperty(ref _eqMid, value);
+        }
+
+        private float _eqHighMid = 0f;
+        public float EqHighMid
+        {
+            get => _eqHighMid;
+            set => SetProperty(ref _eqHighMid, value);
+        }
+
+        private float _eqHigh = 0f;
+        public float EqHigh
+        {
+            get => _eqHigh;
+            set => SetProperty(ref _eqHigh, value);
+        }
+
+        public float[] GetEqualizerGains()
+            => new[] { EqLow, EqLowMid, EqMid, EqHighMid, EqHigh };
 
         public override string ToString() => Name ?? "Unknown Device";
     }

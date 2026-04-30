@@ -19,21 +19,25 @@
 - [x] Fixed the XAML parse crash caused by the invalid `Equalizer24` symbol token.
 
 ## In Progress
-- [ ] Output cards still have placeholder EQ controls.
-- [ ] Device duplication needs polish for per-target toggles and persistent state.
-- [ ] Device volume in the output advanced section is display-only.
+- [ ] EQ is now active for duplicated audio and has presets, but still needs deeper tuning and maybe saved profiles.
+- [ ] Device duplication still needs runtime testing under rapid device changes and device unplug/replug cases.
+- [ ] Output-device volume UI could still use polish, but the control is now functional.
+- [ ] Latency tuning can still be exposed as user-configurable presets later if needed.
 
 ## Next Task
 - [x] Implement device-level duplication from the `Outputs` page.
 - [x] Make source device and target devices explicit in the UI.
 - [x] Key duplication sessions by source device instead of app/process.
-- [ ] Allow one target device to be turned off without stopping the whole source session when other targets remain active.
+- [x] Preserve active duplicate sessions across refreshes and reflect their selections back into the UI.
+- [x] Reapply target changes automatically while a source device is already duplicating.
+- [x] Allow one target device to be turned off with live target management instead of full session restart.
+- [x] Add busy/update state so duplication changes do not feel frozen during rapid target edits.
 
 ## After Next Task
 - [x] Replace the disabled `Duplicate` toggle with real mirror and duplicate actions.
-- [ ] Add writable output-device volume control.
-- [ ] Add output-device latency and buffer tuning options.
-- [ ] Add actual EQ or DSP pipeline if the advanced section remains part of the design.
+- [x] Add writable output-device volume control.
+- [x] Add baseline output-device latency and buffer tuning in the duplication engine.
+- [x] Add an actual EQ or DSP pipeline for duplicated audio in the advanced section.
 - [ ] Add optional persistent expanded and collapsed advanced-card state if needed.
 
 ## Later

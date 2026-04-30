@@ -3,8 +3,11 @@ using CommunityToolkit.Mvvm.Input;
 using KhurramAudioRoute.Core;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -34,6 +37,8 @@ namespace KhurramAudioRoute.ViewModels
 
         [ObservableProperty]
         private DashboardSection currentSection = DashboardSection.Outputs;
+
+        private readonly Dictionary<string, SemaphoreSlim> _duplicateLocks = new();
 
         public MainViewModel()
         {
@@ -68,12 +73,25 @@ namespace KhurramAudioRoute.ViewModels
         [RelayCommand]
         public void RefreshData()
         {
-            DuplicationManager.StopAll();
             try
             {
+                var previousDuplicateSelections = Devices
+                    .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                    .ToDictionary(
+                        d => d.Id!,
+                        d => d.DuplicateTargets
+                            .Where(t => t.IsSelected && !string.IsNullOrWhiteSpace(t.Device.Id))
+                            .Select(t => t.Device.Id!)
+                            .ToHashSet());
+                var previousEqualizerSettings = Devices
+                    .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                    .ToDictionary(
+                        d => d.Id!,
+                        d => d.GetEqualizerGains());
+
                 var availableDevices = DeviceManager.GetRenderDevices();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
-                ConfigureDeviceDuplicateTargets(availableDevices);
+                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
@@ -95,22 +113,104 @@ namespace KhurramAudioRoute.ViewModels
             }
         }
 
-        private static void ConfigureDeviceDuplicateTargets(IReadOnlyList<AudioDevice> devices)
+        private void ConfigureDeviceDuplicateTargets(
+            IReadOnlyList<AudioDevice> devices,
+            IReadOnlyDictionary<string, HashSet<string>>? previousSelections = null,
+            IReadOnlyDictionary<string, float[]>? previousEqualizerSettings = null)
         {
             foreach (var source in devices)
             {
+                HashSet<string>? restoredTargetIds = null;
+                float[]? equalizerValues = null;
+                previousSelections?.TryGetValue(source.Id ?? string.Empty, out restoredTargetIds);
+                previousEqualizerSettings?.TryGetValue(source.Id ?? string.Empty, out equalizerValues);
+
                 source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
                     devices
                         .Where(target => target.Id != source.Id)
                         .Select(target => new DeviceSelection
                         {
                             Device = target,
-                            IsSelected = false
+                            IsSelected = restoredTargetIds?.Contains(target.Id ?? string.Empty) == true
                         }));
 
-                source.IsDuplicating = false;
+                if (equalizerValues != null && equalizerValues.Length >= 5)
+                {
+                    source.EqLow = equalizerValues[0];
+                    source.EqLowMid = equalizerValues[1];
+                    source.EqMid = equalizerValues[2];
+                    source.EqHighMid = equalizerValues[3];
+                    source.EqHigh = equalizerValues[4];
+                }
+
+                foreach (var target in source.DuplicateTargets)
+                    target.PropertyChanged += (_, e) => OnDuplicateTargetSelectionChanged(source, e);
+
+                source.PropertyChanged += (_, e) => OnOutputDevicePropertyChanged(source, e);
+
+                source.IsDuplicating = DuplicationManager.IsDuplicating(source.Id);
                 source.IsAdvancedExpanded = false;
-                source.DuplicateStatus = "No duplicate targets active";
+                UpdateDuplicateStatus(source);
+            }
+        }
+
+        private SemaphoreSlim GetDuplicateLock(string deviceId)
+        {
+            lock (_duplicateLocks)
+            {
+                if (!_duplicateLocks.TryGetValue(deviceId, out var gate))
+                {
+                    gate = new SemaphoreSlim(1, 1);
+                    _duplicateLocks[deviceId] = gate;
+                }
+
+                return gate;
+            }
+        }
+
+        private void OnOutputDevicePropertyChanged(AudioDevice sourceDevice, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(AudioDevice.EqLow)
+                or nameof(AudioDevice.EqLowMid)
+                or nameof(AudioDevice.EqMid)
+                or nameof(AudioDevice.EqHighMid)
+                or nameof(AudioDevice.EqHigh))
+            {
+                DuplicationManager.UpdateEqualizer(sourceDevice.Id, sourceDevice.GetEqualizerGains());
+            }
+        }
+
+        private void OnDuplicateTargetSelectionChanged(AudioDevice sourceDevice, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(DeviceSelection.IsSelected))
+                return;
+
+            UpdateDuplicateStatus(sourceDevice);
+
+            if (sourceDevice.IsDuplicating)
+                _ = ApplyDeviceDuplicateTargets(sourceDevice, false);
+        }
+
+        private static void UpdateDuplicateStatus(AudioDevice sourceDevice)
+        {
+            if (sourceDevice.IsDuplicateBusy)
+            {
+                sourceDevice.DuplicateStatus = "Updating duplicate targets...";
+                return;
+            }
+
+            int selectedCount = sourceDevice.DuplicateTargets.Count(d => d.IsSelected);
+            if (sourceDevice.IsDuplicating && selectedCount > 0)
+            {
+                sourceDevice.DuplicateStatus = $"Mirroring to {selectedCount} device(s)";
+            }
+            else if (selectedCount > 0)
+            {
+                sourceDevice.DuplicateStatus = $"{selectedCount} target device(s) selected";
+            }
+            else
+            {
+                sourceDevice.DuplicateStatus = "No duplicate targets active";
             }
         }
 
@@ -135,17 +235,25 @@ namespace KhurramAudioRoute.ViewModels
             {
                 await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
                 sourceDevice.IsDuplicating = false;
-                sourceDevice.DuplicateStatus = "No duplicate targets active";
+                UpdateDuplicateStatus(sourceDevice);
                 return;
             }
 
-            await ApplyDeviceDuplicateTargets(sourceDevice);
+            await ApplyDeviceDuplicateTargets(sourceDevice, true);
         }
 
         [RelayCommand]
         public async Task ApplyDeviceDuplicateTargets(AudioDevice? sourceDevice)
+            => await ApplyDeviceDuplicateTargets(sourceDevice, true);
+
+        private async Task ApplyDeviceDuplicateTargets(AudioDevice? sourceDevice, bool showValidationMessage)
         {
             if (sourceDevice?.Id == null) return;
+
+            var gate = GetDuplicateLock(sourceDevice.Id);
+            await gate.WaitAsync();
+            sourceDevice.IsDuplicateBusy = true;
+            UpdateDuplicateStatus(sourceDevice);
 
             var targetIds = sourceDevice.DuplicateTargets
                 .Where(d => d.IsSelected && d.Device.Id != sourceDevice.Id && !string.IsNullOrWhiteSpace(d.Device.Id))
@@ -153,36 +261,48 @@ namespace KhurramAudioRoute.ViewModels
                 .Distinct()
                 .ToList();
 
-            if (targetIds.Count == 0)
+            try
             {
-                if (sourceDevice.IsDuplicating)
+                if (targetIds.Count == 0)
                 {
-                    await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
-                    sourceDevice.IsDuplicating = false;
+                    if (sourceDevice.IsDuplicating)
+                    {
+                        await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                        sourceDevice.IsDuplicating = false;
+                    }
+
+                    UpdateDuplicateStatus(sourceDevice);
+                    if (showValidationMessage)
+                    {
+                        MessageBox.Show(
+                            "Select at least one additional output device to mirror this source.",
+                            "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    return;
                 }
 
-                sourceDevice.DuplicateStatus = "Select at least one target device";
-                MessageBox.Show(
-                    "Select at least one additional output device to mirror this source.",
-                    "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                sourceDevice.IsDuplicating = true;
+                bool started = await Task.Run(() => DuplicationManager.StartDuplication(sourceDevice.Id, targetIds, sourceDevice.GetEqualizerGains()));
+
+                if (!started)
+                {
+                    sourceDevice.IsDuplicating = false;
+                    sourceDevice.DuplicateStatus = "Could not start duplication";
+                    MessageBox.Show(
+                        "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
+                        "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                UpdateDuplicateStatus(sourceDevice);
+                sourceDevice.IsAdvancedExpanded = true;
             }
-
-            sourceDevice.IsDuplicating = true;
-            bool started = await Task.Run(() => DuplicationManager.StartDuplication(sourceDevice.Id, targetIds));
-
-            if (!started)
+            finally
             {
-                sourceDevice.IsDuplicating = false;
-                sourceDevice.DuplicateStatus = "Could not start duplication";
-                MessageBox.Show(
-                    "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
-                    "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                sourceDevice.IsDuplicateBusy = false;
+                UpdateDuplicateStatus(sourceDevice);
+                gate.Release();
             }
-
-            sourceDevice.DuplicateStatus = $"Mirroring to {targetIds.Count} device(s)";
-            sourceDevice.IsAdvancedExpanded = true;
         }
 
         // Routes the session to its selected device, then mutes+unmutes to force the app's

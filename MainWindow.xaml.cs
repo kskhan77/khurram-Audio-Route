@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Wpf.Ui.Controls;
+using KhurramAudioRoute.Core;
 using KhurramAudioRoute.ViewModels;
 
 namespace KhurramAudioRoute;
@@ -48,6 +49,72 @@ public partial class MainWindow : FluentWindow
     {
         if (DataContext is MainViewModel viewModel)
             viewModel.RefreshMeters();
+    }
+
+    private void OnOutputDeviceVolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (sender is not Slider slider || slider.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+            return;
+
+        if (!IsLoaded)
+            return;
+
+        DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
+    }
+
+    private void OnApplyEqPreset(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
+            return;
+
+        var preset = element.Tag?.ToString();
+        if (string.IsNullOrWhiteSpace(preset))
+            return;
+
+        ApplyEqualizerPreset(device, preset);
+    }
+
+    private void OnResetEq(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
+            return;
+
+        ApplyEqualizerPreset(device, "Flat");
+    }
+
+    private static void ApplyEqualizerPreset(AudioDevice device, string preset)
+    {
+        switch (preset)
+        {
+            case "Bass":
+                device.EqLow = 6f;
+                device.EqLowMid = 3f;
+                device.EqMid = 0f;
+                device.EqHighMid = -2f;
+                device.EqHigh = -1f;
+                break;
+            case "Voice":
+                device.EqLow = -3f;
+                device.EqLowMid = 1f;
+                device.EqMid = 4f;
+                device.EqHighMid = 3f;
+                device.EqHigh = 1f;
+                break;
+            case "Bright":
+                device.EqLow = -2f;
+                device.EqLowMid = 0f;
+                device.EqMid = 2f;
+                device.EqHighMid = 5f;
+                device.EqHigh = 4f;
+                break;
+            default:
+                device.EqLow = 0f;
+                device.EqLowMid = 0f;
+                device.EqMid = 0f;
+                device.EqHighMid = 0f;
+                device.EqHigh = 0f;
+                break;
+        }
     }
 }
 
