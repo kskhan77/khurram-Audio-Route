@@ -76,6 +76,18 @@ public partial class MainWindow : FluentWindow
             viewModel.ToggleDeviceDuplicateCommand.Execute(device);
     }
 
+    // Mute toggle next to the device volume slider. Flips the endpoint mute state via
+    // WASAPI; the next meter tick re-syncs AudioDevice.IsMuted from the device, so we
+    // intentionally don't write IsMuted ourselves to avoid fighting the polled state.
+    private void OnDeviceMuteClicked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+            return;
+
+        DeviceManager.SetMasterMute(device.Id, !device.IsMuted);
+        device.IsMuted = !device.IsMuted;
+    }
+
     private void OnApplyEqPreset(object sender, RoutedEventArgs e)
     {
         if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
@@ -150,6 +162,19 @@ public class InverseBooleanConverter : IValueConverter
             return !b;
         return false;
     }
+}
+
+/// <summary>
+/// True → Collapsed, False → Visible. Used to hide controls when a flag is set
+/// (e.g. hide the "Set Default" button when the device is already default).
+/// </summary>
+public class InverseBooleanToVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value is bool b && b ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
 }
 
 /// <summary>

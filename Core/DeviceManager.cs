@@ -143,6 +143,17 @@ namespace KhurramAudioRoute.Core
             catch { }
         }
 
+        public static void SetMasterMute(string deviceId, bool mute)
+        {
+            try
+            {
+                using var enumerator = new MMDeviceEnumerator();
+                var device = enumerator.GetDevice(deviceId);
+                device.AudioEndpointVolume.Mute = mute;
+            }
+            catch { }
+        }
+
         public static List<AudioDevice> GetRenderDevices()
         {
             var devices = new List<AudioDevice>();

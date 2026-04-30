@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:KhurramAudioRoute.ViewModels"
         xmlns:local="clr-namespace:KhurramAudioRoute"
+        xmlns:ctrl="clr-namespace:KhurramAudioRoute.Controls"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="SonicFlow - Audio Mixer" Width="1350" Height="900"
@@ -33,6 +34,7 @@
         <SolidColorBrush x:Key="SonicHeaderBgBrush" Color="{StaticResource SonicHeaderBg}"/>
 
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <local:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <local:PeakToHeightConverter x:Key="PeakToHeightConverter"/>
         <local:SpectrumBarHeightConverter x:Key="SpectrumBarHeightConverter"/>
         <local:ActivityBrushConverter x:Key="ActivityBrushConverter"/>
@@ -40,30 +42,46 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <!-- Custom Styles -->
-        <Style x:Key="SonicSideNavLink" TargetType="ui:Button">
-            <Setter Property="Appearance" Value="Transparent"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <!-- Sidebar nav items: plain Button with a fully-controlled template
+             so theme defaults from WPF-UI can't override the dark-mode look. -->
+        <Style x:Key="SonicSideNavLink" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="3,0,0,0"/>
+            <Setter Property="Foreground" Value="#5E6770"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="22,12"/>
-            <Setter Property="Foreground" Value="#9098A0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="22,11"/>
             <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,1"/>
-            <Setter Property="BorderThickness" Value="3,0,0,0"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#14FFFFFF"/>
-                    <Setter Property="Foreground" Value="#E5E2E1"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="SonicActiveNavLink" TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
-            <Setter Property="Foreground" Value="#74D1FF"/>
-            <Setter Property="Background" Value="#1A00A3FF"/>
-            <Setter Property="BorderBrush" Value="#74D1FF"/>
-            <Setter Property="BorderThickness" Value="3,0,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"
+                                              TextElement.FontSize="{TemplateBinding FontSize}"
+                                              TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#0AFFFFFF"/>
+                                <Setter Property="Foreground" Value="#9CA3AC"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#14FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="SonicCard" TargetType="Border">
@@ -110,6 +128,152 @@
             <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Square icon button used for Set Default / Mute / Cog so all three sit
+             together on the device card with identical chrome. -->
+        <Style x:Key="SonicIconFrameButton" TargetType="Button">
+            <Setter Property="Background" Value="#101112"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+            <Setter Property="Padding" Value="9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#26FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Same as SonicIconFrameButton but for ToggleButton, with an "is checked" state -->
+        <Style x:Key="SonicIconFrameToggle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#101112"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+            <Setter Property="Padding" Value="9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Bd" CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1F005374"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#74D1FF"/>
+                                <Setter Property="Foreground" Value="#74D1FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern volume slider — gradient-fill track, round white thumb, click jumps to point. -->
+        <Style x:Key="SonicVolumeSlider" TargetType="Slider">
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="MinHeight" Value="22"/>
+            <Setter Property="IsMoveToPointEnabled" Value="True"/>
+            <Setter Property="Focusable" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Border Height="6" CornerRadius="3" Background="#1AFFFFFF" VerticalAlignment="Center"/>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="Slider.DecreaseLarge" Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border x:Name="FillBar" Height="6" CornerRadius="3,0,0,3" VerticalAlignment="Center">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <GradientStop Color="#74D1FF" Offset="0"/>
+                                                            <GradientStop Color="#7CD0FF" Offset="0.5"/>
+                                                            <GradientStop Color="#86DC52" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="Slider.IncreaseLarge" Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="Transparent"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Focusable="False">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Grid>
+                                                    <Ellipse x:Name="Glow" Width="22" Height="22" Fill="#3374D1FF" Opacity="0"/>
+                                                    <Ellipse Width="16" Height="16" Fill="White" Stroke="#74D1FF" StrokeThickness="3"/>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Glow" Property="Opacity" Value="1"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsDragging" Value="True">
+                                                        <Setter TargetName="Glow" Property="Opacity" Value="1"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -161,7 +325,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- 2. Sidebar -->
-            <Border Grid.Column="0" Background="#18181B" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0">
+            <Border Grid.Column="0" Background="#0E0E10" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/> <!-- Master Engine -->
@@ -185,62 +349,74 @@
                     </Border>
 
                     <StackPanel Grid.Row="1">
-                        <ui:Button Icon="Speaker224" Content="OUTPUTS" Command="{Binding ShowOutputsCommand}">
-                            <ui:Button.Style>
-                                <Style TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
+                        <Button Command="{Binding ShowOutputsCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SonicSideNavLink}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentSection}" Value="{x:Static vm:DashboardSection.Outputs}">
                                             <Setter Property="Foreground" Value="#74D1FF"/>
-                                            <Setter Property="Background" Value="#1A00A3FF"/>
+                                            <Setter Property="Background" Value="#1F005374"/>
                                             <Setter Property="BorderBrush" Value="#74D1FF"/>
-                                            <Setter Property="BorderThickness" Value="3,0,0,0"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ui:Button.Style>
-                        </ui:Button>
-                        <ui:Button Icon="Apps24" Content="APPLICATIONS" Command="{Binding ShowApplicationsCommand}">
-                            <ui:Button.Style>
-                                <Style TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Speaker224" FontSize="18" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="OUTPUTS" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ShowApplicationsCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SonicSideNavLink}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentSection}" Value="{x:Static vm:DashboardSection.Applications}">
                                             <Setter Property="Foreground" Value="#74D1FF"/>
-                                            <Setter Property="Background" Value="#1A00A3FF"/>
+                                            <Setter Property="Background" Value="#1F005374"/>
                                             <Setter Property="BorderBrush" Value="#74D1FF"/>
-                                            <Setter Property="BorderThickness" Value="3,0,0,0"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ui:Button.Style>
-                        </ui:Button>
-                        <ui:Button Icon="Mic24" Content="MIC DEVICES" Command="{Binding ShowMicrophonesCommand}">
-                            <ui:Button.Style>
-                                <Style TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Apps24" FontSize="18" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="APPLICATIONS" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ShowMicrophonesCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SonicSideNavLink}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentSection}" Value="{x:Static vm:DashboardSection.Microphones}">
                                             <Setter Property="Foreground" Value="#74D1FF"/>
-                                            <Setter Property="Background" Value="#1A00A3FF"/>
+                                            <Setter Property="Background" Value="#1F005374"/>
                                             <Setter Property="BorderBrush" Value="#74D1FF"/>
-                                            <Setter Property="BorderThickness" Value="3,0,0,0"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ui:Button.Style>
-                        </ui:Button>
-                        <ui:Button Icon="GridDots24" Content="OTHER OPTIONS" Command="{Binding ShowToolsCommand}">
-                            <ui:Button.Style>
-                                <Style TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Mic24" FontSize="18" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="MIC DEVICES" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ShowToolsCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SonicSideNavLink}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding CurrentSection}" Value="{x:Static vm:DashboardSection.Tools}">
                                             <Setter Property="Foreground" Value="#74D1FF"/>
-                                            <Setter Property="Background" Value="#1A00A3FF"/>
+                                            <Setter Property="Background" Value="#1F005374"/>
                                             <Setter Property="BorderBrush" Value="#74D1FF"/>
-                                            <Setter Property="BorderThickness" Value="3,0,0,0"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ui:Button.Style>
-                        </ui:Button>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="GridDots24" FontSize="18" Margin="0,0,14,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="OTHER OPTIONS" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -276,23 +452,22 @@
                                             </Style>
                                         </Border.Style>
                                         <StackPanel>
-                                            <!-- Header row: identity + status + cog -->
-                                            <Grid Margin="18,16,18,16">
+                                            <!-- Header: identity + spectrum + small actions -->
+                                            <Grid Margin="18,16,14,12">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
                                                 <!-- Round icon -->
-                                                <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24" BorderThickness="1" Margin="0,0,14,0">
+                                                <Border Grid.Column="0" Width="46" Height="46" CornerRadius="23" BorderThickness="1" Margin="0,0,14,0">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
-                                                            <Setter Property="Background" Value="#202225"/>
-                                                            <Setter Property="BorderBrush" Value="#2B2F33"/>
+                                                            <Setter Property="Background" Value="#1B1D20"/>
+                                                            <Setter Property="BorderBrush" Value="#262A2F"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsDefault}" Value="True">
                                                                     <Setter Property="Background" Value="#1A74D1FF"/>
@@ -301,7 +476,7 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Border.Style>
-                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="22">
+                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="20">
                                                         <ui:SymbolIcon.Style>
                                                             <Style TargetType="ui:SymbolIcon">
                                                                 <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
@@ -315,76 +490,101 @@
                                                     </ui:SymbolIcon>
                                                 </Border>
 
-                                                <!-- Name + subtitle -->
+                                                <!-- Name + subtitle/status -->
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="15" TextTrimming="CharacterEllipsis"/>
-                                                        <Border Margin="10,0,0,0" Background="{StaticResource SonicSecondaryBrush}" CornerRadius="10" Padding="8,2"
+                                                        <Border Margin="10,0,0,0" Background="{StaticResource SonicSecondaryBrush}" CornerRadius="9" Padding="7,2"
                                                                 Visibility="{Binding IsDefault, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="DEFAULT" Foreground="#092100" FontSize="9" FontWeight="Bold"/>
                                                         </Border>
-                                                        <Border Margin="8,0,0,0" Background="#1A86DC52" BorderBrush="#86DC52" BorderThickness="1" CornerRadius="10" Padding="8,2"
+                                                        <Border Margin="6,0,0,0" Background="#1A86DC52" BorderBrush="#86DC52" BorderThickness="1" CornerRadius="9" Padding="7,1"
                                                                 Visibility="{Binding IsDuplicating, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="MIRRORING" Foreground="#86DC52" FontSize="9" FontWeight="Bold"/>
                                                         </Border>
                                                     </StackPanel>
-                                                    <TextBlock Text="Output device" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,3,0,0"/>
+                                                    <TextBlock Text="{Binding DuplicateStatus}" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
                                                 </StackPanel>
 
-                                                <!-- Status / duplicate text -->
-                                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,18,0">
-                                                    <TextBlock Style="{StaticResource SonicSectionHeader}" Text="STATUS" Margin="0,0,0,2" HorizontalAlignment="Right"/>
-                                                    <TextBlock Text="{Binding DuplicateStatus}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="11" HorizontalAlignment="Right" MaxWidth="220" TextTrimming="CharacterEllipsis"/>
-                                                </StackPanel>
+                                                <!-- Animated rainbow spectrum -->
+                                                <ctrl:SpectrumMeter Grid.Column="2"
+                                                                    Width="200" Height="44"
+                                                                    Margin="14,0,14,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Level="{Binding PeakValue}"
+                                                                    IsActive="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}"
+                                                                    BarCount="20"/>
 
-                                                <!-- Volume bar -->
-                                                <Border Grid.Column="3" VerticalAlignment="Center" Width="120" Height="6" Background="#0FFFFFFF" CornerRadius="3" Margin="0,0,16,0">
-                                                    <Border Background="{Binding IsDefault, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3" HorizontalAlignment="Left"
-                                                            Width="{Binding Volume, Converter={StaticResource PeakToHeightConverter}, ConverterParameter=120}"/>
-                                                </Border>
+                                                <!-- Set Default — matches cog frame, hidden when already default -->
+                                                <Button Grid.Column="3"
+                                                        Style="{StaticResource SonicIconFrameButton}"
+                                                        Margin="0,0,6,0"
+                                                        ToolTip="Set as default playback device"
+                                                        Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
+                                                        Visibility="{Binding IsDefault, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                                    <ui:SymbolIcon Symbol="Star24" FontSize="16"/>
+                                                </Button>
 
-                                                <!-- Set Default button (hidden when already default) -->
-                                                <ui:Button Grid.Column="4"
-                                                           Content="Set Default"
-                                                           Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                           CommandParameter="{Binding}"
-                                                           Appearance="Primary"
-                                                           Padding="12,6"
-                                                           Margin="0,0,8,0"
-                                                           VerticalAlignment="Center">
-                                                    <ui:Button.Style>
-                                                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsDefault}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </ui:Button.Style>
-                                                </ui:Button>
-
-                                                <!-- Cog (toggles advanced) -->
-                                                <ToggleButton Grid.Column="5"
+                                                <!-- Cog: opens Advanced (matching frame) -->
+                                                <ToggleButton Grid.Column="4"
+                                                              Style="{StaticResource SonicIconFrameToggle}"
                                                               IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}"
-                                                              Background="#101112"
-                                                              BorderBrush="#1AFFFFFF"
-                                                              BorderThickness="1"
-                                                              Padding="10"
-                                                              VerticalAlignment="Center"
-                                                              ToolTip="Advanced device settings (duplicate, volume, EQ)">
-                                                    <ui:SymbolIcon Symbol="Settings24" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="18"/>
+                                                              ToolTip="Advanced (duplicate + EQ)">
+                                                    <ui:SymbolIcon Symbol="Settings24" FontSize="16"/>
                                                 </ToggleButton>
                                             </Grid>
 
-                                            <!-- Advanced panel (inline, no Expander chrome) -->
+                                            <!-- Always-visible volume row with mute toggle -->
+                                            <Grid Margin="18,0,18,16">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Mute toggle (icon swaps to mute glyph when muted) -->
+                                                <Button Grid.Column="0"
+                                                        Style="{StaticResource SonicIconFrameButton}"
+                                                        Click="OnDeviceMuteClicked"
+                                                        Margin="0,0,10,0"
+                                                        Padding="8"
+                                                        ToolTip="Mute / Unmute">
+                                                    <ui:SymbolIcon FontSize="16">
+                                                        <ui:SymbolIcon.Style>
+                                                            <Style TargetType="ui:SymbolIcon">
+                                                                <Setter Property="Symbol" Value="Speaker224"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMuted}" Value="True">
+                                                                        <Setter Property="Symbol" Value="SpeakerMute24"/>
+                                                                        <Setter Property="Foreground" Value="#FF6F8A"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ui:SymbolIcon.Style>
+                                                    </ui:SymbolIcon>
+                                                </Button>
+
+                                                <Slider Grid.Column="1"
+                                                        Style="{StaticResource SonicVolumeSlider}"
+                                                        Value="{Binding Volume, Mode=TwoWay}"
+                                                        Minimum="0" Maximum="1"
+                                                        IsEnabled="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}"
+                                                        ValueChanged="OnOutputDeviceVolumeChanged"
+                                                        VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="12" FontWeight="SemiBold" Width="42" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            </Grid>
+
+                                            <!-- Advanced panel (inline) -->
                                             <Border BorderBrush="#1AFFFFFF" BorderThickness="0,1,0,0" Background="#101112"
                                                     Visibility="{Binding IsAdvancedExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <Grid Margin="18,16,18,18">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="20"/>
-                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="1.2*"/>
                                                     </Grid.ColumnDefinitions>
 
                                                     <!-- LEFT: Duplicate controls -->
@@ -423,43 +623,84 @@
                                                         <TextBlock Text="{Binding DuplicateStatus}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="11" Margin="2,8,0,0"/>
                                                     </StackPanel>
 
-                                                    <!-- RIGHT: Volume + EQ -->
+                                                    <!-- RIGHT: Equalizer -->
                                                     <StackPanel Grid.Column="2">
-                                                        <Grid Margin="0,0,0,4">
-                                                            <TextBlock Style="{StaticResource SonicSectionHeader}" Text="DEVICE VOLUME"/>
-                                                            <TextBlock Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                                        <Grid Margin="0,0,0,8">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel>
+                                                                <TextBlock Style="{StaticResource SonicSectionHeader}" Text="EQUALIZER"/>
+                                                                <TextBlock Text="Applies to mirrored audio. Enable mirroring to hear changes."
+                                                                           Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" TextWrapping="Wrap">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsDuplicating}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                            <ui:Button Grid.Column="1" Content="Reset" Click="OnResetEq" Appearance="Secondary" Padding="10,4"
+                                                                       Background="#2B1618" BorderBrush="#6E3036" VerticalAlignment="Center"
+                                                                       FontSize="11"/>
                                                         </Grid>
-                                                        <Slider Style="{StaticResource SonicSlider}" Value="{Binding Volume, Mode=TwoWay}" Minimum="0" Maximum="1" ValueChanged="OnOutputDeviceVolumeChanged"/>
 
-                                                        <TextBlock Style="{StaticResource SonicSectionHeader}" Text="EQUALIZER" Margin="0,14,0,8"/>
-                                                        <UniformGrid Columns="5" Margin="0,0,0,8">
-                                                            <StackPanel>
-                                                                <TextBlock Text="60" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLow, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <StackPanel>
-                                                                <TextBlock Text="250" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLowMid, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <StackPanel>
-                                                                <TextBlock Text="1K" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqMid, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <StackPanel>
-                                                                <TextBlock Text="4K" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHighMid, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                            <StackPanel>
-                                                                <TextBlock Text="12K" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                                                                <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHigh, Mode=TwoWay}"/>
-                                                            </StackPanel>
-                                                        </UniformGrid>
-                                                        <WrapPanel Margin="0,0,0,4">
-                                                            <ui:Button Content="Flat" Tag="Flat" Click="OnApplyEqPreset" Appearance="Secondary" Padding="10,5" Margin="0,0,6,6" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
-                                                            <ui:Button Content="Bass Boost" Tag="Bass" Click="OnApplyEqPreset" Appearance="Secondary" Padding="10,5" Margin="0,0,6,6" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
-                                                            <ui:Button Content="Voice" Tag="Voice" Click="OnApplyEqPreset" Appearance="Secondary" Padding="10,5" Margin="0,0,6,6" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
-                                                            <ui:Button Content="Bright" Tag="Bright" Click="OnApplyEqPreset" Appearance="Secondary" Padding="10,5" Margin="0,0,6,6" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
-                                                            <ui:Button Content="Reset EQ" Click="OnResetEq" Appearance="Secondary" Padding="10,5" Margin="0,0,0,6" Background="#2B1618" BorderBrush="#6E3036"/>
+                                                        <!-- EQ band sliders with dB readouts -->
+                                                        <Border Background="#0A0A0A" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="10" Padding="12,12">
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Opacity" Value="0.55"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsDuplicating}" Value="True">
+                                                                                <Setter Property="Opacity" Value="1"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+                                                                <UniformGrid Columns="5">
+                                                                    <StackPanel Margin="3,0">
+                                                                        <TextBlock Text="60Hz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqLow, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLow, Mode=TwoWay}"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="3,0">
+                                                                        <TextBlock Text="250Hz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqLowMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqLowMid, Mode=TwoWay}"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="3,0">
+                                                                        <TextBlock Text="1kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqMid, Mode=TwoWay}"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="3,0">
+                                                                        <TextBlock Text="4kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqHighMid, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHighMid, Mode=TwoWay}"/>
+                                                                    </StackPanel>
+                                                                    <StackPanel Margin="3,0">
+                                                                        <TextBlock Text="12kHz" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" HorizontalAlignment="Center"/>
+                                                                        <TextBlock Text="{Binding EqHigh, StringFormat={}{0:+0.#;-0.#;0} dB}" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                                        <Slider Style="{StaticResource SonicSlider}" Minimum="-12" Maximum="12" TickFrequency="1" Value="{Binding EqHigh, Mode=TwoWay}"/>
+                                                                    </StackPanel>
+                                                                </UniformGrid>
+                                                            </Grid>
+                                                        </Border>
+
+                                                        <!-- Preset chips -->
+                                                        <TextBlock Style="{StaticResource SonicSectionHeader}" Text="PRESETS" Margin="0,12,0,6"/>
+                                                        <WrapPanel>
+                                                            <ui:Button Content="Flat" Tag="Flat" Click="OnApplyEqPreset" Appearance="Secondary" Padding="12,5" Margin="0,0,6,0" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF" FontSize="11"/>
+                                                            <ui:Button Content="Bass Boost" Tag="Bass" Click="OnApplyEqPreset" Appearance="Secondary" Padding="12,5" Margin="0,0,6,0" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF" FontSize="11"/>
+                                                            <ui:Button Content="Voice" Tag="Voice" Click="OnApplyEqPreset" Appearance="Secondary" Padding="12,5" Margin="0,0,6,0" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF" FontSize="11"/>
+                                                            <ui:Button Content="Bright" Tag="Bright" Click="OnApplyEqPreset" Appearance="Secondary" Padding="12,5" Margin="0,0,6,0" Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF" FontSize="11"/>
                                                         </WrapPanel>
                                                     </StackPanel>
                                                 </Grid>
@@ -508,20 +749,12 @@
                                                 <ui:Button Grid.Column="2" Icon="ArrowSync24" Command="{Binding DataContext.RefreshDataCommand, RelativeSource={RelativeSource AncestorType=Window}}" Appearance="Transparent" Foreground="{StaticResource SonicOutlineBrush}" Padding="4"/>
                                             </Grid>
 
-                                            <Grid Height="42" Margin="0,0,0,16" Opacity="0.9">
+                                            <Grid Height="42" Margin="0,0,0,16">
                                                 <Border Background="#0CFFFFFF" CornerRadius="10" BorderBrush="#12FFFFFF" BorderThickness="1"/>
-                                                <UniformGrid Columns="10" VerticalAlignment="Bottom" Margin="8,7,8,7">
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.40,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.75,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.05,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.85,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.15,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.95,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.95,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.55,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.85,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                    <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.25,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                                </UniformGrid>
+                                                <ctrl:SpectrumMeter Margin="8,7,8,7"
+                                                                    Level="{Binding PeakValue}"
+                                                                    IsActive="{Binding IsPlaying}"
+                                                                    BarCount="14"/>
                                             </Grid>
 
                                             <StackPanel Margin="0,0,0,16">
