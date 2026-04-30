@@ -26,6 +26,12 @@ namespace KhurramAudioRoute.ViewModels
             RefreshData();
         }
 
+        public void RefreshMeters()
+        {
+            SessionManager.UpdateSessionLevels(Sessions);
+            DeviceManager.UpdateDeviceLevels(Devices);
+        }
+
         [RelayCommand]
         public void UpdateMasterVolume(double value)
         {

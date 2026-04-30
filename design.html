@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#131313",
+                    "primary-fixed-dim": "#74d1ff",
+                    "outline": "#889299",
+                    "on-secondary-fixed-variant": "#215100",
+                    "on-secondary-fixed": "#092100",
+                    "surface-container": "#20201f",
+                    "inverse-surface": "#e5e2e1",
+                    "primary": "#b4e4ff",
+                    "surface-dim": "#131313",
+                    "surface-container-high": "#2a2a2a",
+                    "on-tertiary": "#2f3131",
+                    "tertiary": "#dddddd",
+                    "inverse-primary": "#006687",
+                    "on-primary-fixed": "#001e2b",
+                    "tertiary-fixed-dim": "#c6c6c7",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary-fixed-variant": "#004d67",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-container": "#4d4f4f",
+                    "on-error": "#690005",
+                    "on-surface-variant": "#bdc8cf",
+                    "on-secondary": "#153800",
+                    "surface-variant": "#353535",
+                    "inverse-on-surface": "#313030",
+                    "surface-tint": "#74d1ff",
+                    "surface-container-highest": "#353535",
+                    "secondary-container": "#52a31d",
+                    "secondary-fixed": "#a1f96b",
+                    "outline-variant": "#3e484e",
+                    "background": "#131313",
+                    "tertiary-fixed": "#e2e2e2",
+                    "tertiary-container": "#c0c1c1",
+                    "surface-bright": "#393939",
+                    "on-primary-container": "#005572",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#86dc52",
+                    "error": "#ffb4ab",
+                    "surface-container-low": "#1b1b1b",
+                    "on-secondary-container": "#113100",
+                    "primary-container": "#60cdff",
+                    "on-surface": "#e5e2e1",
+                    "secondary": "#86dc52",
+                    "on-primary": "#003548",
+                    "primary-fixed": "#c1e8ff",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "control-spacing": "8px",
+                    "container-padding": "24px",
+                    "inner-padding": "16px",
+                    "card-gap": "12px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "display-sm": ["Inter"],
+                    "title-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "display-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-caps": ["10px", {"lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        .mica-effect {
+            background: linear-gradient(135deg, rgba(19, 19, 19, 0.8) 0%, rgba(32, 32, 31, 0.8) 100%);
+            backdrop-filter: blur(40px) saturate(150%);
+        }
+
+        .audio-spectrum-animate {
+            mask-image: linear-gradient(to right, black, transparent);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3e484e;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+    <!-- TopAppBar from JSON -->
+    <header class="flex justify-between items-center h-14 px-6 w-full sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-3xl border-b border-white/10 font-['Inter'] antialiased text-sm">
+        <div class="flex items-center gap-4">
+            <span class="text-lg font-semibold tracking-tight text-white">SonicFlow</span>
+            <nav class="hidden md:flex gap-6 ml-8">
+                <a class="text-sky-400 border-b-2 border-sky-400 pb-2 transition-all" href="#">Mixer</a>
+                <a class="text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-colors" href="#">Devices</a>
+                <a class="text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-colors" href="#">Routing</a>
+                <a class="text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-colors" href="#">Analytics</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-all rounded-lg">
+                <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+            </button>
+            <button class="p-2 text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-all rounded-lg">
+                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            </button>
+            <img alt="User Profile" class="w-8 h-8 rounded-full border border-white/10" data-alt="A professional user profile avatar in a minimalist digital interface. The avatar is small and circular with a clean, high-contrast silhouette against a dark, tech-oriented background. The surrounding UI features sharp edges and subtle glowing blue accents, creating a high-end corporate modernism aesthetic suitable for a professional audio software environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNCHYEQwKMzIhfjIbqZrKxVD0hUiVL2WdLNE-1tRg94kAtox4GKTbMhcGmklEvdEfmvg8CyFPB-8VDYZzcvmIkVYtPB9nA3o2EfbfS4OsCNz70YC01jqw9tN34SizXQ1m2VBD6b5VH_YXNhB3FS8jcc0-zt88UkqOQG7UMhdaxBzEETyOzhTnTIH5EgP8HBZyHSFo3XnYZT5v9IGGhauGLk0zRFhmaTa8iRPFD3uV7EnP8GCML5MjhXeMTtHfBhkeOZ8o3aaEmjQ" />
+        </div>
+    </header>
+    <div class="flex">
+        <!-- SideNavBar from JSON -->
+        <aside class="fixed left-0 top-14 bottom-0 flex flex-col py-4 h-screen w-64 border-r border-white/5 bg-zinc-900/60 backdrop-blur-2xl font-['Inter'] text-xs font-medium uppercase tracking-wider">
+            <div class="px-6 mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center border border-primary-container/30">
+                        <span class="material-symbols-outlined text-primary-fixed-dim" data-icon="graphic_eq" data-weight="fill" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+                    </div>
+                    <div>
+                        <h2 class="text-white font-bold normal-case">Master Engine</h2>
+                        <p class="text-[10px] text-zinc-500 normal-case">48kHz / 24-bit</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="flex-1 space-y-1">
+                <a class="flex items-center gap-4 px-6 py-3 bg-sky-500/10 text-sky-400 border-l-2 border-sky-400 scale-95 active:scale-90 transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="apps">apps</span>
+                    <span>Applications</span>
+                </a>
+                <a class="flex items-center gap-4 px-6 py-3 text-zinc-500 hover:bg-white/5 hover:text-zinc-200 scale-95 active:scale-90 transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="speaker_group">speaker_group</span>
+                    <span>Outputs</span>
+                </a>
+                <a class="flex items-center gap-4 px-6 py-3 text-zinc-500 hover:bg-white/5 hover:text-zinc-200 scale-95 active:scale-90 transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="alt_route">alt_route</span>
+                    <span>Routing</span>
+                </a>
+                <a class="flex items-center gap-4 px-6 py-3 text-zinc-500 hover:bg-white/5 hover:text-zinc-200 scale-95 active:scale-90 transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    <span>History</span>
+                </a>
+                <a class="flex items-center gap-4 px-6 py-3 text-zinc-500 hover:bg-white/5 hover:text-zinc-200 scale-95 active:scale-90 transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="ml-64 flex-1 p-container-padding bg-surface-dim custom-scrollbar overflow-y-auto h-[calc(100vh-3.5rem)]">
+            <!-- Section: Application Mixer -->
+            <section class="mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-display-sm text-display-sm text-on-surface">Application Mixer</h2>
+                    <div class="flex gap-2">
+                        <button class="bg-surface-container-high px-4 py-1.5 rounded-lg border border-white/5 text-body-sm hover:bg-surface-bright transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+                            Advanced View
+                        </button>
+                    </div>
+                </div>
+                <!-- Bento Grid of 5 Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-card-gap">
+                    <!-- Chrome Card -->
+                    <div class="bg-surface-container p-inner-padding rounded-xl border border-white/5 flex flex-col gap-4 hover:border-white/10 transition-all group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img alt="Chrome Logo" class="w-8 h-8 rounded-lg" data-alt="A high-definition icon for a web browser with sleek, modern gradients and sharp edges. The logo glows softly against a dark, textured charcoal surface, reflecting a professional high-tech aesthetic. It is surrounded by subtle glassmorphism effects and a 1px white border at low opacity, maintaining a clean Windows 11 Fluent style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiWzx9eAwjHfcQkHwfKHXOZss6yTa3JT7QFKGAgLm8KBQvvVM6sYwcimYNFUcMvjyP-nv-o-4iLEgGfgbUHgXRl51qJXOSeT1JVAaJC1wLm97H0vTQeJlBpqVS_xjz_RPwJQNXQ8zZ85lFUdXbGr4UD1nFwg4Z7bRxLS-7yJtvV4ZAkGX7NdnVcRf3nUOWcUyHFLuP9giwDfgJ2vlcruymbAj3MfU--R5CKaImD2TZrUvyl_soyY1Eqeojw8M0sxkSaQZ05XASfg" />
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md leading-none">Chrome</span>
+                                    <span class="text-[10px] text-outline uppercase tracking-wider font-bold">PID: 12402</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+                                </button>
+                                <button class="p-1 hover:bg-white/5 rounded text-error hover:text-error transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="volume_off">volume_off</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-8 w-full flex items-end gap-[2px] opacity-60 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-primary-fixed-dim w-full h-[20%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[60%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[40%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[80%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[50%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[30%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[90%] rounded-t-sm"></div>
+                            <div class="bg-primary-fixed-dim w-full h-[40%] rounded-t-sm"></div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-[10px] text-outline font-bold">
+                                <span>VOLUME</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="h-1 w-full bg-surface-container-highest rounded-full relative">
+                                <div class="absolute left-0 top-0 h-full w-[82%] bg-primary rounded-full"></div>
+                                <div class="absolute left-[82%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-primary"></div>
+                            </div>
+                        </div>
+                        <button class="bg-surface-container-lowest py-2 px-3 rounded border border-white/5 flex items-center justify-between text-body-sm group/btn hover:bg-surface-variant transition-colors">
+                            <span class="text-on-surface-variant group-hover/btn:text-on-surface transition-colors">Default Output</span>
+                            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                        </button>
+                    </div>
+                    <!-- Spotify Card -->
+                    <div class="bg-surface-container p-inner-padding rounded-xl border border-white/5 flex flex-col gap-4 hover:border-white/10 transition-all group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img alt="Spotify Logo" class="w-8 h-8 rounded-lg" data-alt="A professional music application logo with vibrant green accents, styled with Windows 11 Fluent design principles. The icon is crisp and centered on a dark, semi-transparent background with a subtle mica effect. Soft backlighting creates a sense of depth and focus, consistent with a high-end audio dashboard theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB69PXFUd-4Ax5cZlnWVaemIxA8SpRwaaYMgdPD7EGihitngesLDK5agRmwG1lfrZBFIIoqnr_5jxtf0NVahi0N_Ta0SD814H00CElBPucnk05c1zVplz9_31zP5TTlEwhjAmRzdzDZZZ5MeA8E8gHmeZvlPQclL6ABfvGwfwQ_LAenmpH4aDgx7vlYruy42ce7uQYI3AlbWPLWBf5JHjImpO50Ix2ByYAqYLNZAwzxlJuwAR41ELx6A3M11BrtzBxzlczGVqF-7w" />
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md leading-none">Spotify</span>
+                                    <span class="text-[10px] text-outline uppercase tracking-wider font-bold">PID: 8821</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+                                </button>
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="volume_up">volume_up</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-8 w-full flex items-end gap-[2px] opacity-60 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-secondary w-full h-[10%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[30%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[20%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[40%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[70%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[50%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[30%] rounded-t-sm"></div>
+                            <div class="bg-secondary w-full h-[20%] rounded-t-sm"></div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-[10px] text-outline font-bold">
+                                <span>VOLUME</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="h-1 w-full bg-surface-container-highest rounded-full relative">
+                                <div class="absolute left-0 top-0 h-full w-[45%] bg-secondary rounded-full"></div>
+                                <div class="absolute left-[45%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-secondary"></div>
+                            </div>
+                        </div>
+                        <button class="bg-surface-container-lowest py-2 px-3 rounded border border-white/5 flex items-center justify-between text-body-sm group/btn hover:bg-surface-variant transition-colors">
+                            <span class="text-on-surface-variant group-hover/btn:text-on-surface transition-colors">Headphones</span>
+                            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                        </button>
+                    </div>
+                    <!-- Discord Card -->
+                    <div class="bg-surface-container p-inner-padding rounded-xl border border-white/5 flex flex-col gap-4 hover:border-white/10 transition-all group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img alt="Discord Logo" class="w-8 h-8 rounded-lg" data-alt="A sleek communication app icon with a soft purple glow, integrated into a dark-themed UI. The icon features clean, bold geometry and is displayed against a mica-textured background. The lighting is low-key and dramatic, emphasizing the premium quality of a modern audio mixing suite for power users." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9PkcAe7Xz8LHCcjmQSiVw39xJSdHlZMuM6TY61MnJpnZNgsY9tPsNw2rSuS0gl7gCwuH5Z8JRwLYgKO9z-c9yNI3mU5-hsJuXapokWZri5TGh_1QHRM5OVE1JnvVilJ8C961F8KazrF0Xvx8dnRx2YeGGaXHagZC14E_0FkmDx5lkPM9FiVj6dKbpr023-dvJKr5twJCR8uoGgJWSUY5Ir_jhx_wHW6HTfv4zjJdiM9FtG01iC_NlyPNlXkIJ33vhGAeIuNOAwg" />
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md leading-none">Discord</span>
+                                    <span class="text-[10px] text-outline uppercase tracking-wider font-bold">PID: 15993</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+                                </button>
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="volume_up">volume_up</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-8 w-full flex items-end gap-[2px] opacity-60 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-primary-container w-full h-[40%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[50%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[60%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[55%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[45%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[40%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[50%] rounded-t-sm"></div>
+                            <div class="bg-primary-container w-full h-[40%] rounded-t-sm"></div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-[10px] text-outline font-bold">
+                                <span>VOLUME</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-1 w-full bg-surface-container-highest rounded-full relative">
+                                <div class="absolute left-0 top-0 h-full w-[100%] bg-primary-container rounded-full"></div>
+                                <div class="absolute left-[100%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-primary-container"></div>
+                            </div>
+                        </div>
+                        <button class="bg-surface-container-lowest py-2 px-3 rounded border border-white/5 flex items-center justify-between text-body-sm group/btn hover:bg-surface-variant transition-colors">
+                            <span class="text-on-surface-variant group-hover/btn:text-on-surface transition-colors">Default Output</span>
+                            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                        </button>
+                    </div>
+                    <!-- Edge Card -->
+                    <div class="bg-surface-container p-inner-padding rounded-xl border border-white/5 flex flex-col gap-4 hover:border-white/10 transition-all group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img alt="Edge Logo" class="w-8 h-8 rounded-lg" data-alt="A modern browser icon with blue and teal gradients, presented in a clean and minimal corporate aesthetic. The icon sits within a glassmorphic card container with a subtle 1px stroke. The background is a dark charcoal, and the overall mood is professional, calm, and highly focused for a power user environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwlCK2weVWzIVc-K80_45wRwzOq1_hBw_rlxUY7WDLbX2njRXNbjCNCUeSSZogVubq3Tx9pTl9LWl0dAiXo9NtKPPqjtpWbzpQWGXCVkk4MAQowkl3L_AdU7kLyEmGawJl1luH9i_N0ilLt5Y-q7Bqkn0sE1iojjOCvVV9kUWH0Pz5VpuAbeHgUWJPJF9Xvxa5mNyzWkZ8VsulrRReFO5Is7GiAyrNjc2ufqWOsu_QiKh_OkV7uBCBPDaoeHmwzdiAfp8Xn5ioUg" />
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md leading-none">Edge</span>
+                                    <span class="text-[10px] text-outline uppercase tracking-wider font-bold">PID: 7420</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+                                </button>
+                                <button class="p-1 hover:bg-white/5 rounded text-error hover:text-error transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="volume_off">volume_off</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-8 w-full flex items-end gap-[2px] opacity-20">
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-outline w-full h-[5%] rounded-t-sm"></div>
+                        </div>
+                        <div class="flex flex-col gap-2 opacity-50">
+                            <div class="flex justify-between items-center text-[10px] text-outline font-bold">
+                                <span>VOLUME</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="h-1 w-full bg-surface-container-highest rounded-full relative">
+                                <div class="absolute left-0 top-0 h-full w-[0%] bg-outline rounded-full"></div>
+                                <div class="absolute left-[0%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-outline"></div>
+                            </div>
+                        </div>
+                        <button class="bg-surface-container-lowest py-2 px-3 rounded border border-white/5 flex items-center justify-between text-body-sm group/btn hover:bg-surface-variant transition-colors">
+                            <span class="text-on-surface-variant group-hover/btn:text-on-surface transition-colors">Default Output</span>
+                            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                        </button>
+                    </div>
+                    <!-- System Card -->
+                    <div class="bg-surface-container p-inner-padding rounded-xl border border-white/5 flex flex-col gap-4 hover:border-white/10 transition-all group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img alt="System Logo" class="w-8 h-8 rounded-lg" data-alt="A minimalist system utilities icon with a metallic silver finish. The icon is sharp and geometric, rendered with a professional dark theme aesthetic. It sits on a subtle mica layer within a modern UI card, surrounded by thin glowing borders and high-precision typography, creating a high-density information environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2_QdJdC5eEEm2e3XZMJncYjapUFC9GofP1YcU27DMBZ-6lwxfXxHlmDsiYJS2-_SvkLICMXung8i3EwHONZDp03gKTuS1ylSlcblr3o1oqc8rh7JkGQB6d5WY13aw26JQilpWukk_xFuPBZZaS_8xFxhgiJnD2LQ7DCDxjq1U2fpyQ5M871qfLDjXMfFZVANFUAcj3kKCEeQCfa0HA_ATHxl7cF3fHer1gdc7agN3z2s4jHpL9IftntHKw0hXxBR9fbuXlXxdJQ" />
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md leading-none">System</span>
+                                    <span class="text-[10px] text-outline uppercase tracking-wider font-bold">KERNEL</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-1">
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+                                </button>
+                                <button class="p-1 hover:bg-white/5 rounded text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="volume_up">volume_up</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-8 w-full flex items-end gap-[2px] opacity-60 group-hover:opacity-100 transition-opacity">
+                            <div class="bg-tertiary w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[15%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[10%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[12%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[8%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[5%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[20%] rounded-t-sm"></div>
+                            <div class="bg-tertiary w-full h-[10%] rounded-t-sm"></div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between items-center text-[10px] text-outline font-bold">
+                                <span>VOLUME</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="h-1 w-full bg-surface-container-highest rounded-full relative">
+                                <div class="absolute left-0 top-0 h-full w-[25%] bg-tertiary rounded-full"></div>
+                                <div class="absolute left-[25%] top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-tertiary"></div>
+                            </div>
+                        </div>
+                        <button class="bg-surface-container-lowest py-2 px-3 rounded border border-white/5 flex items-center justify-between text-body-sm group/btn hover:bg-surface-variant transition-colors">
+                            <span class="text-on-surface-variant group-hover/btn:text-on-surface transition-colors">Master Mix</span>
+                            <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <!-- Section: Available Output Devices -->
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-display-sm text-display-sm text-on-surface">Available Output Devices</h2>
+                    <button class="text-primary text-body-sm font-semibold hover:underline">Manage devices</button>
+                </div>
+                <div class="space-y-2">
+                    <!-- Default Device -->
+                    <div class="bg-surface-container-high p-4 rounded-xl border-2 border-primary-container flex items-center justify-between shadow-lg shadow-primary-container/10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center border border-primary-container/40">
+                                <span class="material-symbols-outlined text-primary" data-icon="headphones">headphones</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-title-md text-title-md">Headphones (Pro 2)</span>
+                                    <span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Now Playing</span>
+                                </div>
+                                <span class="text-body-sm text-outline">Realtek High Definition Audio</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] text-outline font-bold uppercase mb-1">Latency</span>
+                                <span class="text-body-sm text-secondary">5ms</span>
+                            </div>
+                            <div class="w-32">
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full w-[65%] bg-primary"></div>
+                                </div>
+                            </div>
+                            <button class="p-2 bg-surface-variant rounded-lg hover:bg-surface-bright transition-colors">
+                                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Secondary Device 1 -->
+                    <div class="bg-surface-container p-4 rounded-xl border border-white/5 flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/5">
+                                <span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-colors" data-icon="speaker">speaker</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-title-md text-title-md">Desktop Speakers</span>
+                                <span class="text-body-sm text-outline">NVIDIA High Definition Audio</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] text-outline font-bold uppercase mb-1">Status</span>
+                                <span class="text-body-sm text-outline">Ready</span>
+                            </div>
+                            <div class="w-32">
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full w-[0%] bg-outline"></div>
+                                </div>
+                            </div>
+                            <button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-variant rounded-lg hover:bg-surface-bright">
+                                <span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Secondary Device 2 -->
+                    <div class="bg-surface-container p-4 rounded-xl border border-white/5 flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center border border-white/5">
+                                <span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-colors" data-icon="settings_input_component">settings_input_component</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-title-md text-title-md">Digital Output</span>
+                                <span class="text-body-sm text-outline">Optical S/PDIF Interface</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] text-outline font-bold uppercase mb-1">Status</span>
+                                <span class="text-body-sm text-outline">Disconnected</span>
+                            </div>
+                            <div class="w-32">
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full w-[0%] bg-outline"></div>
+                                </div>
+                            </div>
+                            <button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-variant rounded-lg hover:bg-surface-bright">
+                                <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- Floating Action Button for Contextual Quick Action -->
+    <button class="fixed bottom-8 right-8 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+        <span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+    </button>
+</body>
+</html>

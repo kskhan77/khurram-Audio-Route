@@ -76,5 +76,47 @@ namespace KhurramAudioRoute.Core
             }
             return devices;
         }
+
+        public static void UpdateDeviceLevels(IEnumerable<AudioDevice> devices)
+        {
+            var deviceMap = devices
+                .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                .ToDictionary(d => d.Id!);
+
+            try
+            {
+                using var enumerator = new MMDeviceEnumerator();
+                MMDevice? defaultDevice = null;
+
+                try { defaultDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); } catch { }
+
+                foreach (var endpoint in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
+                {
+                    try
+                    {
+                        if (!deviceMap.TryGetValue(endpoint.ID, out var device))
+                            continue;
+
+                        try { device.PeakValue = endpoint.AudioMeterInformation.MasterPeakValue; } catch { }
+                        try
+                        {
+                            device.Volume = endpoint.AudioEndpointVolume.MasterVolumeLevelScalar;
+                            device.IsMuted = endpoint.AudioEndpointVolume.Mute;
+                        }
+                        catch { }
+
+                        device.IsDefault = defaultDevice != null && endpoint.ID == defaultDevice.ID;
+                    }
+                    catch { }
+                    finally { endpoint.Dispose(); }
+                }
+
+                defaultDevice?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateDeviceLevels error: {ex.Message}");
+            }
+        }
     }
 }

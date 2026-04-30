@@ -201,5 +201,52 @@ namespace KhurramAudioRoute.Core
             catch (Exception ex) { Debug.WriteLine($"GetActiveSessions error: {ex.Message}"); }
             return new List<AppAudioSession>(map.Values);
         }
+
+        public static void UpdateSessionLevels(IEnumerable<AppAudioSession> sessions)
+        {
+            var sessionMap = sessions.ToDictionary(s => s.ProcessId);
+
+            foreach (var session in sessionMap.Values)
+            {
+                session.PeakValue = 0f;
+                session.IsPlaying = false;
+            }
+
+            try
+            {
+                using var enumerator = new MMDeviceEnumerator();
+                foreach (var device in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
+                {
+                    try
+                    {
+                        var sm = device.AudioSessionManager;
+                        if (sm == null) { device.Dispose(); continue; }
+
+                        for (int i = 0; i < sm.Sessions.Count; i++)
+                        {
+                            using var audioSession = sm.Sessions[i];
+                            int pid = (int)audioSession.GetProcessID;
+                            if (!sessionMap.TryGetValue(pid, out var model))
+                                continue;
+
+                            float peak = 0f;
+                            try { peak = audioSession.AudioMeterInformation.MasterPeakValue; } catch { }
+
+                            model.PeakValue = Math.Max(model.PeakValue, peak);
+                            model.IsPlaying = model.PeakValue > 0.001f;
+
+                            try { model.Volume = audioSession.SimpleAudioVolume.Volume; } catch { }
+                            try { model.IsMuted = audioSession.SimpleAudioVolume.Mute; } catch { }
+                        }
+                    }
+                    catch { }
+                    finally { device.Dispose(); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"UpdateSessionLevels error: {ex.Message}");
+            }
+        }
     }
 }

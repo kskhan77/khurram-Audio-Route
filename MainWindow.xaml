@@ -4,254 +4,392 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:KhurramAudioRoute.ViewModels"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KhurramAudioRoute"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
-        Title="Khurram Audio Route" Width="1040"
-        SizeToContent="Height"
-        WindowStartupLocation="CenterScreen">
-    
+        Title="SonicFlow - Audio Mixer" Width="1350" Height="900"
+        WindowStartupLocation="CenterScreen"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica">
+
+    <Window.Resources>
+        <!-- SonicFlow Colors from design.html -->
+        <Color x:Key="SonicSurface">#131313</Color>
+        <Color x:Key="SonicSurfaceContainer">#20201F</Color>
+        <Color x:Key="SonicSurfaceContainerHigh">#2A2A2A</Color>
+        <Color x:Key="SonicPrimary">#B4E4FF</Color>
+        <Color x:Key="SonicSecondary">#86DC52</Color>
+        <Color x:Key="SonicOutline">#889299</Color>
+        <Color x:Key="SonicOnSurface">#E5E2E1</Color>
+        <Color x:Key="SonicHeaderBg">#09090B</Color>
+
+        <SolidColorBrush x:Key="SonicSurfaceBrush" Color="{StaticResource SonicSurface}"/>
+        <SolidColorBrush x:Key="SonicSurfaceContainerBrush" Color="{StaticResource SonicSurfaceContainer}"/>
+        <SolidColorBrush x:Key="SonicSurfaceContainerHighBrush" Color="{StaticResource SonicSurfaceContainerHigh}"/>
+        <SolidColorBrush x:Key="SonicPrimaryBrush" Color="{StaticResource SonicPrimary}"/>
+        <SolidColorBrush x:Key="SonicSecondaryBrush" Color="{StaticResource SonicSecondary}"/>
+        <SolidColorBrush x:Key="SonicOutlineBrush" Color="{StaticResource SonicOutline}"/>
+        <SolidColorBrush x:Key="SonicOnSurfaceBrush" Color="{StaticResource SonicOnSurface}"/>
+        <SolidColorBrush x:Key="SonicHeaderBgBrush" Color="{StaticResource SonicHeaderBg}"/>
+
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <local:PeakToHeightConverter x:Key="PeakToHeightConverter"/>
+        <local:SpectrumBarHeightConverter x:Key="SpectrumBarHeightConverter"/>
+        <local:ActivityBrushConverter x:Key="ActivityBrushConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <!-- Custom Styles -->
+        <Style x:Key="SonicSideNavLink" TargetType="ui:Button">
+            <Setter Property="Appearance" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1AFFFFFF"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SonicActiveNavLink" TargetType="ui:Button" BasedOn="{StaticResource SonicSideNavLink}">
+            <Setter Property="Foreground" Value="#74D1FF"/>
+            <Setter Property="Background" Value="#1A00A3FF"/>
+            <Setter Property="BorderBrush" Value="#74D1FF"/>
+            <Setter Property="BorderThickness" Value="2,0,0,0"/>
+        </Style>
+
+        <Style x:Key="SonicCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SonicSurfaceContainerBrush}"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+        </Style>
+
+        <Style x:Key="SonicSlider" TargetType="Slider">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Foreground" Value="{StaticResource SonicPrimaryBrush}"/>
+            <Setter Property="Background" Value="#0FFFFFFF"/>
+        </Style>
+
+        <Style x:Key="SonicComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Background" Value="#101112"/>
+            <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="SonicCheckBox" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
 
-    <Grid Margin="0">
+    <Grid Background="{StaticResource SonicSurfaceBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Title Bar -->
-            <RowDefinition Height="Auto"/> <!-- Content -->
+            <RowDefinition Height="56"/> <!-- Header -->
+            <RowDefinition Height="*"/>   <!-- Content Area -->
         </Grid.RowDefinitions>
 
-        <!-- Modern Title Bar -->
-        <ui:TitleBar Title="Khurram Audio Route" Grid.Row="0">
-            <ui:TitleBar.Icon>
-                <ui:SymbolIcon Symbol="Speaker224" />
-            </ui:TitleBar.Icon>
-        </ui:TitleBar>
+        <!-- 1. Top Header -->
+        <Border Grid.Row="0" Background="{StaticResource SonicHeaderBgBrush}" BorderBrush="#1AFFFFFF" BorderThickness="0,0,0,1">
+            <Grid Margin="24,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Margin="20,10,20,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Header Stats -->
-                <RowDefinition Height="Auto"/> <!-- Applications -->
-                <RowDefinition Height="Auto"/> <!-- Devices -->
-            </Grid.RowDefinitions>
-
-            <!-- ══ Header Stats ══ -->
-            <ui:Card Grid.Row="0" Margin="0,0,0,16" Padding="16">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Khurram Audio Route" FontSize="24" FontWeight="Bold" />
-                        <TextBlock Text="Route and duplicate audio per application" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="SonicFlow" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,32,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mixer" Foreground="#74D1FF" FontSize="14" FontWeight="SemiBold" Margin="0,0,24,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Devices" Foreground="{StaticResource SonicOutlineBrush}" FontSize="14" Margin="0,0,24,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Routing" Foreground="{StaticResource SonicOutlineBrush}" FontSize="14" Margin="0,0,24,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Analytics" Foreground="{StaticResource SonicOutlineBrush}" FontSize="14" VerticalAlignment="Center"/>
                     </StackPanel>
+                </StackPanel>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
-                            <ui:SymbolIcon Symbol="SpeakerSettings24" Margin="0,0,10,0" />
-                            <TextBlock Text="Master:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
-                            <Slider Value="{Binding MasterDevice.Volume}" Minimum="0" Maximum="1" Width="120"
-                                    VerticalAlignment="Center" SmallChange="0.01" LargeChange="0.1">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="ValueChanged">
-                                        <i:InvokeCommandAction Command="{Binding UpdateMasterVolumeCommand}"
-                                                               CommandParameter="{Binding Value, RelativeSource={RelativeSource AncestorType=Slider}}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Slider>
-                            <TextBlock Text="{Binding MasterDevice.Volume, StringFormat={}{0:P0}}" Width="40"
-                                       Margin="8,0,0,0" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"/>
-                        </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button Icon="Alert24" Appearance="Transparent" Foreground="{StaticResource SonicOutlineBrush}" Margin="0,0,8,0"/>
+                    <ui:Button Icon="Settings24" Appearance="Transparent" Foreground="{StaticResource SonicOutlineBrush}" Margin="0,0,16,0"/>
+                    <Ellipse Width="32" Height="32">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="https://lh3.googleusercontent.com/aida-public/AB6AXuBNCHYEQwKMzIhfjIbqZrKxVD0hUiVL2WdLNE-1tRg94kAtox4GKTbMhcGmklEvdEfmvg8CyFPB-8VDYZzcvmIkVYtPB9nA3o2EfbfS4OsCNz70YC01jqw9tN34SizXQ1m2VBD6b5VH_YXNhB3FS8jcc0-zt88UkqOQG7UMhdaxBzEETyOzhTnTIH5EgP8HBZyHSFo3XnYZT5v9IGGhauGLk0zRFhmaTa8iRPFD3uV7EnP8GCML5MjhXeMTtHfBhkeOZ8o3aaEmjQ"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-                        <ui:Button Content="Refresh" Icon="ArrowCounterclockwise24" 
-                                   Command="{Binding RefreshDataCommand}"
-                                   Appearance="Primary" Padding="16,8"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="256"/> <!-- Sidebar -->
+                <ColumnDefinition Width="*"/>   <!-- Main Content -->
+            </Grid.ColumnDefinitions>
+
+            <!-- 2. Sidebar -->
+            <Border Grid.Column="0" Background="#18181B" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- Master Engine -->
+                        <RowDefinition Height="*"/>    <!-- Nav Links -->
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Margin="24,24,24,32">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Width="40" Height="40" Background="#1A74D1FF" BorderBrush="#4D74D1FF" BorderThickness="1" CornerRadius="8" Margin="0,0,12,0">
+                                <ui:SymbolIcon Symbol="Pulse24" Foreground="#74D1FF" FontSize="20"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Master Engine" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="48kHz / 24-bit" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Grid.Row="1">
+                        <ui:Button Style="{StaticResource SonicActiveNavLink}" Icon="Apps24" Content="APPLICATIONS" />
+                        <ui:Button Style="{StaticResource SonicSideNavLink}" Icon="Speaker224" Content="OUTPUTS" />
+                        <ui:Button Style="{StaticResource SonicSideNavLink}" Icon="ArrowRouting24" Content="ROUTING" />
+                        <ui:Button Style="{StaticResource SonicSideNavLink}" Icon="History24" Content="HISTORY" />
+                        <ui:Button Style="{StaticResource SonicSideNavLink}" Icon="Settings24" Content="SETTINGS" />
                     </StackPanel>
                 </Grid>
-            </ui:Card>
+            </Border>
 
-            <!-- ══ Active Audio Applications ══ -->
-            <ui:Expander Grid.Row="1" Header="Active Audio Applications" IsExpanded="True" Margin="0,0,0,12"
-                         Icon="Apps24">
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,10,0,0">
-                    <ItemsControl ItemsSource="{Binding Sessions}">
+            <!-- 3. Main Mixer -->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="24">
+                    <!-- Application Mixer Section -->
+                    <Grid Margin="0,0,0,24">
+                        <TextBlock Text="Application Mixer" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="20" FontWeight="SemiBold"/>
+                        <ui:Button Content="Advanced View" Icon="SettingsSettings24" HorizontalAlignment="Right" Appearance="Secondary" 
+                                   Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Sessions}" Margin="0,0,0,48">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
+                                <WrapPanel/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <!-- App Card -->
-                                <ui:Card Margin="0,0,12,12" Width="260" Padding="16">
+                                <Border Style="{StaticResource SonicCard}" Width="292" Margin="0,0,16,16" Padding="18">
                                     <StackPanel>
-                                        <!-- App Name -->
-                                        <Grid Margin="0,0,0,12">
+                                        <!-- Card Header -->
+                                        <Grid Margin="0,0,0,14">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding ProcessName}" FontWeight="Bold" FontSize="14"
-                                                           TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Text="{Binding ProcessId, StringFormat='PID: {0}'}"
-                                                           FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                            <Border Width="40" Height="40" CornerRadius="10" Background="#141A1F" BorderBrush="#22303A" BorderThickness="1" Margin="0,0,12,0">
+                                                <ui:SymbolIcon Symbol="Earth20" Foreground="{StaticResource SonicPrimaryBrush}"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ProcessName}" Foreground="White" FontWeight="SemiBold" FontSize="15" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding ProcessId, StringFormat='PID: {0}'}" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
                                             </StackPanel>
-                                            <ui:SymbolIcon Grid.Column="1" Symbol="MusicNote224" />
-                                        </Grid>
-
-                                        <!-- Volume Slider + Peak Meter -->
-                                        <Grid Height="140" Margin="0,0,0,12">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="16"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Slider Orientation="Vertical" Value="{Binding Volume}"
-                                                    Minimum="0" Maximum="1" HorizontalAlignment="Center"
-                                                    SmallChange="0.01" LargeChange="0.1"/>
-                                            <ProgressBar Grid.Column="1" Orientation="Vertical"
-                                                         Value="{Binding PeakValue, Mode=OneWay}"
-                                                         Minimum="0" Maximum="1" Width="8"
-                                                         CornerRadius="4"
-                                                         Background="{DynamicResource ControlFillColorDefaultBrush}" 
-                                                         Foreground="{DynamicResource SystemFillColorSuccessBrush}"
-                                                         BorderThickness="0" VerticalAlignment="Stretch"/>
-                                        </Grid>
-                                        <TextBlock Text="{Binding Volume, StringFormat='{}{0:P0}'}"
-                                                   FontSize="11" FontWeight="Bold" HorizontalAlignment="Center"
-                                                   Margin="0,0,0,12"/>
-
-                                        <!-- ── Route Section ── -->
-                                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
-                                            <StackPanel>
-                                                <TextBlock Text="ROUTE TO" FontSize="10" FontWeight="Black" Margin="0,0,0,8"
-                                                           Foreground="{DynamicResource SystemFillColorPrimaryBrush}"/>
-                                                <ComboBox ItemsSource="{Binding DataContext.Devices,
-                                                              RelativeSource={RelativeSource AncestorType=Window}}"
-                                                          SelectedItem="{Binding SelectedTargetDevice, Mode=TwoWay}"
-                                                          DisplayMemberPath="Name"
-                                                          Margin="0,0,0,8" HorizontalAlignment="Stretch"/>
-                                                <ui:Button Content="Apply Route" Icon="ArrowRight24"
-                                                           Command="{Binding DataContext.RouteAppCommand,
-                                                               RelativeSource={RelativeSource AncestorType=Window}}"
-                                                           CommandParameter="{Binding}"
-                                                           HorizontalAlignment="Stretch" Appearance="Secondary"/>
-                                            </StackPanel>
-                                        </Border>
-
-                                        <!-- ── Duplicate Section ── -->
-                                        <Border Background="{DynamicResource ControlFillColorTertiaryBrush}" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
-                                            <StackPanel>
-                                                <TextBlock Text="DUPLICATE TO" FontSize="10" FontWeight="Black" Margin="0,0,0,8"
-                                                           Foreground="{DynamicResource SystemFillColorSuccessBrush}"/>
-                                                <ScrollViewer MaxHeight="80" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8">
-                                                    <ItemsControl ItemsSource="{Binding TargetDevices}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <CheckBox Content="{Binding Device.Name}"
-                                                                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                                          FontSize="11" Margin="0,2"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </ScrollViewer>
-                                                
-                                                <ui:Button Command="{Binding DataContext.ToggleDuplicateCommand,
-                                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}"
-                                                        HorizontalAlignment="Stretch">
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <ui:Button Icon="ArrowRepeatAll24" Command="{Binding DataContext.RefreshDataCommand, RelativeSource={RelativeSource AncestorType=Window}}" Appearance="Transparent" Foreground="{StaticResource SonicOutlineBrush}" Padding="4" Margin="0,0,4,0"/>
+                                                <ui:Button Icon="SpeakerMute24" Appearance="Transparent" Foreground="{StaticResource SonicOutlineBrush}" Padding="4" Command="{Binding DataContext.ToggleDuplicateCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">
                                                     <ui:Button.Style>
                                                         <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
-                                                            <Setter Property="Content" Value="Start Duplicate"/>
-                                                            <Setter Property="Icon" Value="Play24"/>
-                                                            <Setter Property="Appearance" Value="Success"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsDuplicating}" Value="True">
-                                                                    <Setter Property="Content" Value="Stop Duplicate"/>
-                                                                    <Setter Property="Icon" Value="Stop24"/>
-                                                                    <Setter Property="Appearance" Value="Danger"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </ui:Button.Style>
                                                 </ui:Button>
                                             </StackPanel>
-                                        </Border>
+                                        </Grid>
 
-                                        <!-- Mute toggle -->
-                                        <ui:ToggleSwitch IsChecked="{Binding IsMuted, Mode=TwoWay}"
-                                                       Content="Mute Session"
-                                                       HorizontalAlignment="Center"/>
+                                        <!-- Spectrum Placeholder Visual -->
+                                        <Grid Height="42" Margin="0,0,0,16" Opacity="0.9">
+                                            <Border Background="#0CFFFFFF" CornerRadius="10" BorderBrush="#12FFFFFF" BorderThickness="1"/>
+                                            <UniformGrid Columns="10" VerticalAlignment="Bottom" Margin="8,7,8,7">
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.40,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.75,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.05,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.85,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.15,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.95,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.95,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.55,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='0.85,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                                <Border Width="6" Height="{Binding PeakValue, Converter={StaticResource SpectrumBarHeightConverter}, ConverterParameter='1.25,5,28'}" Background="{Binding IsPlaying, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                            </UniformGrid>
+                                        </Grid>
 
+                                        <!-- Volume Control -->
+                                        <StackPanel Margin="0,0,0,16">
+                                            <Grid Margin="0,0,0,8">
+                                                <TextBlock Text="VOLUME" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <Slider Style="{StaticResource SonicSlider}" Value="{Binding Volume}" Minimum="0" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="False"/>
+                                        </StackPanel>
+
+                                        <StackPanel>
+                                            <TextBlock Text="SOURCE DEVICE" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,8"/>
+                                            <ComboBox Style="{StaticResource SonicComboBox}"
+                                                      ItemsSource="{Binding DataContext.Devices, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                      SelectedItem="{Binding SelectedTargetDevice, Mode=TwoWay}"
+                                                      DisplayMemberPath="Name"
+                                                      Margin="0,0,0,12"/>
+
+                                            <Border Background="#101112" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,0,12">
+                                                <StackPanel>
+                                                    <Grid Margin="0,0,0,10">
+                                                        <TextBlock Text="DUPLICATE TO" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" FontWeight="Bold"/>
+                                                        <TextBlock Text="Select 2 or more outputs" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="11" HorizontalAlignment="Right"/>
+                                                    </Grid>
+                                                    <ItemsControl ItemsSource="{Binding TargetDevices}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox Style="{StaticResource SonicCheckBox}" IsChecked="{Binding IsSelected, Mode=TwoWay}">
+                                                                    <TextBlock Text="{Binding Device.Name}" TextTrimming="CharacterEllipsis"/>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <ui:Button Command="{Binding DataContext.ToggleDuplicateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       CommandParameter="{Binding}"
+                                                       Appearance="Primary"
+                                                       Padding="16,10">
+                                                <ui:Button.Style>
+                                                    <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                        <Setter Property="Content" Value="Start Duplicate"/>
+                                                        <Setter Property="Background" Value="#1F8FFF"/>
+                                                        <Setter Property="BorderBrush" Value="#51B6FF"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsDuplicating}" Value="True">
+                                                                <Setter Property="Content" Value="Stop Duplicate"/>
+                                                                <Setter Property="Background" Value="#274F1B"/>
+                                                                <Setter Property="BorderBrush" Value="#86DC52"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:Button.Style>
+                                            </ui:Button>
+                                        </StackPanel>
                                     </StackPanel>
-                                </ui:Card>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                </ScrollViewer>
-            </ui:Expander>
 
-            <!-- ══ Available Output Devices ══ -->
-            <ui:Expander Grid.Row="2" Header="Available Output Devices"
-                      IsExpanded="True" Icon="Speaker224">
-                <ui:Card Padding="12" Margin="0,10,0,0" Background="Transparent" BorderThickness="0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="300">
-                        <ItemsControl ItemsSource="{Binding Devices}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid Columns="2"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ui:Button Command="{Binding DataContext.SetDefaultDeviceCommand,
-                                                RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            Margin="4" HorizontalContentAlignment="Stretch"
-                                            Padding="12,10" Appearance="Secondary">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
-                                                           FontSize="13" TextWrapping="Wrap"/>
-                                                <TextBlock x:Name="DefaultLabel" Text="● DEFAULT DEVICE"
-                                                           FontSize="10" Foreground="{DynamicResource SystemFillColorPrimaryBrush}"
-                                                           FontWeight="Black" Visibility="Collapsed"
-                                                           Margin="0,4,0,0"/>
-                                            </StackPanel>
-                                            <ProgressBar Grid.Column="1" Value="{Binding PeakValue}"
-                                                         Minimum="0" Maximum="1" Width="60" Height="6"
-                                                         VerticalAlignment="Center" Margin="12,0,0,0"
-                                                         CornerRadius="3"
-                                                         Foreground="{DynamicResource SystemFillColorSuccessBrush}"/>
-                                        </Grid>
-                                        <ui:Button.Style>
-                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                    <!-- Available Output Devices Section -->
+                    <Grid Margin="0,0,0,24">
+                        <TextBlock Text="Available Output Devices" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="20" FontWeight="SemiBold"/>
+                        <TextBlock Text="Manage devices" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand"/>
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Devices}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ui:Button Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                           CommandParameter="{Binding}"
+                                           Appearance="Transparent"
+                                           Padding="0"
+                                           Margin="0,0,16,16"
+                                           HorizontalContentAlignment="Stretch"
+                                           BorderThickness="0">
+                                    <Border Background="{StaticResource SonicSurfaceContainerBrush}" CornerRadius="14" BorderThickness="1" Padding="18">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsDefault}" Value="True">
-                                                        <Setter Property="Appearance" Value="Primary"/>
+                                                        <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                        <Setter Property="BorderThickness" Value="2"/>
+                                                        <Setter Property="Background" Value="{StaticResource SonicSurfaceContainerHighBrush}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </ui:Button.Style>
-                                    </ui:Button>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding IsDefault}" Value="True">
-                                            <Setter TargetName="DefaultLabel" Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </ui:Card>
-            </ui:Expander>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Grid.Column="0" Width="58" Height="58" CornerRadius="14" Background="#2E3A40" BorderBrush="#4A7080" BorderThickness="1" Margin="0,0,16,0">
+                                                <ui:SymbolIcon Symbol="Speaker224" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="24"/>
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="17" TextTrimming="CharacterEllipsis"/>
+                                                    <Border Margin="10,0,0,0" Background="{StaticResource SonicSecondaryBrush}" CornerRadius="10" Padding="8,2" Visibility="{Binding IsDefault, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <TextBlock Text="NOW PLAYING" Foreground="#092100" FontSize="10" FontWeight="Bold"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Text="Output device ready for routing" Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,3,0,8"/>
+                                                <Border Height="6" Width="160" Background="#0FFFFFFF" CornerRadius="4" HorizontalAlignment="Left">
+                                                    <Border Background="{Binding IsDefault, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="4" HorizontalAlignment="Left" Width="{Binding Volume, Converter={StaticResource PeakToHeightConverter}, ConverterParameter=160}"/>
+                                                </Border>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <TextBlock Text="STATUS" Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                                <TextBlock Text="Ready" FontSize="12" HorizontalAlignment="Right">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsDefault}" Value="False">
+                                                                    <Setter Property="Text" Value="Available"/>
+                                                                    <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                <Border Width="128" Height="6" Background="{StaticResource SonicSurfaceContainerHighBrush}" CornerRadius="3" Margin="0,10,0,0">
+                                                    <Border Background="{Binding IsDefault, Converter={StaticResource ActivityBrushConverter}}" CornerRadius="3" HorizontalAlignment="Left" Width="{Binding Volume, Converter={StaticResource PeakToHeightConverter}, ConverterParameter=128}"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </ui:Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
+
+        <!-- Modern Title Bar Overlay -->
+        <ui:TitleBar Grid.Row="0" Grid.RowSpan="2" Title="" Height="32" VerticalAlignment="Top" Background="Transparent"/>
     </Grid>
 </ui:FluentWindow>
