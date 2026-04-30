@@ -10,8 +10,6 @@
         mc:Ignorable="d"
         Title="Khurram Audio Route" Width="1040"
         SizeToContent="Height"
-        ExtendsContentIntoAppWindow="True"
-        WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen">
     
     <Window.DataContext>
