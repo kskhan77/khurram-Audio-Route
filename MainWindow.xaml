@@ -7,7 +7,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KhurramAudioRoute"
         mc:Ignorable="d"
-        Title="Khurram Audio Route" Height="820" Width="1020"
+        Title="Khurram Audio Route" Width="1020"
+        SizeToContent="Height"
         Background="#F3F3F3">
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -16,7 +17,7 @@
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -54,9 +55,9 @@
         </Grid>
 
         <!-- ══ Active Audio Applications ══ -->
-        <Expander Grid.Row="1" Header="Active Audio Applications" IsExpanded="True" Margin="0,0,0,8"
+        <Expander Grid.Row="1" Header="Active Audio Applications" IsExpanded="True" Margin="0,0,0,12"
                   FontSize="13" FontWeight="SemiBold" Background="White" BorderBrush="#D0D0D0" BorderThickness="1">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="5">
                 <ItemsControl ItemsSource="{Binding Sessions}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
