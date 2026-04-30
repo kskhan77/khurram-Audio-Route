@@ -25,6 +25,11 @@ public partial class MainWindow : FluentWindow
     public MainWindow()
     {
         InitializeComponent();
+        
+        var viewModel = new MainViewModel();
+        viewModel.RefreshData();
+        DataContext = viewModel;
+
         Loaded += OnLoaded;
         Closed += OnClosed;
         _meterTimer.Tick += OnMeterTimerTick;

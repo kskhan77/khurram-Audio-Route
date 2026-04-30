@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using ManagedBass;
 using ManagedBass.Mix;
 using ManagedBass.Fx;
+using ManagedBass.Wasapi;
 
 namespace KhurramAudioRoute.Core
 {
@@ -85,11 +86,12 @@ namespace KhurramAudioRoute.Core
 
         private static readonly Dictionary<string, int> _deviceStreams = new();
         private static readonly Dictionary<string, int[]> _deviceEqHandles = new();
+        private static readonly Dictionary<string, int> _loopbackHandles = new();
         private static int _testToneStream;
 
         /// <summary>
         /// Applies high-precision EQ to a device. 
-        /// This creates a hidden loopback stream that intercepts the device audio and applies BASS_FX.
+        /// For single-device mode, we create a loopback capture to intercept Windows audio.
         /// </summary>
         public static void UpdateEqualizer(string deviceId, float[] gains)
         {
@@ -101,21 +103,20 @@ namespace KhurramAudioRoute.Core
                 if (!InitializeDevice(deviceIndex)) return;
                 Bass.CurrentDevice = deviceIndex;
 
-                // Ensure we have a DSP stream for this device to host the EQ
-                if (!_deviceStreams.TryGetValue(deviceId, out int stream))
+                // Ensure we have a Mixer stream for this device
+                if (!_deviceStreams.TryGetValue(deviceId, out int mixerStream))
                 {
-                    // Create a "dummy" mixer stream that we can use to apply global FX to the device
-                    stream = BassMix.CreateMixerStream(48000, 2, BassFlags.Default | BassFlags.MixerNonStop);
-                    _deviceStreams[deviceId] = stream;
-                    
-                    // Initialize the EQ bands (5-band mapping)
-                    // Frequencies: 60Hz, 230Hz, 910Hz, 4kHz, 14kHz
+                    // Create a Mixer stream (the master output for this engine instance)
+                    mixerStream = BassMix.CreateMixerStream(48000, 2, BassFlags.Default | BassFlags.MixerNonStop);
+                    _deviceStreams[deviceId] = mixerStream;
+
+                    // Initialize the EQ bands
                     float[] centerFreqs = { 60, 230, 910, 4000, 14000 };
                     int[] handles = new int[5];
 
                     for (int i = 0; i < 5; i++)
                     {
-                        handles[i] = Bass.ChannelSetFX(stream, EffectType.PeakEQ, 1);
+                        handles[i] = Bass.ChannelSetFX(mixerStream, EffectType.PeakEQ, 1);
                         var eq = new PeakEQParameters
                         {
                             lBand = i,
@@ -126,12 +127,29 @@ namespace KhurramAudioRoute.Core
                         Bass.FXSetParameters(handles[i], eq);
                     }
                     _deviceEqHandles[deviceId] = handles;
+
+                    // Start the mixer
+                    Bass.ChannelPlay(mixerStream);
+
+                    // IMPORTANT: To affect "single device" Windows sound, we must capture it.
+                    // This creates a loopback stream (like a mirror to itself) so we can process it.
+                    // 8 = Loopback, 1 = Shared
+                    bool wasapiOk = BassWasapi.Init(deviceIndex, 0, 0, (WasapiInitFlags)9, 0.1f, 0.05f, 
+                        (buffer, length, user) => {
+                            // Feed captured Windows audio into our EQ mixer
+                            Bass.StreamPutData(mixerStream, buffer, length);
+                            return length;
+                        });
                     
-                    Bass.ChannelPlay(stream);
+                    if (wasapiOk)
+                    {
+                        BassWasapi.Start();
+                        _loopbackHandles[deviceId] = deviceIndex;
+                    }
                 }
                 else
                 {
-                    // Update existing handles
+                    // Update existing EQ handles
                     if (_deviceEqHandles.TryGetValue(deviceId, out var handles))
                     {
                         for (int i = 0; i < Math.Min(handles.Length, gains.Length); i++)
