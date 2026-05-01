@@ -44,17 +44,21 @@ namespace KhurramAudioRoute.Core
         /// </summary>
         public static bool InitializeDevice(int deviceIndex)
         {
+            // Skip devices that have already failed init - retrying them every meter
+            // tick produces hundreds of identical error lines per minute.
+            if (_bassInitFailedDevices.Contains(deviceIndex)) return false;
+
             try
             {
                 if (!CheckNativeDlls(out _)) return false;
 
-                // Set device context
                 if (!Bass.Init(deviceIndex))
                 {
                     var error = Bass.LastError;
                     if (error != Errors.Already)
                     {
-                        Debug.WriteLine($"BASS: Failed to init device {deviceIndex}. Error: {error}");
+                        Debug.WriteLine($"BASS: Failed to init device {deviceIndex}. Error: {error} (will not retry)");
+                        _bassInitFailedDevices.Add(deviceIndex);
                         return false;
                     }
                 }
@@ -67,6 +71,7 @@ namespace KhurramAudioRoute.Core
             catch (Exception ex)
             {
                 Debug.WriteLine($"BASS: Critical error during init: {ex.Message}");
+                _bassInitFailedDevices.Add(deviceIndex);
                 return false;
             }
         }
@@ -88,6 +93,13 @@ namespace KhurramAudioRoute.Core
         private static readonly Dictionary<string, int[]> _deviceEqHandles = new();
         private static readonly Dictionary<string, int> _loopbackHandles = new();
         private static int _testToneStream;
+
+        // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
+        // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
+        // init floods the debug console with the same error every tick.
+        private static bool _bassWasapiAvailable = true;
+        private static readonly HashSet<int> _bassInitFailedDevices = new();
+        private static readonly HashSet<string> _wasapiInitFailedDevices = new();
 
         /// <summary>
         /// Applies high-precision EQ to a device. 
@@ -136,17 +148,38 @@ namespace KhurramAudioRoute.Core
                     // IMPORTANT: To affect "single device" Windows sound, we must capture it.
                     // This creates a loopback stream (like a mirror to itself) so we can process it.
                     // 8 = Loopback, 1 = Shared
-                    bool wasapiOk = BassWasapi.Init(deviceIndex, 0, 0, (WasapiInitFlags)9, 0.1f, 0.05f, 
-                        (buffer, length, user) => {
-                            // Feed captured Windows audio into our EQ mixer
-                            Bass.StreamPutData(mixerStream, buffer, length);
-                            return length;
-                        });
-                    
-                    if (wasapiOk)
+                    if (_bassWasapiAvailable && !_wasapiInitFailedDevices.Contains(deviceId))
                     {
-                        BassWasapi.Start();
-                        _loopbackHandles[deviceId] = deviceIndex;
+                        try
+                        {
+                            bool wasapiOk = BassWasapi.Init(deviceIndex, 0, 0, (WasapiInitFlags)9, 0.1f, 0.05f,
+                                (buffer, length, user) =>
+                                {
+                                    Bass.StreamPutData(mixerStream, buffer, length);
+                                    return length;
+                                });
+
+                            if (wasapiOk)
+                            {
+                                BassWasapi.Start();
+                                _loopbackHandles[deviceId] = deviceIndex;
+                            }
+                            else
+                            {
+                                // Cache the failure so we don't keep poking this device every meter tick.
+                                _wasapiInitFailedDevices.Add(deviceId);
+                                Debug.WriteLine($"BASS WASAPI: Loopback init failed for {deviceId} (will not retry).");
+                            }
+                        }
+                        catch (DllNotFoundException)
+                        {
+                            // basswasapi.dll wasn't shipped. Disable the BassWasapi loopback path
+                            // entirely - the NAudio-based DuplicationManager already handles loopback
+                            // capture for the mirror feature, so EQ-only-on-default-device is the only
+                            // capability we lose here.
+                            _bassWasapiAvailable = false;
+                            Debug.WriteLine("BASS WASAPI: basswasapi.dll missing. Single-device EQ capture disabled for this session.");
+                        }
                     }
                 }
                 else

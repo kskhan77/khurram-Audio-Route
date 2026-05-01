@@ -65,6 +65,15 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _isAdvancedExpanded, value);
         }
 
+        // Pre-fan-out delay added before every mirror target's per-target offset.
+        // Used to align this device's mirrored copies with its OS-level playback.
+        private int _sourceLatencyMs;
+        public int SourceLatencyMs
+        {
+            get => _sourceLatencyMs;
+            set => SetProperty(ref _sourceLatencyMs, value);
+        }
+
         private string _duplicateStatus = "No duplicate targets active";
         public string DuplicateStatus
         {

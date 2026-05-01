@@ -11,7 +11,12 @@ namespace KhurramAudioRoute.Core
 {
     public partial class DeviceSelection : ObservableObject
     {
+        // Maximum DELAY (positive offset). Anything past this would just stack pointless lag.
         public const int MaxLatencyOffsetMs = 500;
+        // Maximum ADVANCE (negative offset). Capped by the engine baseline pre-buffer
+        // (DuplicationSession.BaselinePreDelayMs) - we can't advance further than the
+        // baseline allows because that would require look-ahead.
+        public const int MinLatencyOffsetMs = -DuplicationSession.BaselinePreDelayMs;
         public const int LatencyStepMs = 10;
 
         public AudioDevice Device { get; set; } = null!;
@@ -19,9 +24,9 @@ namespace KhurramAudioRoute.Core
         [ObservableProperty]
         private bool _isSelected;
 
-        // Per-target playback delay in milliseconds. Used to align mirror sources that
-        // run on different transports (e.g. wired vs Bluetooth) so their output stays
-        // in phase. Positive values delay this target relative to the source.
+        // Signed per-target offset in ms. Negative = advance this target toward the
+        // source's natural playback (eats into the engine's baseline pre-buffer).
+        // Positive = delay it further (used to wait for slower Bluetooth transports).
         [ObservableProperty]
         private int _latencyOffsetMs;
     }

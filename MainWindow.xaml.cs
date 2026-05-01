@@ -17,6 +17,7 @@ namespace KhurramAudioRoute;
 /// </summary>
 public partial class MainWindow : FluentWindow
 {
+    private bool _isExplicitExit;
     private readonly DispatcherTimer _meterTimer = new()
     {
         Interval = TimeSpan.FromMilliseconds(220)
@@ -31,6 +32,7 @@ public partial class MainWindow : FluentWindow
         DataContext = viewModel;
 
         Loaded += OnLoaded;
+        Closing += OnClosing;
         Closed += OnClosed;
         _meterTimer.Tick += OnMeterTimerTick;
     }
@@ -43,11 +45,36 @@ public partial class MainWindow : FluentWindow
         _meterTimer.Start();
     }
 
+    private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (!_isExplicitExit)
+        {
+            e.Cancel = true;
+            Hide();
+        }
+    }
+
+    public void ExitApplication()
+    {
+        _isExplicitExit = true;
+        Application.Current.Shutdown();
+    }
+
+    public void ShowWindow()
+    {
+        Show();
+        if (WindowState == WindowState.Minimized)
+            WindowState = WindowState.Normal;
+        Activate();
+    }
+
     private void OnClosed(object? sender, EventArgs e)
     {
         _meterTimer.Stop();
         _meterTimer.Tick -= OnMeterTimerTick;
+        TrayIcon?.Dispose();
         Loaded -= OnLoaded;
+        Closing -= OnClosing;
         Closed -= OnClosed;
     }
 
@@ -68,26 +95,53 @@ public partial class MainWindow : FluentWindow
         DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
     }
 
-    // Master output strip on the Applications page. DataContext is bound to MasterDevice
-    // (the system default), so the same handler shape as the per-device Outputs slider works.
+    // The master strips on Applications + Outputs are GLOBAL controls: mute affects
+    // every output device, and the volume slider sets every output to the same level.
+    // The strip's DataContext is still MasterDevice so the IsMuted/Volume binding shows
+    // the default device's state - we just fan the action out to the rest.
     private void OnMasterVolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (sender is not Slider slider || slider.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+        if (sender is not Slider slider || slider.DataContext is not AudioDevice device)
             return;
 
         if (!IsLoaded)
             return;
 
-        DeviceManager.SetMasterVolume(device.Id, (float)e.NewValue);
+        ApplyVolumeToAllOutputs((float)e.NewValue, device);
     }
 
     private void OnMasterMuteClicked(object sender, RoutedEventArgs e)
     {
-        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device || string.IsNullOrWhiteSpace(device.Id))
+        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
             return;
 
-        DeviceManager.SetMasterMute(device.Id, !device.IsMuted);
-        device.IsMuted = !device.IsMuted;
+        bool nextMuted = !device.IsMuted;
+        ApplyMuteToAllOutputs(nextMuted);
+    }
+
+    private void ApplyVolumeToAllOutputs(float level, AudioDevice anchor)
+    {
+        if (DataContext is not MainViewModel vm) return;
+        foreach (var d in vm.Devices)
+        {
+            if (string.IsNullOrWhiteSpace(d.Id)) continue;
+            DeviceManager.SetMasterVolume(d.Id, level);
+            // Keep the model in sync so the per-device volume slider on the Outputs
+            // cards reflects the master move immediately, without waiting for the
+            // 220 ms meter tick to repoll device levels.
+            d.Volume = level;
+        }
+    }
+
+    private void ApplyMuteToAllOutputs(bool muted)
+    {
+        if (DataContext is not MainViewModel vm) return;
+        foreach (var d in vm.Devices)
+        {
+            if (string.IsNullOrWhiteSpace(d.Id)) continue;
+            DeviceManager.SetMasterMute(d.Id, muted);
+            d.IsMuted = muted;
+        }
     }
 
     // Mirror sync offset +/- buttons. Tag carries the DeviceSelection so the same
@@ -108,8 +162,13 @@ public partial class MainWindow : FluentWindow
             return;
 
         int updated = selection.LatencyOffsetMs + deltaMs;
-        selection.LatencyOffsetMs = Math.Clamp(updated, 0, DeviceSelection.MaxLatencyOffsetMs);
+        selection.LatencyOffsetMs = Math.Clamp(updated, DeviceSelection.MinLatencyOffsetMs, DeviceSelection.MaxLatencyOffsetMs);
     }
+
+    // The Outputs-page strip uses the same global handlers as the Applications strip;
+    // these wrappers exist only because the XAML Click/ValueChanged attributes name them.
+    private void OnOutputsMasterMuteClicked(object sender, RoutedEventArgs e) => OnMasterMuteClicked(sender, e);
+    private void OnOutputsMasterVolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => OnMasterVolumeChanged(sender, e);
 
     // ToggleSwitch in the Outputs Advanced panel: forwards the click to the
     // ToggleDeviceDuplicate command on the MainViewModel. The switch's IsChecked
@@ -188,6 +247,10 @@ public partial class MainWindow : FluentWindow
 
         device.SetEqualizerGains(gains);
     }
+
+    private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();
+    private void OnShowAppClicked(object sender, RoutedEventArgs e) => ShowWindow();
+    private void OnExitAppClicked(object sender, RoutedEventArgs e) => ExitApplication();
 }
 
 /// <summary>

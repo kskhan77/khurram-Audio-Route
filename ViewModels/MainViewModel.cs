@@ -162,10 +162,13 @@ namespace KhurramAudioRoute.ViewModels
                         d => d.DuplicateTargets
                             .Where(t => !string.IsNullOrWhiteSpace(t.Device.Id))
                             .ToDictionary(t => t.Device.Id!, t => t.LatencyOffsetMs));
+                var previousSourceLatencies = Devices
+                    .Where(d => !string.IsNullOrWhiteSpace(d.Id))
+                    .ToDictionary(d => d.Id!, d => d.SourceLatencyMs);
 
                 var availableDevices = DeviceManager.GetRenderDevices();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
-                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded, previousLatencyOffsets);
+                ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded, previousLatencyOffsets, previousSourceLatencies);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
@@ -192,7 +195,8 @@ namespace KhurramAudioRoute.ViewModels
             IReadOnlyDictionary<string, HashSet<string>>? previousSelections = null,
             IReadOnlyDictionary<string, float[]>? previousEqualizerSettings = null,
             IReadOnlyDictionary<string, bool>? previousAdvancedExpanded = null,
-            IReadOnlyDictionary<string, Dictionary<string, int>>? previousLatencyOffsets = null)
+            IReadOnlyDictionary<string, Dictionary<string, int>>? previousLatencyOffsets = null,
+            IReadOnlyDictionary<string, int>? previousSourceLatencies = null)
         {
             foreach (var source in devices)
             {
@@ -200,10 +204,13 @@ namespace KhurramAudioRoute.ViewModels
                 float[]? equalizerValues = null;
                 bool wasExpanded = false;
                 Dictionary<string, int>? latencyMap = null;
+                int sourceLatency = 0;
                 previousSelections?.TryGetValue(source.Id ?? string.Empty, out restoredTargetIds);
                 previousEqualizerSettings?.TryGetValue(source.Id ?? string.Empty, out equalizerValues);
                 previousAdvancedExpanded?.TryGetValue(source.Id ?? string.Empty, out wasExpanded);
                 previousLatencyOffsets?.TryGetValue(source.Id ?? string.Empty, out latencyMap);
+                previousSourceLatencies?.TryGetValue(source.Id ?? string.Empty, out sourceLatency);
+                source.SourceLatencyMs = sourceLatency;
 
                 source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
                     devices
@@ -269,6 +276,12 @@ namespace KhurramAudioRoute.ViewModels
                     BassEngine.UpdateEqualizer(sourceDevice.Id, gains);
 
                 DuplicationManager.UpdateEqualizer(sourceDevice.Id, gains);
+                return;
+            }
+
+            if (e.PropertyName == nameof(AudioDevice.SourceLatencyMs))
+            {
+                DuplicationManager.SetSourceLatency(sourceDevice.Id, sourceDevice.SourceLatencyMs);
             }
         }
 
@@ -387,13 +400,15 @@ namespace KhurramAudioRoute.ViewModels
                     .Where(d => d.IsSelected && !string.IsNullOrWhiteSpace(d.Device.Id))
                     .ToDictionary(d => d.Device.Id!, d => d.LatencyOffsetMs);
 
+                int sourceLatency = sourceDevice.SourceLatencyMs;
                 bool started = await Task.Run(() =>
                 {
                     bool ok = DuplicationManager.StartDuplication(sourceDevice.Id, targetIds, sourceDevice.GetEqualizerGains());
                     if (ok)
                     {
-                        // Apply per-target latency after the targets exist; SetTargetLatency
-                        // also stores the value so newly added targets pick it up automatically.
+                        // Source latency must be applied first so per-target SetTargetLatency
+                        // computes the combined effective delay correctly.
+                        DuplicationManager.SetSourceLatency(sourceDevice.Id, sourceLatency);
                         foreach (var (targetId, ms) in latencyOffsets)
                             DuplicationManager.SetTargetLatency(sourceDevice.Id, targetId, ms);
                     }
@@ -403,9 +418,10 @@ namespace KhurramAudioRoute.ViewModels
                 if (!started)
                 {
                     sourceDevice.IsDuplicating = false;
-                    sourceDevice.DuplicateStatus = "Could not start duplication";
+                    var reason = DuplicationManager.GetLastError(sourceDevice.Id);
+                    sourceDevice.DuplicateStatus = reason ?? "Could not start duplication";
                     MessageBox.Show(
-                        "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
+                        reason ?? "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
                         "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }

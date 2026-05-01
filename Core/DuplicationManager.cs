@@ -202,10 +202,21 @@ namespace KhurramAudioRoute.Core
         private const int DeviceSettleDelayMs = 350;
         private const int RetryDelayMs = 350;
         private const int MaxInitAttempts = 4;
+        // Bluetooth A2DP endpoints (e.g. Sony HT-CT290) frequently fail with
+        // AUDCLNT_E_ENDPOINT_CREATE_FAILED on the first second of attempts because the
+        // codec handshake hasn't finished. Give targets a longer budget with backoff
+        // so the negotiation has time to complete before we surface a failure.
+        private const int MaxTargetInitAttempts = 10;
+        private const int TargetRetryStartMs = 250;
+        private const int TargetRetryMaxMs = 1500;
         private const int TargetPlaybackLatencyMs = 45;
-        // Sized so the user can dial in enough delay to compensate for slow Bluetooth
-        // links without wasting RAM on a multi-second ring buffer per target.
-        private const int MaxDelayMs = 800;
+        // Per-delay ring-buffer size. Combined baseline + source + per-target must fit
+        // here, so this is larger than the sum of the per-control caps.
+        private const int MaxDelayMs = 1500;
+        // Baseline pre-delay added to every target so negative per-target offsets can
+        // "advance" a mirror toward the source. The user-visible "0 ms" point sits at
+        // this baseline; a -250 ms target offset cancels it (effective 0).
+        public const int BaselinePreDelayMs = 250;
         private static readonly TimeSpan TargetBufferDuration = TimeSpan.FromMilliseconds(180);
 
         private WasapiLoopbackCapture? _capture;
@@ -214,7 +225,12 @@ namespace KhurramAudioRoute.Core
         // Persists per-target latency across target add/remove so toggling a checkbox
         // doesn't reset the user's sync setting for that device.
         private readonly Dictionary<string, int> _targetLatencies = new();
+        // Global pre-fan-out delay applied uniformly to every mirror target. Used so the
+        // user can shift "all mirrored copies" relative to the source's natural OS playback.
+        private int _sourceLatencyMs;
         private readonly object _sync = new();
+
+        public string? LastError { get; private set; }
 
         public string SessionKey { get; }
 
@@ -261,13 +277,17 @@ namespace KhurramAudioRoute.Core
                     Debug.WriteLine($"Duplication: source not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/{MaxInitAttempts}), retrying in {RetryDelayMs}ms...");
                     ReleaseCapture();
                     if (attempt == MaxInitAttempts)
+                    {
+                        LastError = $"Source device not ready (HRESULT 0x{(uint)ex.HResult:X}). Try again after audio is playing.";
                         return false;
+                    }
                     Thread.Sleep(RetryDelayMs);
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Duplication: source init failed for {sourceDeviceId}: {ex.Message}");
                     ReleaseCapture();
+                    LastError = $"Source capture failed: {ex.Message}";
                     return false;
                 }
             }
@@ -290,18 +310,25 @@ namespace KhurramAudioRoute.Core
             if (_capture == null)
                 return null;
 
-            for (int attempt = 1; attempt <= MaxInitAttempts; attempt++)
+            string? deviceName = null;
+            for (int attempt = 1; attempt <= MaxTargetInitAttempts; attempt++)
             {
+                MMDevice? device = null;
+                WasapiOut? player = null;
+                bool success = false;
                 try
                 {
                     using var enumerator = new MMDeviceEnumerator();
-                    var device = enumerator.GetDevice(deviceId);
+                    device = enumerator.GetDevice(deviceId);
 
                     if (device == null || device.State != DeviceState.Active)
                     {
-                        device?.Dispose();
+                        deviceName ??= TryGetFriendlyName(device);
+                        LastError = $"{deviceName ?? "Target device"} is not active. Reconnect or unmute it, then try again.";
                         return null;
                     }
+
+                    deviceName = TryGetFriendlyName(device);
 
                     var buffer = new BufferedWaveProvider(_capture.WaveFormat)
                     {
@@ -309,35 +336,99 @@ namespace KhurramAudioRoute.Core
                         BufferDuration = TargetBufferDuration
                     };
 
-                    var player = new WasapiOut(device, AudioClientShareMode.Shared, true, TargetPlaybackLatencyMs);
+                    player = new WasapiOut(device, AudioClientShareMode.Shared, true, TargetPlaybackLatencyMs);
                     ISampleProvider provider = buffer.ToSampleProvider();
                     if (_capture.WaveFormat.SampleRate != player.OutputWaveFormat.SampleRate)
                         provider = new WdlResamplingSampleProvider(provider, player.OutputWaveFormat.SampleRate);
 
                     var equalizer = new EqualizerSampleProvider(provider, gains);
                     var delay = new DelaySampleProvider(equalizer, MaxDelayMs);
-                    delay.SetDelayMs(_targetLatencies.TryGetValue(deviceId, out var ms) ? ms : 0);
+                    int targetMs = _targetLatencies.TryGetValue(deviceId, out var ms) ? ms : 0;
+                    delay.SetDelayMs(EffectiveDelayMs(targetMs));
                     provider = delay;
 
                     player.Init(provider);
                     player.Play();
 
                     Debug.WriteLine($"Duplication: player ready for device {deviceId} (attempt {attempt}, delay={delay.CurrentDelayMs}ms)");
+                    success = true;
                     return new DuplicationTarget(deviceId, device, player, buffer, equalizer, delay);
                 }
                 catch (COMException ex) when (IsTransientWasapi(ex))
                 {
-                    Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/{MaxInitAttempts}), retrying in {RetryDelayMs}ms...");
-                    Thread.Sleep(RetryDelayMs);
+                    int backoff = Math.Min(TargetRetryMaxMs, TargetRetryStartMs * (1 << Math.Min(8, attempt - 1)));
+                    Debug.WriteLine($"Duplication: target not ready 0x{(uint)ex.HResult:X} (attempt {attempt}/{MaxTargetInitAttempts}), retrying in {backoff}ms...");
+                    if (attempt == MaxTargetInitAttempts)
+                        LastError = DescribeTransientWasapi(deviceName ?? "Target device", (uint)ex.HResult);
+                    Thread.Sleep(backoff);
+                }
+                catch (COMException ex)
+                {
+                    Debug.WriteLine($"Duplication: COM error for {deviceId} 0x{(uint)ex.HResult:X}: {ex.Message}");
+                    LastError = DescribeWasapiError(deviceName ?? deviceId, ex);
+                    return null;
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Duplication: fatal error for {deviceId}: {ex.Message}");
+                    LastError = $"{deviceName ?? "Target device"}: {ex.Message}";
                     return null;
+                }
+                finally
+                {
+                    // Critical: a leaked WasapiOut keeps the audio endpoint open in shared
+                    // mode, which can wedge the device for Windows itself (BT soundbars
+                    // are particularly sensitive). Always dispose if we didn't hand the
+                    // player to a successful DuplicationTarget.
+                    if (!success)
+                    {
+                        try { player?.Stop(); } catch { }
+                        try { player?.Dispose(); } catch { }
+                        try { device?.Dispose(); } catch { }
+                    }
                 }
             }
 
             return null;
+        }
+
+        private static string? TryGetFriendlyName(MMDevice? device)
+        {
+            try { return device?.FriendlyName; }
+            catch { return null; }
+        }
+
+        private static string DescribeWasapiError(string deviceLabel, COMException ex)
+        {
+            uint code = (uint)ex.HResult;
+            string hint = code switch
+            {
+                0x88890008 => "format not supported in shared mode (try changing the device's default format in Windows Sound settings).",
+                0x8889000A => "endpoint already in exclusive use by another app.",
+                0x88890001 => "device not initialized.",
+                0x88890017 => "audio service not running.",
+                0x80070490 => "endpoint not found - the device may have disconnected.",
+                _ => ex.Message
+            };
+            return $"{deviceLabel}: {hint} (0x{code:X})";
+        }
+
+        // Used when transient retries are exhausted. 0x8889000F (ENDPOINT_CREATE_FAILED)
+        // is the common Bluetooth A2DP failure mode — the codec handshake hasn't bound
+        // the audio endpoint yet, so the user needs to wake the link first.
+        private static string DescribeTransientWasapi(string deviceLabel, uint code)
+        {
+            string hint = code switch
+            {
+                0x8889000F =>
+                    "audio endpoint failed to open (0x8889000F). Bluetooth devices often need waking up first - " +
+                    "play any sound on it (e.g. right-click in Windows Sound Settings → Test) and then re-enable mirroring.",
+                0x88890004 =>
+                    "device was invalidated (0x88890004). It may have been disconnected, set as default again, or " +
+                    "had its format changed mid-stream.",
+                _ => $"not ready after retries (HRESULT 0x{code:X}). It may be in use by another app or asleep."
+            };
+            return $"{deviceLabel}: {hint}";
         }
 
         private void RemoveTargetInternal(string deviceId)
@@ -362,6 +453,8 @@ namespace KhurramAudioRoute.Core
 
         public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains)
         {
+            LastError = null;
+
             var desiredTargets = targetDeviceIds
                 .Where(id => !string.IsNullOrWhiteSpace(id) && id != sourceDeviceId)
                 .Distinct()
@@ -422,12 +515,12 @@ namespace KhurramAudioRoute.Core
 
         public void SetTargetLatency(string targetDeviceId, int latencyMs)
         {
-            int clamped = Math.Clamp(latencyMs, 0, MaxDelayMs);
+            int clamped = Math.Clamp(latencyMs, -MaxDelayMs, MaxDelayMs);
             lock (_sync)
             {
                 _targetLatencies[targetDeviceId] = clamped;
                 if (_targets.TryGetValue(targetDeviceId, out var target))
-                    target.Delay.SetDelayMs(clamped);
+                    target.Delay.SetDelayMs(EffectiveDelayMs(clamped));
             }
         }
 
@@ -438,6 +531,30 @@ namespace KhurramAudioRoute.Core
                 return _targetLatencies.TryGetValue(targetDeviceId, out var ms) ? ms : 0;
             }
         }
+
+        public void SetSourceLatency(int latencyMs)
+        {
+            int clamped = Math.Clamp(latencyMs, -MaxDelayMs, MaxDelayMs);
+            lock (_sync)
+            {
+                _sourceLatencyMs = clamped;
+                foreach (var (targetId, target) in _targets)
+                {
+                    int targetMs = _targetLatencies.TryGetValue(targetId, out var t) ? t : 0;
+                    target.Delay.SetDelayMs(EffectiveDelayMs(targetMs));
+                }
+            }
+        }
+
+        public int GetSourceLatency()
+        {
+            lock (_sync) return _sourceLatencyMs;
+        }
+
+        // Translates the user-visible signed offset into the actual ring-buffer delay
+        // applied to a target. Baseline gives headroom for negative (advance) values.
+        private int EffectiveDelayMs(int targetOffsetMs)
+            => Math.Clamp(BaselinePreDelayMs + _sourceLatencyMs + targetOffsetMs, 0, MaxDelayMs);
 
         public void Stop()
         {
@@ -457,6 +574,8 @@ namespace KhurramAudioRoute.Core
     public static class DuplicationManager
     {
         private static readonly Dictionary<string, DuplicationSession> _sessions = new();
+        // Survives session disposal so the UI can still show why StartDuplication failed.
+        private static readonly Dictionary<string, string?> _lastErrors = new();
 
         public static bool StartDuplication(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[]? equalizerGains = null)
         {
@@ -467,6 +586,7 @@ namespace KhurramAudioRoute.Core
             }
 
             bool ok = session.StartOrUpdate(sourceDeviceId, targetDeviceIds, equalizerGains ?? new float[10]);
+            _lastErrors[sourceDeviceId] = session.LastError;
             if (!ok)
             {
                 session.Stop();
@@ -474,6 +594,12 @@ namespace KhurramAudioRoute.Core
             }
 
             return ok;
+        }
+
+        public static string? GetLastError(string? sourceDeviceId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId)) return null;
+            return _lastErrors.TryGetValue(sourceDeviceId, out var msg) ? msg : null;
         }
 
         public static void StopDuplication(string sourceDeviceId)
@@ -521,6 +647,21 @@ namespace KhurramAudioRoute.Core
 
             return _sessions.TryGetValue(sourceDeviceId, out var session)
                 ? session.GetTargetLatency(targetDeviceId)
+                : 0;
+        }
+
+        public static void SetSourceLatency(string? sourceDeviceId, int latencyMs)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId)) return;
+            if (_sessions.TryGetValue(sourceDeviceId, out var session))
+                session.SetSourceLatency(latencyMs);
+        }
+
+        public static int GetSourceLatency(string? sourceDeviceId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId)) return 0;
+            return _sessions.TryGetValue(sourceDeviceId, out var session)
+                ? session.GetSourceLatency()
                 : 0;
         }
     }

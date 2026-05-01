@@ -7,13 +7,28 @@
         xmlns:local="clr-namespace:KhurramAudioRoute"
         xmlns:ctrl="clr-namespace:KhurramAudioRoute.Controls"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="SonicFlow - Audio Mixer" Width="1350" Height="900"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Mica">
+        WindowBackdropType="Mica"
+        Icon="Assets/app_icon.ico">
 
     <Window.Resources>
+        <ContextMenu x:Key="TrayMenu" x:Name="TrayMenu">
+            <MenuItem Header="Show SonicFlow" Click="OnShowAppClicked">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="Window24"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Exit" Click="OnExitAppClicked">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="SignOut24"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
         <!-- SonicFlow Colors from design.html -->
         <Color x:Key="SonicSurface">#131313</Color>
         <Color x:Key="SonicSurfaceContainer">#20201F</Color>
@@ -288,6 +303,12 @@
             <RowDefinition Height="*"/>   <!-- Content Area -->
         </Grid.RowDefinitions>
 
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        IconSource="Assets/app_icon.ico"
+                        ToolTipText="SonicFlow - Audio Mixer"
+                        ContextMenu="{StaticResource TrayMenu}"
+                        TrayMouseDoubleClick="OnTrayIconDoubleClick"/>
+
         <!-- 1. Top Header -->
         <Border Grid.Row="0" Background="{StaticResource SonicHeaderBgBrush}" BorderBrush="#1AFFFFFF" BorderThickness="0,0,0,1">
             <Grid Margin="24,0">
@@ -442,6 +463,69 @@
                                        Command="{Binding RefreshDataCommand}"
                                        Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
                         </Grid>
+
+                        <!-- Master output strip on the Outputs page: master mute + volume for the system
+                             default device. Mirrors the strip on the Applications page so users get the
+                             same global "kill-switch + level" controls regardless of which tab they're on. -->
+                        <Border Style="{StaticResource SonicCard}" Padding="16,12" Margin="0,0,0,16"
+                                DataContext="{Binding MasterDevice}"
+                                Visibility="{Binding ., Converter={StaticResource NullToCollapsedConverter}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="38" Height="38" CornerRadius="19"
+                                        Background="#1A74D1FF" BorderBrush="#4D74D1FF" BorderThickness="1" Margin="0,0,12,0">
+                                    <ui:SymbolIcon Symbol="Speaker224" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="18"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,18,0">
+                                    <TextBlock Text="MASTER OUTPUT" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="240"/>
+                                </StackPanel>
+
+                                <Grid Grid.Column="2" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0"
+                                            Style="{StaticResource SonicIconFrameButton}"
+                                            Click="OnOutputsMasterMuteClicked"
+                                            Margin="0,0,10,0"
+                                            Padding="8"
+                                            ToolTip="Mute every output device (silences all audio)">
+                                        <ui:SymbolIcon FontSize="16">
+                                            <ui:SymbolIcon.Style>
+                                                <Style TargetType="ui:SymbolIcon">
+                                                    <Setter Property="Symbol" Value="Speaker224"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource SonicOnSurfaceBrush}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMuted}" Value="True">
+                                                            <Setter Property="Symbol" Value="SpeakerMute24"/>
+                                                            <Setter Property="Foreground" Value="#FF6F8A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ui:SymbolIcon.Style>
+                                        </ui:SymbolIcon>
+                                    </Button>
+                                    <Slider Grid.Column="1"
+                                            Style="{StaticResource SonicVolumeSlider}"
+                                            Value="{Binding Volume, Mode=TwoWay}"
+                                            Minimum="0" Maximum="1"
+                                            IsEnabled="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}"
+                                            ValueChanged="OnOutputsMasterVolumeChanged"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="12" FontWeight="SemiBold" Width="42" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
 
                         <ItemsControl ItemsSource="{Binding Devices}">
                             <ItemsControl.ItemTemplate>
@@ -638,21 +722,21 @@
                                                                                             IsEnabled="{Binding IsSelected}">
                                                                                     <Button Content="−" Click="OnDecreaseLatency" Tag="{Binding}"
                                                                                             Width="24" Height="24" Padding="0" FontSize="14" FontWeight="Bold"
-                                                                                            ToolTip="Decrease delay (10 ms)"
+                                                                                            ToolTip="Step -10 ms (negative = advance this target toward the source)"
                                                                                             Style="{StaticResource SonicIconFrameButton}"/>
-                                                                                    <TextBlock Text="{Binding LatencyOffsetMs, StringFormat={}{0} ms}"
+                                                                                    <TextBlock Text="{Binding LatencyOffsetMs, StringFormat={}{0:+0;-0;0} ms}"
                                                                                                Foreground="{StaticResource SonicPrimaryBrush}" FontSize="11" FontWeight="SemiBold"
                                                                                                Width="58" TextAlignment="Center" VerticalAlignment="Center" Margin="6,0"/>
                                                                                     <Button Content="+" Click="OnIncreaseLatency" Tag="{Binding}"
                                                                                             Width="24" Height="24" Padding="0" FontSize="14" FontWeight="Bold"
-                                                                                            ToolTip="Increase delay (10 ms)"
+                                                                                            ToolTip="Step +10 ms (positive = delay this target relative to the source)"
                                                                                             Style="{StaticResource SonicIconFrameButton}"/>
                                                                                 </StackPanel>
                                                                             </Grid>
                                                                         </DataTemplate>
                                                                     </ItemsControl.ItemTemplate>
                                                                 </ItemsControl>
-                                                                <TextBlock Text="Add delay to a target so it stays in sync with slower devices (e.g. Bluetooth)."
+                                                                <TextBlock Text="Negative = advance toward the source. Positive = wait for slow devices (e.g. Bluetooth)."
                                                                            Foreground="{StaticResource SonicOutlineBrush}" FontSize="10"
                                                                            TextWrapping="Wrap" Margin="0,4,0,0"/>
                                                             </StackPanel>
@@ -821,7 +905,7 @@
                                             Click="OnMasterMuteClicked"
                                             Margin="0,0,10,0"
                                             Padding="8"
-                                            ToolTip="Mute master output">
+                                            ToolTip="Mute every output device">
                                         <ui:SymbolIcon FontSize="16">
                                             <ui:SymbolIcon.Style>
                                                 <Style TargetType="ui:SymbolIcon">

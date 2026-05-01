@@ -26,7 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\app_icon.ico" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ApplicationIcon>Assets\app_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.2.0" />
     <PackageReference Include="ManagedBass" Version="3.1.1" />
     <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
     <PackageReference Include="ManagedBass.Mix" Version="3.1.1" />

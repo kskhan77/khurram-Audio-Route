@@ -1,0 +1,9 @@
+{
+  "enabledMcpjsonServers": [
+    "codebase-memory",
+    "repomix",
+    "postgres",
+    "code-mode",
+    "sequential-thinking"
+  ]
+}
