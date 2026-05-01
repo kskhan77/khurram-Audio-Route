@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.ViewModels
+  commentId: N:KhurramAudioRoute.ViewModels
+  id: KhurramAudioRoute.ViewModels
+  children:
+  - KhurramAudioRoute.ViewModels.DashboardSection
+  - KhurramAudioRoute.ViewModels.MainViewModel
+  langs:
+  - csharp
+  - vb
+  name: KhurramAudioRoute.ViewModels
+  nameWithType: KhurramAudioRoute.ViewModels
+  fullName: KhurramAudioRoute.ViewModels
+  type: Namespace
+  assemblies:
+  - KhurramAudioRoute
+references:
+- uid: KhurramAudioRoute.ViewModels.DashboardSection
+  commentId: T:KhurramAudioRoute.ViewModels.DashboardSection
+  parent: KhurramAudioRoute.ViewModels
+  href: KhurramAudioRoute.ViewModels.DashboardSection.html
+  name: DashboardSection
+  nameWithType: DashboardSection
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection
+- uid: KhurramAudioRoute.ViewModels.MainViewModel
+  commentId: T:KhurramAudioRoute.ViewModels.MainViewModel
+  href: KhurramAudioRoute.ViewModels.MainViewModel.html
+  name: MainViewModel
+  nameWithType: MainViewModel
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel
+- uid: KhurramAudioRoute.ViewModels
+  commentId: N:KhurramAudioRoute.ViewModels
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.ViewModels
+  nameWithType: KhurramAudioRoute.ViewModels
+  fullName: KhurramAudioRoute.ViewModels
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.ViewModels
+    name: ViewModels
+    href: KhurramAudioRoute.ViewModels.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.ViewModels
+    name: ViewModels
+    href: KhurramAudioRoute.ViewModels.html

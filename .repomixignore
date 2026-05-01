@@ -1,0 +1,12 @@
+bin/
+obj/
+*.dll
+*.exe
+*.png
+*.sln
+*.md
+!CLAUDE.md
+!AI_WORKFLOW.md
+!PLAN.md
+!README.md
+!MEMORY.md

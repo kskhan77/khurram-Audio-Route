@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class AudioDevice </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class AudioDevice ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/new/feature/sound-bass-branding/apiSpec/new?filename=KhurramAudioRoute_Core_AudioDevice.md&amp;value=---%0Auid%3A%20KhurramAudioRoute.Core.AudioDevice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="KhurramAudioRoute.Core.AudioDevice">
+
+
+
+  <h1 id="KhurramAudioRoute_Core_AudioDevice" data-uid="KhurramAudioRoute.Core.AudioDevice" class="text-break">
+Class AudioDevice  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="KhurramAudioRoute.html">KhurramAudioRoute</a>.<a class="xref" href="KhurramAudioRoute.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>KhurramAudioRoute.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class AudioDevice : ObservableObject, INotifyPropertyChanged, INotifyPropertyChanging</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject">ObservableObject</a></div>
+      <div><span class="xref">AudioDevice</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanging">INotifyPropertyChanging</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanged#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanged(system-componentmodel-propertychangedeventargs)">ObservableObject.OnPropertyChanged(PropertyChangedEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanging#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanging(system-componentmodel-propertychangingeventargs)">ObservableObject.OnPropertyChanging(PropertyChangingEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanged#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanged(system-string)">ObservableObject.OnPropertyChanged(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanging#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanging(system-string)">ObservableObject.OnPropertyChanging(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0@-0-system-string)">ObservableObject.SetProperty&lt;T&gt;(ref T, T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0@-0-system-collections-generic-iequalitycomparer((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(ref T, T, IEqualityComparer&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0-0-system-action((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(T, T, Action&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0-0-system-collections-generic-iequalitycomparer((-0))-system-action((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(T, T, IEqualityComparer&lt;T&gt;, Action&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-2(-1-1-0-system-action((-0-1))-system-string)">ObservableObject.SetProperty&lt;TModel, T&gt;(T, T, TModel, Action&lt;TModel, T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-2(-1-1-system-collections-generic-iequalitycomparer((-1))-0-system-action((-0-1))-system-string)">ObservableObject.SetProperty&lt;TModel, T&gt;(T, T, IEqualityComparer&lt;T&gt;, TModel, Action&lt;TModel, T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier@-system-threading-tasks-task-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion(ref ObservableObject.TaskNotifier, Task, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier@-system-threading-tasks-task-system-action((system-threading-tasks-task))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion(ref ObservableObject.TaskNotifier, Task, Action&lt;Task&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion-1(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier((-0))@-system-threading-tasks-task((-0))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion&lt;T&gt;(ref ObservableObject.TaskNotifier&lt;T&gt;, Task&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion-1(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier((-0))@-system-threading-tasks-task((-0))-system-action((system-threading-tasks-task((-0))))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion&lt;T&gt;(ref ObservableObject.TaskNotifier&lt;T&gt;, Task&lt;T&gt;, Action&lt;Task&lt;T&gt;&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.propertychanged">ObservableObject.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.propertychanging">ObservableObject.PropertyChanging</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_DuplicateStatus_" data-uid="KhurramAudioRoute.Core.AudioDevice.DuplicateStatus*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_DuplicateStatus" data-uid="KhurramAudioRoute.Core.AudioDevice.DuplicateStatus">
+  DuplicateStatus
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DuplicateStatus { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_DuplicateTargets_" data-uid="KhurramAudioRoute.Core.AudioDevice.DuplicateTargets*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_DuplicateTargets" data-uid="KhurramAudioRoute.Core.AudioDevice.DuplicateTargets">
+  DuplicateTargets
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ObservableCollection&lt;DeviceSelection&gt; DuplicateTargets { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.DeviceSelection.html">DeviceSelection</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand0_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand0*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand0" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand0">
+  EqBand0
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand0 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand1_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand1*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand1" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand1">
+  EqBand1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand1 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand2_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand2*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand2" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand2">
+  EqBand2
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand2 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand3_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand3*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand3" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand3">
+  EqBand3
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand3 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand4_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand4*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand4" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand4">
+  EqBand4
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand4 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand5_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand5*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand5" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand5">
+  EqBand5
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand5 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand6_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand6*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand6" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand6">
+  EqBand6
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand6 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand7_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand7*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand7" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand7">
+  EqBand7
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand7 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand8_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand8*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand8" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand8">
+  EqBand8
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand8 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_EqBand9_" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand9*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_EqBand9" data-uid="KhurramAudioRoute.Core.AudioDevice.EqBand9">
+  EqBand9
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EqBand9 { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_Id_" data-uid="KhurramAudioRoute.Core.AudioDevice.Id*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_Id" data-uid="KhurramAudioRoute.Core.AudioDevice.Id">
+  Id
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Id { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_IsAdvancedExpanded_" data-uid="KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_IsAdvancedExpanded" data-uid="KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded">
+  IsAdvancedExpanded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsAdvancedExpanded { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_IsDefault_" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDefault*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_IsDefault" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDefault">
+  IsDefault
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsDefault { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_IsDuplicateBusy_" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_IsDuplicateBusy" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy">
+  IsDuplicateBusy
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsDuplicateBusy { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_IsDuplicating_" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDuplicating*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_IsDuplicating" data-uid="KhurramAudioRoute.Core.AudioDevice.IsDuplicating">
+  IsDuplicating
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsDuplicating { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_IsMuted_" data-uid="KhurramAudioRoute.Core.AudioDevice.IsMuted*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_IsMuted" data-uid="KhurramAudioRoute.Core.AudioDevice.IsMuted">
+  IsMuted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsMuted { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_Name_" data-uid="KhurramAudioRoute.Core.AudioDevice.Name*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_Name" data-uid="KhurramAudioRoute.Core.AudioDevice.Name">
+  Name
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? Name { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_PeakValue_" data-uid="KhurramAudioRoute.Core.AudioDevice.PeakValue*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_PeakValue" data-uid="KhurramAudioRoute.Core.AudioDevice.PeakValue">
+  PeakValue
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float PeakValue { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_Volume_" data-uid="KhurramAudioRoute.Core.AudioDevice.Volume*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_Volume" data-uid="KhurramAudioRoute.Core.AudioDevice.Volume">
+  Volume
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Volume { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_GetEqualizerGains_" data-uid="KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_GetEqualizerGains" data-uid="KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains">
+  GetEqualizerGains()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float[] GetEqualizerGains()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_SetEqualizerGains_" data-uid="KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_SetEqualizerGains_System_Single___" data-uid="KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains(System.Single[])">
+  SetEqualizerGains(float[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetEqualizerGains(float[] gains)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>gains</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_AudioDevice_ToString_" data-uid="KhurramAudioRoute.Core.AudioDevice.ToString*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_AudioDevice_ToString" data-uid="KhurramAudioRoute.Core.AudioDevice.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string that represents the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A string that represents the current object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/DeviceManager.cs/#L10" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

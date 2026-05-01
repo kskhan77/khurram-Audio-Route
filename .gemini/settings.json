@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "codebase-memory": {
+      "command": "codebase-memory-mcp --db 'C:\\Users\\KhurramShafique\\.codebase-memory.db'",
+      "args": []
+    },
+    "repomix": {
+      "command": "npx -y repomix --mcp",
+      "args": []
+    },
+    "postgres": {
+      "command": "npx -y @modelcontextprotocol/server-postgres postgresql://root:Mansehra786@10.0.0.65:5432/portfolio-db",
+      "args": []
+    },
+    "code-mode": {
+      "command": "npx -y @cloudflare/code-mode-mcp",
+      "args": [],
+      "env": {
+        "CLOUDFLARE_API_TOKEN": "12c279da9f806cb43befd0618a9e03ea4d7a1"
+      }
+    },
+    "sequential-thinking": {
+      "command": "npx -y @modelcontextprotocol/server-sequential-thinking",
+      "args": []
+    }
+  }
+}

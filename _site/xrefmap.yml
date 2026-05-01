@@ -1,0 +1,2767 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: KhurramAudioRoute
+  name: KhurramAudioRoute
+  href: api/KhurramAudioRoute.html
+  commentId: N:KhurramAudioRoute
+  fullName: KhurramAudioRoute
+  nameWithType: KhurramAudioRoute
+- uid: KhurramAudioRoute.ActivityBrushConverter
+  name: ActivityBrushConverter
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html
+  commentId: T:KhurramAudioRoute.ActivityBrushConverter
+  fullName: KhurramAudioRoute.ActivityBrushConverter
+  nameWithType: ActivityBrushConverter
+- uid: KhurramAudioRoute.ActivityBrushConverter.ActiveBrush
+  name: ActiveBrush
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_ActiveBrush
+  commentId: P:KhurramAudioRoute.ActivityBrushConverter.ActiveBrush
+  fullName: KhurramAudioRoute.ActivityBrushConverter.ActiveBrush
+  nameWithType: ActivityBrushConverter.ActiveBrush
+- uid: KhurramAudioRoute.ActivityBrushConverter.ActiveBrush*
+  name: ActiveBrush
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_ActiveBrush_
+  commentId: Overload:KhurramAudioRoute.ActivityBrushConverter.ActiveBrush
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ActivityBrushConverter.ActiveBrush
+  nameWithType: ActivityBrushConverter.ActiveBrush
+- uid: KhurramAudioRoute.ActivityBrushConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.ActivityBrushConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.ActivityBrushConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.ActivityBrushConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: ActivityBrushConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: ActivityBrushConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.ActivityBrushConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.ActivityBrushConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ActivityBrushConverter.Convert
+  nameWithType: ActivityBrushConverter.Convert
+- uid: KhurramAudioRoute.ActivityBrushConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.ActivityBrushConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.ActivityBrushConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.ActivityBrushConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: ActivityBrushConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: ActivityBrushConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.ActivityBrushConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.ActivityBrushConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ActivityBrushConverter.ConvertBack
+  nameWithType: ActivityBrushConverter.ConvertBack
+- uid: KhurramAudioRoute.ActivityBrushConverter.InactiveBrush
+  name: InactiveBrush
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_InactiveBrush
+  commentId: P:KhurramAudioRoute.ActivityBrushConverter.InactiveBrush
+  fullName: KhurramAudioRoute.ActivityBrushConverter.InactiveBrush
+  nameWithType: ActivityBrushConverter.InactiveBrush
+- uid: KhurramAudioRoute.ActivityBrushConverter.InactiveBrush*
+  name: InactiveBrush
+  href: api/KhurramAudioRoute.ActivityBrushConverter.html#KhurramAudioRoute_ActivityBrushConverter_InactiveBrush_
+  commentId: Overload:KhurramAudioRoute.ActivityBrushConverter.InactiveBrush
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ActivityBrushConverter.InactiveBrush
+  nameWithType: ActivityBrushConverter.InactiveBrush
+- uid: KhurramAudioRoute.App
+  name: App
+  href: api/KhurramAudioRoute.App.html
+  commentId: T:KhurramAudioRoute.App
+  fullName: KhurramAudioRoute.App
+  nameWithType: App
+- uid: KhurramAudioRoute.App.InitializeComponent
+  name: InitializeComponent()
+  href: api/KhurramAudioRoute.App.html#KhurramAudioRoute_App_InitializeComponent
+  commentId: M:KhurramAudioRoute.App.InitializeComponent
+  fullName: KhurramAudioRoute.App.InitializeComponent()
+  nameWithType: App.InitializeComponent()
+- uid: KhurramAudioRoute.App.InitializeComponent*
+  name: InitializeComponent
+  href: api/KhurramAudioRoute.App.html#KhurramAudioRoute_App_InitializeComponent_
+  commentId: Overload:KhurramAudioRoute.App.InitializeComponent
+  isSpec: "True"
+  fullName: KhurramAudioRoute.App.InitializeComponent
+  nameWithType: App.InitializeComponent
+- uid: KhurramAudioRoute.App.Main
+  name: Main()
+  href: api/KhurramAudioRoute.App.html#KhurramAudioRoute_App_Main
+  commentId: M:KhurramAudioRoute.App.Main
+  fullName: KhurramAudioRoute.App.Main()
+  nameWithType: App.Main()
+- uid: KhurramAudioRoute.App.Main*
+  name: Main
+  href: api/KhurramAudioRoute.App.html#KhurramAudioRoute_App_Main_
+  commentId: Overload:KhurramAudioRoute.App.Main
+  isSpec: "True"
+  fullName: KhurramAudioRoute.App.Main
+  nameWithType: App.Main
+- uid: KhurramAudioRoute.Controls
+  name: KhurramAudioRoute.Controls
+  href: api/KhurramAudioRoute.Controls.html
+  commentId: N:KhurramAudioRoute.Controls
+  fullName: KhurramAudioRoute.Controls
+  nameWithType: KhurramAudioRoute.Controls
+- uid: KhurramAudioRoute.Controls.SpectrumMeter
+  name: SpectrumMeter
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html
+  commentId: T:KhurramAudioRoute.Controls.SpectrumMeter
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter
+  nameWithType: SpectrumMeter
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.#ctor
+  name: SpectrumMeter()
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter__ctor
+  commentId: M:KhurramAudioRoute.Controls.SpectrumMeter.#ctor
+  name.vb: New()
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.SpectrumMeter()
+  fullName.vb: KhurramAudioRoute.Controls.SpectrumMeter.New()
+  nameWithType: SpectrumMeter.SpectrumMeter()
+  nameWithType.vb: SpectrumMeter.New()
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.#ctor*
+  name: SpectrumMeter
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter__ctor_
+  commentId: Overload:KhurramAudioRoute.Controls.SpectrumMeter.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.SpectrumMeter
+  fullName.vb: KhurramAudioRoute.Controls.SpectrumMeter.New
+  nameWithType: SpectrumMeter.SpectrumMeter
+  nameWithType.vb: SpectrumMeter.New
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.BarCount
+  name: BarCount
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_BarCount
+  commentId: P:KhurramAudioRoute.Controls.SpectrumMeter.BarCount
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.BarCount
+  nameWithType: SpectrumMeter.BarCount
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.BarCount*
+  name: BarCount
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_BarCount_
+  commentId: Overload:KhurramAudioRoute.Controls.SpectrumMeter.BarCount
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.BarCount
+  nameWithType: SpectrumMeter.BarCount
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.BarCountProperty
+  name: BarCountProperty
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_BarCountProperty
+  commentId: F:KhurramAudioRoute.Controls.SpectrumMeter.BarCountProperty
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.BarCountProperty
+  nameWithType: SpectrumMeter.BarCountProperty
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent
+  name: InitializeComponent()
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_InitializeComponent
+  commentId: M:KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent()
+  nameWithType: SpectrumMeter.InitializeComponent()
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent*
+  name: InitializeComponent
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_InitializeComponent_
+  commentId: Overload:KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.InitializeComponent
+  nameWithType: SpectrumMeter.InitializeComponent
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.IsActive
+  name: IsActive
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_IsActive
+  commentId: P:KhurramAudioRoute.Controls.SpectrumMeter.IsActive
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.IsActive
+  nameWithType: SpectrumMeter.IsActive
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.IsActive*
+  name: IsActive
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_IsActive_
+  commentId: Overload:KhurramAudioRoute.Controls.SpectrumMeter.IsActive
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.IsActive
+  nameWithType: SpectrumMeter.IsActive
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.IsActiveProperty
+  name: IsActiveProperty
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_IsActiveProperty
+  commentId: F:KhurramAudioRoute.Controls.SpectrumMeter.IsActiveProperty
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.IsActiveProperty
+  nameWithType: SpectrumMeter.IsActiveProperty
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.Level
+  name: Level
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_Level
+  commentId: P:KhurramAudioRoute.Controls.SpectrumMeter.Level
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.Level
+  nameWithType: SpectrumMeter.Level
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.Level*
+  name: Level
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_Level_
+  commentId: Overload:KhurramAudioRoute.Controls.SpectrumMeter.Level
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.Level
+  nameWithType: SpectrumMeter.Level
+- uid: KhurramAudioRoute.Controls.SpectrumMeter.LevelProperty
+  name: LevelProperty
+  href: api/KhurramAudioRoute.Controls.SpectrumMeter.html#KhurramAudioRoute_Controls_SpectrumMeter_LevelProperty
+  commentId: F:KhurramAudioRoute.Controls.SpectrumMeter.LevelProperty
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter.LevelProperty
+  nameWithType: SpectrumMeter.LevelProperty
+- uid: KhurramAudioRoute.Core
+  name: KhurramAudioRoute.Core
+  href: api/KhurramAudioRoute.Core.html
+  commentId: N:KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+- uid: KhurramAudioRoute.Core.AppAudioSession
+  name: AppAudioSession
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html
+  commentId: T:KhurramAudioRoute.Core.AppAudioSession
+  fullName: KhurramAudioRoute.Core.AppAudioSession
+  nameWithType: AppAudioSession
+- uid: KhurramAudioRoute.Core.AppAudioSession.ExePath
+  name: ExePath
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ExePath
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.ExePath
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ExePath
+  nameWithType: AppAudioSession.ExePath
+- uid: KhurramAudioRoute.Core.AppAudioSession.ExePath*
+  name: ExePath
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ExePath_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.ExePath
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ExePath
+  nameWithType: AppAudioSession.ExePath
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsDuplicating
+  name: IsDuplicating
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsDuplicating
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.IsDuplicating
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsDuplicating
+  nameWithType: AppAudioSession.IsDuplicating
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsDuplicating*
+  name: IsDuplicating
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsDuplicating_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.IsDuplicating
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsDuplicating
+  nameWithType: AppAudioSession.IsDuplicating
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsMuted
+  name: IsMuted
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsMuted
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.IsMuted
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsMuted
+  nameWithType: AppAudioSession.IsMuted
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsMuted*
+  name: IsMuted
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsMuted_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.IsMuted
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsMuted
+  nameWithType: AppAudioSession.IsMuted
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsPlaying
+  name: IsPlaying
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsPlaying
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.IsPlaying
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsPlaying
+  nameWithType: AppAudioSession.IsPlaying
+- uid: KhurramAudioRoute.Core.AppAudioSession.IsPlaying*
+  name: IsPlaying
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_IsPlaying_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.IsPlaying
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.IsPlaying
+  nameWithType: AppAudioSession.IsPlaying
+- uid: KhurramAudioRoute.Core.AppAudioSession.PeakValue
+  name: PeakValue
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_PeakValue
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.PeakValue
+  fullName: KhurramAudioRoute.Core.AppAudioSession.PeakValue
+  nameWithType: AppAudioSession.PeakValue
+- uid: KhurramAudioRoute.Core.AppAudioSession.PeakValue*
+  name: PeakValue
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_PeakValue_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.PeakValue
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.PeakValue
+  nameWithType: AppAudioSession.PeakValue
+- uid: KhurramAudioRoute.Core.AppAudioSession.ProcessId
+  name: ProcessId
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ProcessId
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.ProcessId
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ProcessId
+  nameWithType: AppAudioSession.ProcessId
+- uid: KhurramAudioRoute.Core.AppAudioSession.ProcessId*
+  name: ProcessId
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ProcessId_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.ProcessId
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ProcessId
+  nameWithType: AppAudioSession.ProcessId
+- uid: KhurramAudioRoute.Core.AppAudioSession.ProcessName
+  name: ProcessName
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ProcessName
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.ProcessName
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ProcessName
+  nameWithType: AppAudioSession.ProcessName
+- uid: KhurramAudioRoute.Core.AppAudioSession.ProcessName*
+  name: ProcessName
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_ProcessName_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.ProcessName
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.ProcessName
+  nameWithType: AppAudioSession.ProcessName
+- uid: KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice
+  name: SelectedTargetDevice
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_SelectedTargetDevice
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice
+  fullName: KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice
+  nameWithType: AppAudioSession.SelectedTargetDevice
+- uid: KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice*
+  name: SelectedTargetDevice
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_SelectedTargetDevice_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.SelectedTargetDevice
+  nameWithType: AppAudioSession.SelectedTargetDevice
+- uid: KhurramAudioRoute.Core.AppAudioSession.TargetDevices
+  name: TargetDevices
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_TargetDevices
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.TargetDevices
+  fullName: KhurramAudioRoute.Core.AppAudioSession.TargetDevices
+  nameWithType: AppAudioSession.TargetDevices
+- uid: KhurramAudioRoute.Core.AppAudioSession.TargetDevices*
+  name: TargetDevices
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_TargetDevices_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.TargetDevices
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.TargetDevices
+  nameWithType: AppAudioSession.TargetDevices
+- uid: KhurramAudioRoute.Core.AppAudioSession.Volume
+  name: Volume
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_Volume
+  commentId: P:KhurramAudioRoute.Core.AppAudioSession.Volume
+  fullName: KhurramAudioRoute.Core.AppAudioSession.Volume
+  nameWithType: AppAudioSession.Volume
+- uid: KhurramAudioRoute.Core.AppAudioSession.Volume*
+  name: Volume
+  href: api/KhurramAudioRoute.Core.AppAudioSession.html#KhurramAudioRoute_Core_AppAudioSession_Volume_
+  commentId: Overload:KhurramAudioRoute.Core.AppAudioSession.Volume
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AppAudioSession.Volume
+  nameWithType: AppAudioSession.Volume
+- uid: KhurramAudioRoute.Core.AudioDevice
+  name: AudioDevice
+  href: api/KhurramAudioRoute.Core.AudioDevice.html
+  commentId: T:KhurramAudioRoute.Core.AudioDevice
+  fullName: KhurramAudioRoute.Core.AudioDevice
+  nameWithType: AudioDevice
+- uid: KhurramAudioRoute.Core.AudioDevice.DuplicateStatus
+  name: DuplicateStatus
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_DuplicateStatus
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.DuplicateStatus
+  fullName: KhurramAudioRoute.Core.AudioDevice.DuplicateStatus
+  nameWithType: AudioDevice.DuplicateStatus
+- uid: KhurramAudioRoute.Core.AudioDevice.DuplicateStatus*
+  name: DuplicateStatus
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_DuplicateStatus_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.DuplicateStatus
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.DuplicateStatus
+  nameWithType: AudioDevice.DuplicateStatus
+- uid: KhurramAudioRoute.Core.AudioDevice.DuplicateTargets
+  name: DuplicateTargets
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_DuplicateTargets
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.DuplicateTargets
+  fullName: KhurramAudioRoute.Core.AudioDevice.DuplicateTargets
+  nameWithType: AudioDevice.DuplicateTargets
+- uid: KhurramAudioRoute.Core.AudioDevice.DuplicateTargets*
+  name: DuplicateTargets
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_DuplicateTargets_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.DuplicateTargets
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.DuplicateTargets
+  nameWithType: AudioDevice.DuplicateTargets
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand0
+  name: EqBand0
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand0
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand0
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand0
+  nameWithType: AudioDevice.EqBand0
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand0*
+  name: EqBand0
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand0_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand0
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand0
+  nameWithType: AudioDevice.EqBand0
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand1
+  name: EqBand1
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand1
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand1
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand1
+  nameWithType: AudioDevice.EqBand1
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand1*
+  name: EqBand1
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand1_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand1
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand1
+  nameWithType: AudioDevice.EqBand1
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand2
+  name: EqBand2
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand2
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand2
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand2
+  nameWithType: AudioDevice.EqBand2
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand2*
+  name: EqBand2
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand2_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand2
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand2
+  nameWithType: AudioDevice.EqBand2
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand3
+  name: EqBand3
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand3
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand3
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand3
+  nameWithType: AudioDevice.EqBand3
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand3*
+  name: EqBand3
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand3_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand3
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand3
+  nameWithType: AudioDevice.EqBand3
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand4
+  name: EqBand4
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand4
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand4
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand4
+  nameWithType: AudioDevice.EqBand4
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand4*
+  name: EqBand4
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand4_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand4
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand4
+  nameWithType: AudioDevice.EqBand4
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand5
+  name: EqBand5
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand5
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand5
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand5
+  nameWithType: AudioDevice.EqBand5
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand5*
+  name: EqBand5
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand5_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand5
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand5
+  nameWithType: AudioDevice.EqBand5
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand6
+  name: EqBand6
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand6
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand6
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand6
+  nameWithType: AudioDevice.EqBand6
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand6*
+  name: EqBand6
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand6_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand6
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand6
+  nameWithType: AudioDevice.EqBand6
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand7
+  name: EqBand7
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand7
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand7
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand7
+  nameWithType: AudioDevice.EqBand7
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand7*
+  name: EqBand7
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand7_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand7
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand7
+  nameWithType: AudioDevice.EqBand7
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand8
+  name: EqBand8
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand8
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand8
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand8
+  nameWithType: AudioDevice.EqBand8
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand8*
+  name: EqBand8
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand8_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand8
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand8
+  nameWithType: AudioDevice.EqBand8
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand9
+  name: EqBand9
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand9
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.EqBand9
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand9
+  nameWithType: AudioDevice.EqBand9
+- uid: KhurramAudioRoute.Core.AudioDevice.EqBand9*
+  name: EqBand9
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_EqBand9_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.EqBand9
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.EqBand9
+  nameWithType: AudioDevice.EqBand9
+- uid: KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains
+  name: GetEqualizerGains()
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_GetEqualizerGains
+  commentId: M:KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains
+  fullName: KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains()
+  nameWithType: AudioDevice.GetEqualizerGains()
+- uid: KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains*
+  name: GetEqualizerGains
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_GetEqualizerGains_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.GetEqualizerGains
+  nameWithType: AudioDevice.GetEqualizerGains
+- uid: KhurramAudioRoute.Core.AudioDevice.Id
+  name: Id
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Id
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.Id
+  fullName: KhurramAudioRoute.Core.AudioDevice.Id
+  nameWithType: AudioDevice.Id
+- uid: KhurramAudioRoute.Core.AudioDevice.Id*
+  name: Id
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Id_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.Id
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.Id
+  nameWithType: AudioDevice.Id
+- uid: KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded
+  name: IsAdvancedExpanded
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsAdvancedExpanded
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded
+  nameWithType: AudioDevice.IsAdvancedExpanded
+- uid: KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded*
+  name: IsAdvancedExpanded
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsAdvancedExpanded_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsAdvancedExpanded
+  nameWithType: AudioDevice.IsAdvancedExpanded
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDefault
+  name: IsDefault
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDefault
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.IsDefault
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDefault
+  nameWithType: AudioDevice.IsDefault
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDefault*
+  name: IsDefault
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDefault_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.IsDefault
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDefault
+  nameWithType: AudioDevice.IsDefault
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy
+  name: IsDuplicateBusy
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDuplicateBusy
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy
+  nameWithType: AudioDevice.IsDuplicateBusy
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy*
+  name: IsDuplicateBusy
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDuplicateBusy_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDuplicateBusy
+  nameWithType: AudioDevice.IsDuplicateBusy
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDuplicating
+  name: IsDuplicating
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDuplicating
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.IsDuplicating
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDuplicating
+  nameWithType: AudioDevice.IsDuplicating
+- uid: KhurramAudioRoute.Core.AudioDevice.IsDuplicating*
+  name: IsDuplicating
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsDuplicating_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.IsDuplicating
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsDuplicating
+  nameWithType: AudioDevice.IsDuplicating
+- uid: KhurramAudioRoute.Core.AudioDevice.IsMuted
+  name: IsMuted
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsMuted
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.IsMuted
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsMuted
+  nameWithType: AudioDevice.IsMuted
+- uid: KhurramAudioRoute.Core.AudioDevice.IsMuted*
+  name: IsMuted
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_IsMuted_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.IsMuted
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.IsMuted
+  nameWithType: AudioDevice.IsMuted
+- uid: KhurramAudioRoute.Core.AudioDevice.Name
+  name: Name
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Name
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.Name
+  fullName: KhurramAudioRoute.Core.AudioDevice.Name
+  nameWithType: AudioDevice.Name
+- uid: KhurramAudioRoute.Core.AudioDevice.Name*
+  name: Name
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Name_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.Name
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.Name
+  nameWithType: AudioDevice.Name
+- uid: KhurramAudioRoute.Core.AudioDevice.PeakValue
+  name: PeakValue
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_PeakValue
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.PeakValue
+  fullName: KhurramAudioRoute.Core.AudioDevice.PeakValue
+  nameWithType: AudioDevice.PeakValue
+- uid: KhurramAudioRoute.Core.AudioDevice.PeakValue*
+  name: PeakValue
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_PeakValue_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.PeakValue
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.PeakValue
+  nameWithType: AudioDevice.PeakValue
+- uid: KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains(System.Single[])
+  name: SetEqualizerGains(float[])
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_SetEqualizerGains_System_Single___
+  commentId: M:KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains(System.Single[])
+  name.vb: SetEqualizerGains(Single())
+  fullName: KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains(float[])
+  fullName.vb: KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains(Single())
+  nameWithType: AudioDevice.SetEqualizerGains(float[])
+  nameWithType.vb: AudioDevice.SetEqualizerGains(Single())
+- uid: KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains*
+  name: SetEqualizerGains
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_SetEqualizerGains_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.SetEqualizerGains
+  nameWithType: AudioDevice.SetEqualizerGains
+- uid: KhurramAudioRoute.Core.AudioDevice.ToString
+  name: ToString()
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_ToString
+  commentId: M:KhurramAudioRoute.Core.AudioDevice.ToString
+  fullName: KhurramAudioRoute.Core.AudioDevice.ToString()
+  nameWithType: AudioDevice.ToString()
+- uid: KhurramAudioRoute.Core.AudioDevice.ToString*
+  name: ToString
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_ToString_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.ToString
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.ToString
+  nameWithType: AudioDevice.ToString
+- uid: KhurramAudioRoute.Core.AudioDevice.Volume
+  name: Volume
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Volume
+  commentId: P:KhurramAudioRoute.Core.AudioDevice.Volume
+  fullName: KhurramAudioRoute.Core.AudioDevice.Volume
+  nameWithType: AudioDevice.Volume
+- uid: KhurramAudioRoute.Core.AudioDevice.Volume*
+  name: Volume
+  href: api/KhurramAudioRoute.Core.AudioDevice.html#KhurramAudioRoute_Core_AudioDevice_Volume_
+  commentId: Overload:KhurramAudioRoute.Core.AudioDevice.Volume
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioDevice.Volume
+  nameWithType: AudioDevice.Volume
+- uid: KhurramAudioRoute.Core.AudioRouterNative
+  name: AudioRouterNative
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html
+  commentId: T:KhurramAudioRoute.Core.AudioRouterNative
+  fullName: KhurramAudioRoute.Core.AudioRouterNative
+  nameWithType: AudioRouterNative
+- uid: KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice(System.Int32,System.String,System.String)
+  name: ResetAppDefaultDevice(int, string?, string?)
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_ResetAppDefaultDevice_System_Int32_System_String_System_String_
+  commentId: M:KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice(System.Int32,System.String,System.String)
+  name.vb: ResetAppDefaultDevice(Integer, String, String)
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice(int, string?, string?)
+  fullName.vb: KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice(Integer, String, String)
+  nameWithType: AudioRouterNative.ResetAppDefaultDevice(int, string?, string?)
+  nameWithType.vb: AudioRouterNative.ResetAppDefaultDevice(Integer, String, String)
+- uid: KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice*
+  name: ResetAppDefaultDevice
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_ResetAppDefaultDevice_
+  commentId: Overload:KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.ResetAppDefaultDevice
+  nameWithType: AudioRouterNative.ResetAppDefaultDevice
+- uid: KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice(System.Int32,System.String,System.String,System.String)
+  name: SetAppDefaultDevice(int, string?, string?, string?)
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_SetAppDefaultDevice_System_Int32_System_String_System_String_System_String_
+  commentId: M:KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice(System.Int32,System.String,System.String,System.String)
+  name.vb: SetAppDefaultDevice(Integer, String, String, String)
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice(int, string?, string?, string?)
+  fullName.vb: KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice(Integer, String, String, String)
+  nameWithType: AudioRouterNative.SetAppDefaultDevice(int, string?, string?, string?)
+  nameWithType.vb: AudioRouterNative.SetAppDefaultDevice(Integer, String, String, String)
+- uid: KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice*
+  name: SetAppDefaultDevice
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_SetAppDefaultDevice_
+  commentId: Overload:KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.SetAppDefaultDevice
+  nameWithType: AudioRouterNative.SetAppDefaultDevice
+- uid: KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice(System.String)
+  name: SetSystemDefaultDevice(string)
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_SetSystemDefaultDevice_System_String_
+  commentId: M:KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice(System.String)
+  name.vb: SetSystemDefaultDevice(String)
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice(string)
+  fullName.vb: KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice(String)
+  nameWithType: AudioRouterNative.SetSystemDefaultDevice(string)
+  nameWithType.vb: AudioRouterNative.SetSystemDefaultDevice(String)
+- uid: KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice*
+  name: SetSystemDefaultDevice
+  href: api/KhurramAudioRoute.Core.AudioRouterNative.html#KhurramAudioRoute_Core_AudioRouterNative_SetSystemDefaultDevice_
+  commentId: Overload:KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.AudioRouterNative.SetSystemDefaultDevice
+  nameWithType: AudioRouterNative.SetSystemDefaultDevice
+- uid: KhurramAudioRoute.Core.BassEngine
+  name: BassEngine
+  href: api/KhurramAudioRoute.Core.BassEngine.html
+  commentId: T:KhurramAudioRoute.Core.BassEngine
+  fullName: KhurramAudioRoute.Core.BassEngine
+  nameWithType: BassEngine
+- uid: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(System.String@)
+  name: CheckNativeDlls(out string)
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_CheckNativeDlls_System_String__
+  commentId: M:KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(System.String@)
+  name.vb: CheckNativeDlls(String)
+  fullName: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(out string)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(String)
+  nameWithType: BassEngine.CheckNativeDlls(out string)
+  nameWithType.vb: BassEngine.CheckNativeDlls(String)
+- uid: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls*
+  name: CheckNativeDlls
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_CheckNativeDlls_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.CheckNativeDlls
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls
+  nameWithType: BassEngine.CheckNativeDlls
+- uid: KhurramAudioRoute.Core.BassEngine.Free
+  name: Free()
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_Free
+  commentId: M:KhurramAudioRoute.Core.BassEngine.Free
+  fullName: KhurramAudioRoute.Core.BassEngine.Free()
+  nameWithType: BassEngine.Free()
+- uid: KhurramAudioRoute.Core.BassEngine.Free*
+  name: Free
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_Free_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.Free
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.Free
+  nameWithType: BassEngine.Free
+- uid: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(System.String)
+  name: GetDeviceIndex(string)
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_GetDeviceIndex_System_String_
+  commentId: M:KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(System.String)
+  name.vb: GetDeviceIndex(String)
+  fullName: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(string)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(String)
+  nameWithType: BassEngine.GetDeviceIndex(string)
+  nameWithType.vb: BassEngine.GetDeviceIndex(String)
+- uid: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex*
+  name: GetDeviceIndex
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_GetDeviceIndex_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.GetDeviceIndex
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex
+  nameWithType: BassEngine.GetDeviceIndex
+- uid: KhurramAudioRoute.Core.BassEngine.InitializeDevice(System.Int32)
+  name: InitializeDevice(int)
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_InitializeDevice_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.BassEngine.InitializeDevice(System.Int32)
+  name.vb: InitializeDevice(Integer)
+  fullName: KhurramAudioRoute.Core.BassEngine.InitializeDevice(int)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.InitializeDevice(Integer)
+  nameWithType: BassEngine.InitializeDevice(int)
+  nameWithType.vb: BassEngine.InitializeDevice(Integer)
+- uid: KhurramAudioRoute.Core.BassEngine.InitializeDevice*
+  name: InitializeDevice
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_InitializeDevice_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.InitializeDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.InitializeDevice
+  nameWithType: BassEngine.InitializeDevice
+- uid: KhurramAudioRoute.Core.BassEngine.PlayTestTone(System.String)
+  name: PlayTestTone(string)
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_PlayTestTone_System_String_
+  commentId: M:KhurramAudioRoute.Core.BassEngine.PlayTestTone(System.String)
+  name.vb: PlayTestTone(String)
+  fullName: KhurramAudioRoute.Core.BassEngine.PlayTestTone(string)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.PlayTestTone(String)
+  nameWithType: BassEngine.PlayTestTone(string)
+  nameWithType.vb: BassEngine.PlayTestTone(String)
+- uid: KhurramAudioRoute.Core.BassEngine.PlayTestTone*
+  name: PlayTestTone
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_PlayTestTone_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.PlayTestTone
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.PlayTestTone
+  nameWithType: BassEngine.PlayTestTone
+- uid: KhurramAudioRoute.Core.BassEngine.StopTestTone
+  name: StopTestTone()
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_StopTestTone
+  commentId: M:KhurramAudioRoute.Core.BassEngine.StopTestTone
+  fullName: KhurramAudioRoute.Core.BassEngine.StopTestTone()
+  nameWithType: BassEngine.StopTestTone()
+- uid: KhurramAudioRoute.Core.BassEngine.StopTestTone*
+  name: StopTestTone
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_StopTestTone_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.StopTestTone
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.StopTestTone
+  nameWithType: BassEngine.StopTestTone
+- uid: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(System.String,System.Single[])
+  name: UpdateEqualizer(string, float[])
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_UpdateEqualizer_System_String_System_Single___
+  commentId: M:KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(System.String,System.Single[])
+  name.vb: UpdateEqualizer(String, Single())
+  fullName: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(string, float[])
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(String, Single())
+  nameWithType: BassEngine.UpdateEqualizer(string, float[])
+  nameWithType.vb: BassEngine.UpdateEqualizer(String, Single())
+- uid: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer*
+  name: UpdateEqualizer
+  href: api/KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_UpdateEqualizer_
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.UpdateEqualizer
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer
+  nameWithType: BassEngine.UpdateEqualizer
+- uid: KhurramAudioRoute.Core.DelaySampleProvider
+  name: DelaySampleProvider
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html
+  commentId: T:KhurramAudioRoute.Core.DelaySampleProvider
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider
+  nameWithType: DelaySampleProvider
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Int32)
+  name: DelaySampleProvider(ISampleProvider, int)
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider__ctor_NAudio_Wave_ISampleProvider_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.DelaySampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Int32)
+  name.vb: New(ISampleProvider, Integer)
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.DelaySampleProvider(NAudio.Wave.ISampleProvider, int)
+  fullName.vb: KhurramAudioRoute.Core.DelaySampleProvider.New(NAudio.Wave.ISampleProvider, Integer)
+  nameWithType: DelaySampleProvider.DelaySampleProvider(ISampleProvider, int)
+  nameWithType.vb: DelaySampleProvider.New(ISampleProvider, Integer)
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.#ctor*
+  name: DelaySampleProvider
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider__ctor_
+  commentId: Overload:KhurramAudioRoute.Core.DelaySampleProvider.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.DelaySampleProvider
+  fullName.vb: KhurramAudioRoute.Core.DelaySampleProvider.New
+  nameWithType: DelaySampleProvider.DelaySampleProvider
+  nameWithType.vb: DelaySampleProvider.New
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs
+  name: CurrentDelayMs
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_CurrentDelayMs
+  commentId: P:KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs
+  nameWithType: DelaySampleProvider.CurrentDelayMs
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs*
+  name: CurrentDelayMs
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_CurrentDelayMs_
+  commentId: Overload:KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.CurrentDelayMs
+  nameWithType: DelaySampleProvider.CurrentDelayMs
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  name: Read(float[], int, int)
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_Read_System_Single___System_Int32_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.DelaySampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  name.vb: Read(Single(), Integer, Integer)
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.Read(float[], int, int)
+  fullName.vb: KhurramAudioRoute.Core.DelaySampleProvider.Read(Single(), Integer, Integer)
+  nameWithType: DelaySampleProvider.Read(float[], int, int)
+  nameWithType.vb: DelaySampleProvider.Read(Single(), Integer, Integer)
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.Read*
+  name: Read
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_Read_
+  commentId: Overload:KhurramAudioRoute.Core.DelaySampleProvider.Read
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.Read
+  nameWithType: DelaySampleProvider.Read
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs(System.Int32)
+  name: SetDelayMs(int)
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_SetDelayMs_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs(System.Int32)
+  name.vb: SetDelayMs(Integer)
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs(int)
+  fullName.vb: KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs(Integer)
+  nameWithType: DelaySampleProvider.SetDelayMs(int)
+  nameWithType.vb: DelaySampleProvider.SetDelayMs(Integer)
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs*
+  name: SetDelayMs
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_SetDelayMs_
+  commentId: Overload:KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.SetDelayMs
+  nameWithType: DelaySampleProvider.SetDelayMs
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_WaveFormat
+  commentId: P:KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat
+  nameWithType: DelaySampleProvider.WaveFormat
+- uid: KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat*
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Core.DelaySampleProvider.html#KhurramAudioRoute_Core_DelaySampleProvider_WaveFormat_
+  commentId: Overload:KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider.WaveFormat
+  nameWithType: DelaySampleProvider.WaveFormat
+- uid: KhurramAudioRoute.Core.DeviceManager
+  name: DeviceManager
+  href: api/KhurramAudioRoute.Core.DeviceManager.html
+  commentId: T:KhurramAudioRoute.Core.DeviceManager
+  fullName: KhurramAudioRoute.Core.DeviceManager
+  nameWithType: DeviceManager
+- uid: KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices
+  name: GetCaptureDevices()
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_GetCaptureDevices
+  commentId: M:KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices
+  fullName: KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices()
+  nameWithType: DeviceManager.GetCaptureDevices()
+- uid: KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices*
+  name: GetCaptureDevices
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_GetCaptureDevices_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceManager.GetCaptureDevices
+  nameWithType: DeviceManager.GetCaptureDevices
+- uid: KhurramAudioRoute.Core.DeviceManager.GetRenderDevices
+  name: GetRenderDevices()
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_GetRenderDevices
+  commentId: M:KhurramAudioRoute.Core.DeviceManager.GetRenderDevices
+  fullName: KhurramAudioRoute.Core.DeviceManager.GetRenderDevices()
+  nameWithType: DeviceManager.GetRenderDevices()
+- uid: KhurramAudioRoute.Core.DeviceManager.GetRenderDevices*
+  name: GetRenderDevices
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_GetRenderDevices_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceManager.GetRenderDevices
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceManager.GetRenderDevices
+  nameWithType: DeviceManager.GetRenderDevices
+- uid: KhurramAudioRoute.Core.DeviceManager.SetMasterMute(System.String,System.Boolean)
+  name: SetMasterMute(string, bool)
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_SetMasterMute_System_String_System_Boolean_
+  commentId: M:KhurramAudioRoute.Core.DeviceManager.SetMasterMute(System.String,System.Boolean)
+  name.vb: SetMasterMute(String, Boolean)
+  fullName: KhurramAudioRoute.Core.DeviceManager.SetMasterMute(string, bool)
+  fullName.vb: KhurramAudioRoute.Core.DeviceManager.SetMasterMute(String, Boolean)
+  nameWithType: DeviceManager.SetMasterMute(string, bool)
+  nameWithType.vb: DeviceManager.SetMasterMute(String, Boolean)
+- uid: KhurramAudioRoute.Core.DeviceManager.SetMasterMute*
+  name: SetMasterMute
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_SetMasterMute_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceManager.SetMasterMute
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceManager.SetMasterMute
+  nameWithType: DeviceManager.SetMasterMute
+- uid: KhurramAudioRoute.Core.DeviceManager.SetMasterVolume(System.String,System.Single)
+  name: SetMasterVolume(string, float)
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_SetMasterVolume_System_String_System_Single_
+  commentId: M:KhurramAudioRoute.Core.DeviceManager.SetMasterVolume(System.String,System.Single)
+  name.vb: SetMasterVolume(String, Single)
+  fullName: KhurramAudioRoute.Core.DeviceManager.SetMasterVolume(string, float)
+  fullName.vb: KhurramAudioRoute.Core.DeviceManager.SetMasterVolume(String, Single)
+  nameWithType: DeviceManager.SetMasterVolume(string, float)
+  nameWithType.vb: DeviceManager.SetMasterVolume(String, Single)
+- uid: KhurramAudioRoute.Core.DeviceManager.SetMasterVolume*
+  name: SetMasterVolume
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_SetMasterVolume_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceManager.SetMasterVolume
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceManager.SetMasterVolume
+  nameWithType: DeviceManager.SetMasterVolume
+- uid: KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels(System.Collections.Generic.IEnumerable{KhurramAudioRoute.Core.AudioDevice})
+  name: UpdateDeviceLevels(IEnumerable<AudioDevice>)
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_UpdateDeviceLevels_System_Collections_Generic_IEnumerable_KhurramAudioRoute_Core_AudioDevice__
+  commentId: M:KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels(System.Collections.Generic.IEnumerable{KhurramAudioRoute.Core.AudioDevice})
+  name.vb: UpdateDeviceLevels(IEnumerable(Of AudioDevice))
+  fullName: KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels(System.Collections.Generic.IEnumerable<KhurramAudioRoute.Core.AudioDevice>)
+  fullName.vb: KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels(System.Collections.Generic.IEnumerable(Of KhurramAudioRoute.Core.AudioDevice))
+  nameWithType: DeviceManager.UpdateDeviceLevels(IEnumerable<AudioDevice>)
+  nameWithType.vb: DeviceManager.UpdateDeviceLevels(IEnumerable(Of AudioDevice))
+- uid: KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels*
+  name: UpdateDeviceLevels
+  href: api/KhurramAudioRoute.Core.DeviceManager.html#KhurramAudioRoute_Core_DeviceManager_UpdateDeviceLevels_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceManager.UpdateDeviceLevels
+  nameWithType: DeviceManager.UpdateDeviceLevels
+- uid: KhurramAudioRoute.Core.DeviceSelection
+  name: DeviceSelection
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html
+  commentId: T:KhurramAudioRoute.Core.DeviceSelection
+  fullName: KhurramAudioRoute.Core.DeviceSelection
+  nameWithType: DeviceSelection
+- uid: KhurramAudioRoute.Core.DeviceSelection.Device
+  name: Device
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_Device
+  commentId: P:KhurramAudioRoute.Core.DeviceSelection.Device
+  fullName: KhurramAudioRoute.Core.DeviceSelection.Device
+  nameWithType: DeviceSelection.Device
+- uid: KhurramAudioRoute.Core.DeviceSelection.Device*
+  name: Device
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_Device_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceSelection.Device
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceSelection.Device
+  nameWithType: DeviceSelection.Device
+- uid: KhurramAudioRoute.Core.DeviceSelection.IsSelected
+  name: IsSelected
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_IsSelected
+  commentId: P:KhurramAudioRoute.Core.DeviceSelection.IsSelected
+  fullName: KhurramAudioRoute.Core.DeviceSelection.IsSelected
+  nameWithType: DeviceSelection.IsSelected
+- uid: KhurramAudioRoute.Core.DeviceSelection.IsSelected*
+  name: IsSelected
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_IsSelected_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceSelection.IsSelected
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceSelection.IsSelected
+  nameWithType: DeviceSelection.IsSelected
+- uid: KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs
+  name: LatencyOffsetMs
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_LatencyOffsetMs
+  commentId: P:KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs
+  fullName: KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs
+  nameWithType: DeviceSelection.LatencyOffsetMs
+- uid: KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs*
+  name: LatencyOffsetMs
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_LatencyOffsetMs_
+  commentId: Overload:KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DeviceSelection.LatencyOffsetMs
+  nameWithType: DeviceSelection.LatencyOffsetMs
+- uid: KhurramAudioRoute.Core.DeviceSelection.LatencyStepMs
+  name: LatencyStepMs
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_LatencyStepMs
+  commentId: F:KhurramAudioRoute.Core.DeviceSelection.LatencyStepMs
+  fullName: KhurramAudioRoute.Core.DeviceSelection.LatencyStepMs
+  nameWithType: DeviceSelection.LatencyStepMs
+- uid: KhurramAudioRoute.Core.DeviceSelection.MaxLatencyOffsetMs
+  name: MaxLatencyOffsetMs
+  href: api/KhurramAudioRoute.Core.DeviceSelection.html#KhurramAudioRoute_Core_DeviceSelection_MaxLatencyOffsetMs
+  commentId: F:KhurramAudioRoute.Core.DeviceSelection.MaxLatencyOffsetMs
+  fullName: KhurramAudioRoute.Core.DeviceSelection.MaxLatencyOffsetMs
+  nameWithType: DeviceSelection.MaxLatencyOffsetMs
+- uid: KhurramAudioRoute.Core.DuplicationManager
+  name: DuplicationManager
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html
+  commentId: T:KhurramAudioRoute.Core.DuplicationManager
+  fullName: KhurramAudioRoute.Core.DuplicationManager
+  nameWithType: DuplicationManager
+- uid: KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency(System.String,System.String)
+  name: GetTargetLatency(string?, string?)
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_GetTargetLatency_System_String_System_String_
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency(System.String,System.String)
+  name.vb: GetTargetLatency(String, String)
+  fullName: KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency(string?, string?)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency(String, String)
+  nameWithType: DuplicationManager.GetTargetLatency(string?, string?)
+  nameWithType.vb: DuplicationManager.GetTargetLatency(String, String)
+- uid: KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency*
+  name: GetTargetLatency
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_GetTargetLatency_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.GetTargetLatency
+  nameWithType: DuplicationManager.GetTargetLatency
+- uid: KhurramAudioRoute.Core.DuplicationManager.IsDuplicating(System.String)
+  name: IsDuplicating(string?)
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_IsDuplicating_System_String_
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.IsDuplicating(System.String)
+  name.vb: IsDuplicating(String)
+  fullName: KhurramAudioRoute.Core.DuplicationManager.IsDuplicating(string?)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.IsDuplicating(String)
+  nameWithType: DuplicationManager.IsDuplicating(string?)
+  nameWithType.vb: DuplicationManager.IsDuplicating(String)
+- uid: KhurramAudioRoute.Core.DuplicationManager.IsDuplicating*
+  name: IsDuplicating
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_IsDuplicating_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.IsDuplicating
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.IsDuplicating
+  nameWithType: DuplicationManager.IsDuplicating
+- uid: KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency(System.String,System.String,System.Int32)
+  name: SetTargetLatency(string?, string?, int)
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_SetTargetLatency_System_String_System_String_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency(System.String,System.String,System.Int32)
+  name.vb: SetTargetLatency(String, String, Integer)
+  fullName: KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency(string?, string?, int)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency(String, String, Integer)
+  nameWithType: DuplicationManager.SetTargetLatency(string?, string?, int)
+  nameWithType.vb: DuplicationManager.SetTargetLatency(String, String, Integer)
+- uid: KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency*
+  name: SetTargetLatency
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_SetTargetLatency_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.SetTargetLatency
+  nameWithType: DuplicationManager.SetTargetLatency
+- uid: KhurramAudioRoute.Core.DuplicationManager.StartDuplication(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  name: StartDuplication(string, IEnumerable<string>, float[]?)
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StartDuplication_System_String_System_Collections_Generic_IEnumerable_System_String__System_Single___
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.StartDuplication(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  name.vb: StartDuplication(String, IEnumerable(Of String), Single())
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StartDuplication(string, System.Collections.Generic.IEnumerable<string>, float[]?)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.StartDuplication(String, System.Collections.Generic.IEnumerable(Of String), Single())
+  nameWithType: DuplicationManager.StartDuplication(string, IEnumerable<string>, float[]?)
+  nameWithType.vb: DuplicationManager.StartDuplication(String, IEnumerable(Of String), Single())
+- uid: KhurramAudioRoute.Core.DuplicationManager.StartDuplication*
+  name: StartDuplication
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StartDuplication_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.StartDuplication
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StartDuplication
+  nameWithType: DuplicationManager.StartDuplication
+- uid: KhurramAudioRoute.Core.DuplicationManager.StopAll
+  name: StopAll()
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StopAll
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.StopAll
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StopAll()
+  nameWithType: DuplicationManager.StopAll()
+- uid: KhurramAudioRoute.Core.DuplicationManager.StopAll*
+  name: StopAll
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StopAll_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.StopAll
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StopAll
+  nameWithType: DuplicationManager.StopAll
+- uid: KhurramAudioRoute.Core.DuplicationManager.StopDuplication(System.String)
+  name: StopDuplication(string)
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StopDuplication_System_String_
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.StopDuplication(System.String)
+  name.vb: StopDuplication(String)
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StopDuplication(string)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.StopDuplication(String)
+  nameWithType: DuplicationManager.StopDuplication(string)
+  nameWithType.vb: DuplicationManager.StopDuplication(String)
+- uid: KhurramAudioRoute.Core.DuplicationManager.StopDuplication*
+  name: StopDuplication
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_StopDuplication_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.StopDuplication
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.StopDuplication
+  nameWithType: DuplicationManager.StopDuplication
+- uid: KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer(System.String,System.Single[])
+  name: UpdateEqualizer(string?, float[])
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_UpdateEqualizer_System_String_System_Single___
+  commentId: M:KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer(System.String,System.Single[])
+  name.vb: UpdateEqualizer(String, Single())
+  fullName: KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer(string?, float[])
+  fullName.vb: KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer(String, Single())
+  nameWithType: DuplicationManager.UpdateEqualizer(string?, float[])
+  nameWithType.vb: DuplicationManager.UpdateEqualizer(String, Single())
+- uid: KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer*
+  name: UpdateEqualizer
+  href: api/KhurramAudioRoute.Core.DuplicationManager.html#KhurramAudioRoute_Core_DuplicationManager_UpdateEqualizer_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationManager.UpdateEqualizer
+  nameWithType: DuplicationManager.UpdateEqualizer
+- uid: KhurramAudioRoute.Core.DuplicationSession
+  name: DuplicationSession
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html
+  commentId: T:KhurramAudioRoute.Core.DuplicationSession
+  fullName: KhurramAudioRoute.Core.DuplicationSession
+  nameWithType: DuplicationSession
+- uid: KhurramAudioRoute.Core.DuplicationSession.#ctor(System.String)
+  name: DuplicationSession(string)
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession__ctor_System_String_
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.#ctor(System.String)
+  name.vb: New(String)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.DuplicationSession(string)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.New(String)
+  nameWithType: DuplicationSession.DuplicationSession(string)
+  nameWithType.vb: DuplicationSession.New(String)
+- uid: KhurramAudioRoute.Core.DuplicationSession.#ctor*
+  name: DuplicationSession
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession__ctor_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Core.DuplicationSession.DuplicationSession
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.New
+  nameWithType: DuplicationSession.DuplicationSession
+  nameWithType.vb: DuplicationSession.New
+- uid: KhurramAudioRoute.Core.DuplicationSession.Dispose
+  name: Dispose()
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Dispose
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.Dispose
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Dispose()
+  nameWithType: DuplicationSession.Dispose()
+- uid: KhurramAudioRoute.Core.DuplicationSession.Dispose*
+  name: Dispose
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Dispose_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.Dispose
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Dispose
+  nameWithType: DuplicationSession.Dispose
+- uid: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(System.String)
+  name: GetTargetLatency(string)
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_GetTargetLatency_System_String_
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(System.String)
+  name.vb: GetTargetLatency(String)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(string)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(String)
+  nameWithType: DuplicationSession.GetTargetLatency(string)
+  nameWithType.vb: DuplicationSession.GetTargetLatency(String)
+- uid: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency*
+  name: GetTargetLatency
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_GetTargetLatency_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency
+  nameWithType: DuplicationSession.GetTargetLatency
+- uid: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  name: SessionKey
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SessionKey
+  commentId: P:KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  nameWithType: DuplicationSession.SessionKey
+- uid: KhurramAudioRoute.Core.DuplicationSession.SessionKey*
+  name: SessionKey
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SessionKey_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  nameWithType: DuplicationSession.SessionKey
+- uid: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(System.String,System.Int32)
+  name: SetTargetLatency(string, int)
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SetTargetLatency_System_String_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(System.String,System.Int32)
+  name.vb: SetTargetLatency(String, Integer)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(string, int)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(String, Integer)
+  nameWithType: DuplicationSession.SetTargetLatency(string, int)
+  nameWithType.vb: DuplicationSession.SetTargetLatency(String, Integer)
+- uid: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency*
+  name: SetTargetLatency
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SetTargetLatency_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency
+  nameWithType: DuplicationSession.SetTargetLatency
+- uid: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  name: StartOrUpdate(string, IEnumerable<string>, float[])
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_StartOrUpdate_System_String_System_Collections_Generic_IEnumerable_System_String__System_Single___
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  name.vb: StartOrUpdate(String, IEnumerable(Of String), Single())
+  fullName: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(string, System.Collections.Generic.IEnumerable<string>, float[])
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(String, System.Collections.Generic.IEnumerable(Of String), Single())
+  nameWithType: DuplicationSession.StartOrUpdate(string, IEnumerable<string>, float[])
+  nameWithType.vb: DuplicationSession.StartOrUpdate(String, IEnumerable(Of String), Single())
+- uid: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate*
+  name: StartOrUpdate
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_StartOrUpdate_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate
+  nameWithType: DuplicationSession.StartOrUpdate
+- uid: KhurramAudioRoute.Core.DuplicationSession.Stop
+  name: Stop()
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Stop
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.Stop
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Stop()
+  nameWithType: DuplicationSession.Stop()
+- uid: KhurramAudioRoute.Core.DuplicationSession.Stop*
+  name: Stop
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Stop_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.Stop
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Stop
+  nameWithType: DuplicationSession.Stop
+- uid: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(System.Single[])
+  name: UpdateEqualizer(float[])
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_UpdateEqualizer_System_Single___
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(System.Single[])
+  name.vb: UpdateEqualizer(Single())
+  fullName: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(float[])
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(Single())
+  nameWithType: DuplicationSession.UpdateEqualizer(float[])
+  nameWithType.vb: DuplicationSession.UpdateEqualizer(Single())
+- uid: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer*
+  name: UpdateEqualizer
+  href: api/KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_UpdateEqualizer_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer
+  nameWithType: DuplicationSession.UpdateEqualizer
+- uid: KhurramAudioRoute.Core.DuplicationTarget
+  name: DuplicationTarget
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html
+  commentId: T:KhurramAudioRoute.Core.DuplicationTarget
+  fullName: KhurramAudioRoute.Core.DuplicationTarget
+  nameWithType: DuplicationTarget
+- uid: KhurramAudioRoute.Core.DuplicationTarget.#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)
+  name: DuplicationTarget(string, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget__ctor_System_String_NAudio_CoreAudioApi_MMDevice_NAudio_Wave_IWavePlayer_NAudio_Wave_BufferedWaveProvider_KhurramAudioRoute_Core_EqualizerSampleProvider_KhurramAudioRoute_Core_DelaySampleProvider_
+  commentId: M:KhurramAudioRoute.Core.DuplicationTarget.#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)
+  name.vb: New(String, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DuplicationTarget(string, NAudio.CoreAudioApi.MMDevice, NAudio.Wave.IWavePlayer, NAudio.Wave.BufferedWaveProvider, KhurramAudioRoute.Core.EqualizerSampleProvider, KhurramAudioRoute.Core.DelaySampleProvider)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationTarget.New(String, NAudio.CoreAudioApi.MMDevice, NAudio.Wave.IWavePlayer, NAudio.Wave.BufferedWaveProvider, KhurramAudioRoute.Core.EqualizerSampleProvider, KhurramAudioRoute.Core.DelaySampleProvider)
+  nameWithType: DuplicationTarget.DuplicationTarget(string, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  nameWithType.vb: DuplicationTarget.New(String, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+- uid: KhurramAudioRoute.Core.DuplicationTarget.#ctor*
+  name: DuplicationTarget
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget__ctor_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DuplicationTarget
+  fullName.vb: KhurramAudioRoute.Core.DuplicationTarget.New
+  nameWithType: DuplicationTarget.DuplicationTarget
+  nameWithType.vb: DuplicationTarget.New
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  name: Buffer
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Buffer
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  nameWithType: DuplicationTarget.Buffer
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Buffer*
+  name: Buffer
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Buffer_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  nameWithType: DuplicationTarget.Buffer
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Delay
+  name: Delay
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Delay
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Delay
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Delay
+  nameWithType: DuplicationTarget.Delay
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Delay*
+  name: Delay
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Delay_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Delay
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Delay
+  nameWithType: DuplicationTarget.Delay
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Device
+  name: Device
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Device
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Device
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Device
+  nameWithType: DuplicationTarget.Device
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Device*
+  name: Device
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Device_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Device
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Device
+  nameWithType: DuplicationTarget.Device
+- uid: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  name: DeviceId
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_DeviceId
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  nameWithType: DuplicationTarget.DeviceId
+- uid: KhurramAudioRoute.Core.DuplicationTarget.DeviceId*
+  name: DeviceId
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_DeviceId_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  nameWithType: DuplicationTarget.DeviceId
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  name: Dispose()
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Dispose
+  commentId: M:KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Dispose()
+  nameWithType: DuplicationTarget.Dispose()
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Dispose*
+  name: Dispose
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Dispose_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  nameWithType: DuplicationTarget.Dispose
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  name: Equalizer
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Equalizer
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  nameWithType: DuplicationTarget.Equalizer
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Equalizer*
+  name: Equalizer
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Equalizer_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  nameWithType: DuplicationTarget.Equalizer
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Player
+  name: Player
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Player
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Player
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Player
+  nameWithType: DuplicationTarget.Player
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Player*
+  name: Player
+  href: api/KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Player_
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Player
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Player
+  nameWithType: DuplicationTarget.Player
+- uid: KhurramAudioRoute.Core.EDataFlow
+  name: EDataFlow
+  href: api/KhurramAudioRoute.Core.EDataFlow.html
+  commentId: T:KhurramAudioRoute.Core.EDataFlow
+  fullName: KhurramAudioRoute.Core.EDataFlow
+  nameWithType: EDataFlow
+- uid: KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  name: EDataFlow_enum_count
+  href: api/KhurramAudioRoute.Core.EDataFlow.html#KhurramAudioRoute_Core_EDataFlow_EDataFlow_enum_count
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  fullName: KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  nameWithType: EDataFlow.EDataFlow_enum_count
+- uid: KhurramAudioRoute.Core.EDataFlow.eAll
+  name: eAll
+  href: api/KhurramAudioRoute.Core.EDataFlow.html#KhurramAudioRoute_Core_EDataFlow_eAll
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eAll
+  fullName: KhurramAudioRoute.Core.EDataFlow.eAll
+  nameWithType: EDataFlow.eAll
+- uid: KhurramAudioRoute.Core.EDataFlow.eCapture
+  name: eCapture
+  href: api/KhurramAudioRoute.Core.EDataFlow.html#KhurramAudioRoute_Core_EDataFlow_eCapture
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eCapture
+  fullName: KhurramAudioRoute.Core.EDataFlow.eCapture
+  nameWithType: EDataFlow.eCapture
+- uid: KhurramAudioRoute.Core.EDataFlow.eRender
+  name: eRender
+  href: api/KhurramAudioRoute.Core.EDataFlow.html#KhurramAudioRoute_Core_EDataFlow_eRender
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eRender
+  fullName: KhurramAudioRoute.Core.EDataFlow.eRender
+  nameWithType: EDataFlow.eRender
+- uid: KhurramAudioRoute.Core.ERole
+  name: ERole
+  href: api/KhurramAudioRoute.Core.ERole.html
+  commentId: T:KhurramAudioRoute.Core.ERole
+  fullName: KhurramAudioRoute.Core.ERole
+  nameWithType: ERole
+- uid: KhurramAudioRoute.Core.ERole.ERole_enum_count
+  name: ERole_enum_count
+  href: api/KhurramAudioRoute.Core.ERole.html#KhurramAudioRoute_Core_ERole_ERole_enum_count
+  commentId: F:KhurramAudioRoute.Core.ERole.ERole_enum_count
+  fullName: KhurramAudioRoute.Core.ERole.ERole_enum_count
+  nameWithType: ERole.ERole_enum_count
+- uid: KhurramAudioRoute.Core.ERole.eCommunications
+  name: eCommunications
+  href: api/KhurramAudioRoute.Core.ERole.html#KhurramAudioRoute_Core_ERole_eCommunications
+  commentId: F:KhurramAudioRoute.Core.ERole.eCommunications
+  fullName: KhurramAudioRoute.Core.ERole.eCommunications
+  nameWithType: ERole.eCommunications
+- uid: KhurramAudioRoute.Core.ERole.eConsole
+  name: eConsole
+  href: api/KhurramAudioRoute.Core.ERole.html#KhurramAudioRoute_Core_ERole_eConsole
+  commentId: F:KhurramAudioRoute.Core.ERole.eConsole
+  fullName: KhurramAudioRoute.Core.ERole.eConsole
+  nameWithType: ERole.eConsole
+- uid: KhurramAudioRoute.Core.ERole.eMultimedia
+  name: eMultimedia
+  href: api/KhurramAudioRoute.Core.ERole.html#KhurramAudioRoute_Core_ERole_eMultimedia
+  commentId: F:KhurramAudioRoute.Core.ERole.eMultimedia
+  fullName: KhurramAudioRoute.Core.ERole.eMultimedia
+  nameWithType: ERole.eMultimedia
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider
+  name: EqualizerSampleProvider
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html
+  commentId: T:KhurramAudioRoute.Core.EqualizerSampleProvider
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider
+  nameWithType: EqualizerSampleProvider
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Single[])
+  name: EqualizerSampleProvider(ISampleProvider, float[]?)
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider__ctor_NAudio_Wave_ISampleProvider_System_Single___
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Single[])
+  name.vb: New(ISampleProvider, Single())
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.EqualizerSampleProvider(NAudio.Wave.ISampleProvider, float[]?)
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.New(NAudio.Wave.ISampleProvider, Single())
+  nameWithType: EqualizerSampleProvider.EqualizerSampleProvider(ISampleProvider, float[]?)
+  nameWithType.vb: EqualizerSampleProvider.New(ISampleProvider, Single())
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor*
+  name: EqualizerSampleProvider
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider__ctor_
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.EqualizerSampleProvider
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.New
+  nameWithType: EqualizerSampleProvider.EqualizerSampleProvider
+  nameWithType.vb: EqualizerSampleProvider.New
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  name: Read(float[], int, int)
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_Read_System_Single___System_Int32_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  name.vb: Read(Single(), Integer, Integer)
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(float[], int, int)
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(Single(), Integer, Integer)
+  nameWithType: EqualizerSampleProvider.Read(float[], int, int)
+  nameWithType.vb: EqualizerSampleProvider.Read(Single(), Integer, Integer)
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.Read*
+  name: Read
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_Read_
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.Read
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.Read
+  nameWithType: EqualizerSampleProvider.Read
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(System.Single[])
+  name: UpdateGains(float[])
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_UpdateGains_System_Single___
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(System.Single[])
+  name.vb: UpdateGains(Single())
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(float[])
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(Single())
+  nameWithType: EqualizerSampleProvider.UpdateGains(float[])
+  nameWithType.vb: EqualizerSampleProvider.UpdateGains(Single())
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains*
+  name: UpdateGains
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_UpdateGains_
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains
+  nameWithType: EqualizerSampleProvider.UpdateGains
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_WaveFormat
+  commentId: P:KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  nameWithType: EqualizerSampleProvider.WaveFormat
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat*
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_WaveFormat_
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  nameWithType: EqualizerSampleProvider.WaveFormat
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  name: IAudioPolicyConfigFactory
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html
+  commentId: T:KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  nameWithType: IAudioPolicyConfigFactory
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  name: ClearAllPersistedApplicationDefaultEndpoints()
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_ClearAllPersistedApplicationDefaultEndpoints
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints()
+  nameWithType: IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints()
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints*
+  name: ClearAllPersistedApplicationDefaultEndpoints
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_ClearAllPersistedApplicationDefaultEndpoints_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  nameWithType: IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  name: GetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, out nint)
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_GetPersistedDefaultAudioEndpoint_System_UInt32_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_IntPtr__
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  name.vb: GetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(uint, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, out nint)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(UInteger, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, System.IntPtr)
+  nameWithType: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, out nint)
+  nameWithType.vb: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint*
+  name: GetPersistedDefaultAudioEndpoint
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_GetPersistedDefaultAudioEndpoint_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  name: SetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, nint)
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_SetPersistedDefaultAudioEndpoint_System_UInt32_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_IntPtr_
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  name.vb: SetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(uint, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, nint)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(UInteger, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, System.IntPtr)
+  nameWithType: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, nint)
+  nameWithType.vb: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint*
+  name: SetPersistedDefaultAudioEndpoint
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_SetPersistedDefaultAudioEndpoint_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10
+  name: IAudioPolicyConfigWin10
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html
+  commentId: T:KhurramAudioRoute.Core.IAudioPolicyConfigWin10
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10
+  nameWithType: IAudioPolicyConfigWin10
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints
+  name: ClearAllPersistedApplicationDefaultEndpoints()
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_ClearAllPersistedApplicationDefaultEndpoints
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints()
+  nameWithType: IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints()
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints*
+  name: ClearAllPersistedApplicationDefaultEndpoints
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_ClearAllPersistedApplicationDefaultEndpoints_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints
+  nameWithType: IAudioPolicyConfigWin10.ClearAllPersistedApplicationDefaultEndpoints
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(System.String,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.String@)
+  name: GetPersistedDefaultAudioEndpoint(string, EDataFlow, ERole, out string)
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_GetPersistedDefaultAudioEndpoint_System_String_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_String__
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(System.String,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.String@)
+  name.vb: GetPersistedDefaultAudioEndpoint(String, EDataFlow, ERole, String)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(string, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, out string)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(String, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, String)
+  nameWithType: IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(string, EDataFlow, ERole, out string)
+  nameWithType.vb: IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint(String, EDataFlow, ERole, String)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint*
+  name: GetPersistedDefaultAudioEndpoint
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_GetPersistedDefaultAudioEndpoint_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigWin10.GetPersistedDefaultAudioEndpoint
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(System.String,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.String)
+  name: SetPersistedDefaultAudioEndpoint(string, EDataFlow, ERole, string?)
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_SetPersistedDefaultAudioEndpoint_System_String_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_String_
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(System.String,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.String)
+  name.vb: SetPersistedDefaultAudioEndpoint(String, EDataFlow, ERole, String)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(string, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, string?)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(String, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, String)
+  nameWithType: IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(string, EDataFlow, ERole, string?)
+  nameWithType.vb: IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint(String, EDataFlow, ERole, String)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint*
+  name: SetPersistedDefaultAudioEndpoint
+  href: api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html#KhurramAudioRoute_Core_IAudioPolicyConfigWin10_SetPersistedDefaultAudioEndpoint_
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigWin10.SetPersistedDefaultAudioEndpoint
+- uid: KhurramAudioRoute.Core.IPolicyConfig
+  name: IPolicyConfig
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html
+  commentId: T:KhurramAudioRoute.Core.IPolicyConfig
+  fullName: KhurramAudioRoute.Core.IPolicyConfig
+  nameWithType: IPolicyConfig
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  name: GetDeviceFormat(string, int, out nint)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetDeviceFormat_System_String_System_Int32_System_IntPtr__
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  name.vb: GetDeviceFormat(String, Integer, IntPtr)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(string, int, out nint)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(String, Integer, System.IntPtr)
+  nameWithType: IPolicyConfig.GetDeviceFormat(string, int, out nint)
+  nameWithType.vb: IPolicyConfig.GetDeviceFormat(String, Integer, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat*
+  name: GetDeviceFormat
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetDeviceFormat_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat
+  nameWithType: IPolicyConfig.GetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)
+  name: GetMixFormat(string, out nint)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetMixFormat_System_String_System_IntPtr__
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)
+  name.vb: GetMixFormat(String, IntPtr)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(string, out nint)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(String, System.IntPtr)
+  nameWithType: IPolicyConfig.GetMixFormat(string, out nint)
+  nameWithType.vb: IPolicyConfig.GetMixFormat(String, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat*
+  name: GetMixFormat
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetMixFormat_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat
+  nameWithType: IPolicyConfig.GetMixFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  name: GetProcessingPeriod(string, int, out long, out long)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetProcessingPeriod_System_String_System_Int32_System_Int64__System_Int64__
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  name.vb: GetProcessingPeriod(String, Integer, Long, Long)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(string, int, out long, out long)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(String, Integer, Long, Long)
+  nameWithType: IPolicyConfig.GetProcessingPeriod(string, int, out long, out long)
+  nameWithType.vb: IPolicyConfig.GetProcessingPeriod(String, Integer, Long, Long)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod*
+  name: GetProcessingPeriod
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetProcessingPeriod_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod
+  nameWithType: IPolicyConfig.GetProcessingPeriod
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  name: GetPropertyValue(string, int, nint, out nint)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr__
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  name.vb: GetPropertyValue(String, Integer, IntPtr, IntPtr)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(string, int, nint, out nint)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(String, Integer, System.IntPtr, System.IntPtr)
+  nameWithType: IPolicyConfig.GetPropertyValue(string, int, nint, out nint)
+  nameWithType.vb: IPolicyConfig.GetPropertyValue(String, Integer, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue*
+  name: GetPropertyValue
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetPropertyValue_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue
+  nameWithType: IPolicyConfig.GetPropertyValue
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)
+  name: GetShareMode(string, out int)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetShareMode_System_String_System_Int32__
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)
+  name.vb: GetShareMode(String, Integer)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(string, out int)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(String, Integer)
+  nameWithType: IPolicyConfig.GetShareMode(string, out int)
+  nameWithType.vb: IPolicyConfig.GetShareMode(String, Integer)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode*
+  name: GetShareMode
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetShareMode_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetShareMode
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode
+  nameWithType: IPolicyConfig.GetShareMode
+- uid: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)
+  name: ResetDeviceFormat(string)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_ResetDeviceFormat_System_String_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)
+  name.vb: ResetDeviceFormat(String)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(string)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(String)
+  nameWithType: IPolicyConfig.ResetDeviceFormat(string)
+  nameWithType.vb: IPolicyConfig.ResetDeviceFormat(String)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat*
+  name: ResetDeviceFormat
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_ResetDeviceFormat_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat
+  nameWithType: IPolicyConfig.ResetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  name: SetDefaultEndpoint(string, ERole)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDefaultEndpoint_System_String_KhurramAudioRoute_Core_ERole_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  name.vb: SetDefaultEndpoint(String, ERole)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(string, KhurramAudioRoute.Core.ERole)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(String, KhurramAudioRoute.Core.ERole)
+  nameWithType: IPolicyConfig.SetDefaultEndpoint(string, ERole)
+  nameWithType.vb: IPolicyConfig.SetDefaultEndpoint(String, ERole)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint*
+  name: SetDefaultEndpoint
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDefaultEndpoint_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint
+  nameWithType: IPolicyConfig.SetDefaultEndpoint
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  name: SetDeviceFormat(string, nint, nint)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDeviceFormat_System_String_System_IntPtr_System_IntPtr_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  name.vb: SetDeviceFormat(String, IntPtr, IntPtr)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(string, nint, nint)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(String, System.IntPtr, System.IntPtr)
+  nameWithType: IPolicyConfig.SetDeviceFormat(string, nint, nint)
+  nameWithType.vb: IPolicyConfig.SetDeviceFormat(String, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat*
+  name: SetDeviceFormat
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDeviceFormat_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat
+  nameWithType: IPolicyConfig.SetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)
+  name: SetEndpointVisibility(string, int)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetEndpointVisibility_System_String_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)
+  name.vb: SetEndpointVisibility(String, Integer)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(string, int)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(String, Integer)
+  nameWithType: IPolicyConfig.SetEndpointVisibility(string, int)
+  nameWithType.vb: IPolicyConfig.SetEndpointVisibility(String, Integer)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility*
+  name: SetEndpointVisibility
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetEndpointVisibility_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility
+  nameWithType: IPolicyConfig.SetEndpointVisibility
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)
+  name: SetProcessingPeriod(string, long)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetProcessingPeriod_System_String_System_Int64_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)
+  name.vb: SetProcessingPeriod(String, Long)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(string, long)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(String, Long)
+  nameWithType: IPolicyConfig.SetProcessingPeriod(string, long)
+  nameWithType.vb: IPolicyConfig.SetProcessingPeriod(String, Long)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod*
+  name: SetProcessingPeriod
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetProcessingPeriod_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod
+  nameWithType: IPolicyConfig.SetProcessingPeriod
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  name: SetPropertyValue(string, int, nint, nint)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  name.vb: SetPropertyValue(String, Integer, IntPtr, IntPtr)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(string, int, nint, nint)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(String, Integer, System.IntPtr, System.IntPtr)
+  nameWithType: IPolicyConfig.SetPropertyValue(string, int, nint, nint)
+  nameWithType.vb: IPolicyConfig.SetPropertyValue(String, Integer, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue*
+  name: SetPropertyValue
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetPropertyValue_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue
+  nameWithType: IPolicyConfig.SetPropertyValue
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)
+  name: SetShareMode(string, int)
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetShareMode_System_String_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)
+  name.vb: SetShareMode(String, Integer)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(string, int)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(String, Integer)
+  nameWithType: IPolicyConfig.SetShareMode(string, int)
+  nameWithType.vb: IPolicyConfig.SetShareMode(String, Integer)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode*
+  name: SetShareMode
+  href: api/KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetShareMode_
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetShareMode
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode
+  nameWithType: IPolicyConfig.SetShareMode
+- uid: KhurramAudioRoute.Core.PolicyConfigClient
+  name: PolicyConfigClient
+  href: api/KhurramAudioRoute.Core.PolicyConfigClient.html
+  commentId: T:KhurramAudioRoute.Core.PolicyConfigClient
+  fullName: KhurramAudioRoute.Core.PolicyConfigClient
+  nameWithType: PolicyConfigClient
+- uid: KhurramAudioRoute.Core.SessionManager
+  name: SessionManager
+  href: api/KhurramAudioRoute.Core.SessionManager.html
+  commentId: T:KhurramAudioRoute.Core.SessionManager
+  fullName: KhurramAudioRoute.Core.SessionManager
+  nameWithType: SessionManager
+- uid: KhurramAudioRoute.Core.SessionManager.GetActiveSessions
+  name: GetActiveSessions()
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_GetActiveSessions
+  commentId: M:KhurramAudioRoute.Core.SessionManager.GetActiveSessions
+  fullName: KhurramAudioRoute.Core.SessionManager.GetActiveSessions()
+  nameWithType: SessionManager.GetActiveSessions()
+- uid: KhurramAudioRoute.Core.SessionManager.GetActiveSessions*
+  name: GetActiveSessions
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_GetActiveSessions_
+  commentId: Overload:KhurramAudioRoute.Core.SessionManager.GetActiveSessions
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.SessionManager.GetActiveSessions
+  nameWithType: SessionManager.GetActiveSessions
+- uid: KhurramAudioRoute.Core.SessionManager.GetExePath(System.Int32)
+  name: GetExePath(int)
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_GetExePath_System_Int32_
+  commentId: M:KhurramAudioRoute.Core.SessionManager.GetExePath(System.Int32)
+  name.vb: GetExePath(Integer)
+  fullName: KhurramAudioRoute.Core.SessionManager.GetExePath(int)
+  fullName.vb: KhurramAudioRoute.Core.SessionManager.GetExePath(Integer)
+  nameWithType: SessionManager.GetExePath(int)
+  nameWithType.vb: SessionManager.GetExePath(Integer)
+- uid: KhurramAudioRoute.Core.SessionManager.GetExePath*
+  name: GetExePath
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_GetExePath_
+  commentId: Overload:KhurramAudioRoute.Core.SessionManager.GetExePath
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.SessionManager.GetExePath
+  nameWithType: SessionManager.GetExePath
+- uid: KhurramAudioRoute.Core.SessionManager.SetMute(System.Int32,System.Boolean)
+  name: SetMute(int, bool)
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_SetMute_System_Int32_System_Boolean_
+  commentId: M:KhurramAudioRoute.Core.SessionManager.SetMute(System.Int32,System.Boolean)
+  name.vb: SetMute(Integer, Boolean)
+  fullName: KhurramAudioRoute.Core.SessionManager.SetMute(int, bool)
+  fullName.vb: KhurramAudioRoute.Core.SessionManager.SetMute(Integer, Boolean)
+  nameWithType: SessionManager.SetMute(int, bool)
+  nameWithType.vb: SessionManager.SetMute(Integer, Boolean)
+- uid: KhurramAudioRoute.Core.SessionManager.SetMute*
+  name: SetMute
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_SetMute_
+  commentId: Overload:KhurramAudioRoute.Core.SessionManager.SetMute
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.SessionManager.SetMute
+  nameWithType: SessionManager.SetMute
+- uid: KhurramAudioRoute.Core.SessionManager.SetVolume(System.Int32,System.Single)
+  name: SetVolume(int, float)
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_SetVolume_System_Int32_System_Single_
+  commentId: M:KhurramAudioRoute.Core.SessionManager.SetVolume(System.Int32,System.Single)
+  name.vb: SetVolume(Integer, Single)
+  fullName: KhurramAudioRoute.Core.SessionManager.SetVolume(int, float)
+  fullName.vb: KhurramAudioRoute.Core.SessionManager.SetVolume(Integer, Single)
+  nameWithType: SessionManager.SetVolume(int, float)
+  nameWithType.vb: SessionManager.SetVolume(Integer, Single)
+- uid: KhurramAudioRoute.Core.SessionManager.SetVolume*
+  name: SetVolume
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_SetVolume_
+  commentId: Overload:KhurramAudioRoute.Core.SessionManager.SetVolume
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.SessionManager.SetVolume
+  nameWithType: SessionManager.SetVolume
+- uid: KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels(System.Collections.Generic.IEnumerable{KhurramAudioRoute.Core.AppAudioSession})
+  name: UpdateSessionLevels(IEnumerable<AppAudioSession>)
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_UpdateSessionLevels_System_Collections_Generic_IEnumerable_KhurramAudioRoute_Core_AppAudioSession__
+  commentId: M:KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels(System.Collections.Generic.IEnumerable{KhurramAudioRoute.Core.AppAudioSession})
+  name.vb: UpdateSessionLevels(IEnumerable(Of AppAudioSession))
+  fullName: KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels(System.Collections.Generic.IEnumerable<KhurramAudioRoute.Core.AppAudioSession>)
+  fullName.vb: KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels(System.Collections.Generic.IEnumerable(Of KhurramAudioRoute.Core.AppAudioSession))
+  nameWithType: SessionManager.UpdateSessionLevels(IEnumerable<AppAudioSession>)
+  nameWithType.vb: SessionManager.UpdateSessionLevels(IEnumerable(Of AppAudioSession))
+- uid: KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels*
+  name: UpdateSessionLevels
+  href: api/KhurramAudioRoute.Core.SessionManager.html#KhurramAudioRoute_Core_SessionManager_UpdateSessionLevels_
+  commentId: Overload:KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Core.SessionManager.UpdateSessionLevels
+  nameWithType: SessionManager.UpdateSessionLevels
+- uid: KhurramAudioRoute.InverseBooleanConverter
+  name: InverseBooleanConverter
+  href: api/KhurramAudioRoute.InverseBooleanConverter.html
+  commentId: T:KhurramAudioRoute.InverseBooleanConverter
+  fullName: KhurramAudioRoute.InverseBooleanConverter
+  nameWithType: InverseBooleanConverter
+- uid: KhurramAudioRoute.InverseBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.InverseBooleanConverter.html#KhurramAudioRoute_InverseBooleanConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.InverseBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.InverseBooleanConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.InverseBooleanConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: InverseBooleanConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: InverseBooleanConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.InverseBooleanConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.InverseBooleanConverter.html#KhurramAudioRoute_InverseBooleanConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.InverseBooleanConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.InverseBooleanConverter.Convert
+  nameWithType: InverseBooleanConverter.Convert
+- uid: KhurramAudioRoute.InverseBooleanConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.InverseBooleanConverter.html#KhurramAudioRoute_InverseBooleanConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.InverseBooleanConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.InverseBooleanConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.InverseBooleanConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: InverseBooleanConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: InverseBooleanConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.InverseBooleanConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.InverseBooleanConverter.html#KhurramAudioRoute_InverseBooleanConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.InverseBooleanConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.InverseBooleanConverter.ConvertBack
+  nameWithType: InverseBooleanConverter.ConvertBack
+- uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter
+  name: InverseBooleanToVisibilityConverter
+  href: api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html
+  commentId: T:KhurramAudioRoute.InverseBooleanToVisibilityConverter
+  fullName: KhurramAudioRoute.InverseBooleanToVisibilityConverter
+  nameWithType: InverseBooleanToVisibilityConverter
+- uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html#KhurramAudioRoute_InverseBooleanToVisibilityConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: InverseBooleanToVisibilityConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: InverseBooleanToVisibilityConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html#KhurramAudioRoute_InverseBooleanToVisibilityConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.InverseBooleanToVisibilityConverter.Convert
+  nameWithType: InverseBooleanToVisibilityConverter.Convert
+- uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html#KhurramAudioRoute_InverseBooleanToVisibilityConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: InverseBooleanToVisibilityConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: InverseBooleanToVisibilityConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html#KhurramAudioRoute_InverseBooleanToVisibilityConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.InverseBooleanToVisibilityConverter.ConvertBack
+  nameWithType: InverseBooleanToVisibilityConverter.ConvertBack
+- uid: KhurramAudioRoute.MainWindow
+  name: MainWindow
+  href: api/KhurramAudioRoute.MainWindow.html
+  commentId: T:KhurramAudioRoute.MainWindow
+  fullName: KhurramAudioRoute.MainWindow
+  nameWithType: MainWindow
+- uid: KhurramAudioRoute.MainWindow.#ctor
+  name: MainWindow()
+  href: api/KhurramAudioRoute.MainWindow.html#KhurramAudioRoute_MainWindow__ctor
+  commentId: M:KhurramAudioRoute.MainWindow.#ctor
+  name.vb: New()
+  fullName: KhurramAudioRoute.MainWindow.MainWindow()
+  fullName.vb: KhurramAudioRoute.MainWindow.New()
+  nameWithType: MainWindow.MainWindow()
+  nameWithType.vb: MainWindow.New()
+- uid: KhurramAudioRoute.MainWindow.#ctor*
+  name: MainWindow
+  href: api/KhurramAudioRoute.MainWindow.html#KhurramAudioRoute_MainWindow__ctor_
+  commentId: Overload:KhurramAudioRoute.MainWindow.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.MainWindow.MainWindow
+  fullName.vb: KhurramAudioRoute.MainWindow.New
+  nameWithType: MainWindow.MainWindow
+  nameWithType.vb: MainWindow.New
+- uid: KhurramAudioRoute.MainWindow.InitializeComponent
+  name: InitializeComponent()
+  href: api/KhurramAudioRoute.MainWindow.html#KhurramAudioRoute_MainWindow_InitializeComponent
+  commentId: M:KhurramAudioRoute.MainWindow.InitializeComponent
+  fullName: KhurramAudioRoute.MainWindow.InitializeComponent()
+  nameWithType: MainWindow.InitializeComponent()
+- uid: KhurramAudioRoute.MainWindow.InitializeComponent*
+  name: InitializeComponent
+  href: api/KhurramAudioRoute.MainWindow.html#KhurramAudioRoute_MainWindow_InitializeComponent_
+  commentId: Overload:KhurramAudioRoute.MainWindow.InitializeComponent
+  isSpec: "True"
+  fullName: KhurramAudioRoute.MainWindow.InitializeComponent
+  nameWithType: MainWindow.InitializeComponent
+- uid: KhurramAudioRoute.NullToCollapsedConverter
+  name: NullToCollapsedConverter
+  href: api/KhurramAudioRoute.NullToCollapsedConverter.html
+  commentId: T:KhurramAudioRoute.NullToCollapsedConverter
+  fullName: KhurramAudioRoute.NullToCollapsedConverter
+  nameWithType: NullToCollapsedConverter
+- uid: KhurramAudioRoute.NullToCollapsedConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.NullToCollapsedConverter.html#KhurramAudioRoute_NullToCollapsedConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.NullToCollapsedConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.NullToCollapsedConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.NullToCollapsedConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: NullToCollapsedConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: NullToCollapsedConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.NullToCollapsedConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.NullToCollapsedConverter.html#KhurramAudioRoute_NullToCollapsedConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.NullToCollapsedConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.NullToCollapsedConverter.Convert
+  nameWithType: NullToCollapsedConverter.Convert
+- uid: KhurramAudioRoute.NullToCollapsedConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.NullToCollapsedConverter.html#KhurramAudioRoute_NullToCollapsedConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.NullToCollapsedConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.NullToCollapsedConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.NullToCollapsedConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: NullToCollapsedConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: NullToCollapsedConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.NullToCollapsedConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.NullToCollapsedConverter.html#KhurramAudioRoute_NullToCollapsedConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.NullToCollapsedConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.NullToCollapsedConverter.ConvertBack
+  nameWithType: NullToCollapsedConverter.ConvertBack
+- uid: KhurramAudioRoute.PeakToHeightConverter
+  name: PeakToHeightConverter
+  href: api/KhurramAudioRoute.PeakToHeightConverter.html
+  commentId: T:KhurramAudioRoute.PeakToHeightConverter
+  fullName: KhurramAudioRoute.PeakToHeightConverter
+  nameWithType: PeakToHeightConverter
+- uid: KhurramAudioRoute.PeakToHeightConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.PeakToHeightConverter.html#KhurramAudioRoute_PeakToHeightConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.PeakToHeightConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.PeakToHeightConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.PeakToHeightConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: PeakToHeightConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: PeakToHeightConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.PeakToHeightConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.PeakToHeightConverter.html#KhurramAudioRoute_PeakToHeightConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.PeakToHeightConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.PeakToHeightConverter.Convert
+  nameWithType: PeakToHeightConverter.Convert
+- uid: KhurramAudioRoute.PeakToHeightConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.PeakToHeightConverter.html#KhurramAudioRoute_PeakToHeightConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.PeakToHeightConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.PeakToHeightConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.PeakToHeightConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: PeakToHeightConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: PeakToHeightConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.PeakToHeightConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.PeakToHeightConverter.html#KhurramAudioRoute_PeakToHeightConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.PeakToHeightConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.PeakToHeightConverter.ConvertBack
+  nameWithType: PeakToHeightConverter.ConvertBack
+- uid: KhurramAudioRoute.SectionVisibilityConverter
+  name: SectionVisibilityConverter
+  href: api/KhurramAudioRoute.SectionVisibilityConverter.html
+  commentId: T:KhurramAudioRoute.SectionVisibilityConverter
+  fullName: KhurramAudioRoute.SectionVisibilityConverter
+  nameWithType: SectionVisibilityConverter
+- uid: KhurramAudioRoute.SectionVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.SectionVisibilityConverter.html#KhurramAudioRoute_SectionVisibilityConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.SectionVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.SectionVisibilityConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.SectionVisibilityConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: SectionVisibilityConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: SectionVisibilityConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.SectionVisibilityConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.SectionVisibilityConverter.html#KhurramAudioRoute_SectionVisibilityConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.SectionVisibilityConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.SectionVisibilityConverter.Convert
+  nameWithType: SectionVisibilityConverter.Convert
+- uid: KhurramAudioRoute.SectionVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.SectionVisibilityConverter.html#KhurramAudioRoute_SectionVisibilityConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.SectionVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.SectionVisibilityConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.SectionVisibilityConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: SectionVisibilityConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: SectionVisibilityConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.SectionVisibilityConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.SectionVisibilityConverter.html#KhurramAudioRoute_SectionVisibilityConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.SectionVisibilityConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.SectionVisibilityConverter.ConvertBack
+  nameWithType: SectionVisibilityConverter.ConvertBack
+- uid: KhurramAudioRoute.SpectrumBarHeightConverter
+  name: SpectrumBarHeightConverter
+  href: api/KhurramAudioRoute.SpectrumBarHeightConverter.html
+  commentId: T:KhurramAudioRoute.SpectrumBarHeightConverter
+  fullName: KhurramAudioRoute.SpectrumBarHeightConverter
+  nameWithType: SpectrumBarHeightConverter
+- uid: KhurramAudioRoute.SpectrumBarHeightConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: Convert(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.SpectrumBarHeightConverter.html#KhurramAudioRoute_SpectrumBarHeightConverter_Convert_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.SpectrumBarHeightConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: Convert(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.SpectrumBarHeightConverter.Convert(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.SpectrumBarHeightConverter.Convert(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: SpectrumBarHeightConverter.Convert(object, Type, object, CultureInfo)
+  nameWithType.vb: SpectrumBarHeightConverter.Convert(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.SpectrumBarHeightConverter.Convert*
+  name: Convert
+  href: api/KhurramAudioRoute.SpectrumBarHeightConverter.html#KhurramAudioRoute_SpectrumBarHeightConverter_Convert_
+  commentId: Overload:KhurramAudioRoute.SpectrumBarHeightConverter.Convert
+  isSpec: "True"
+  fullName: KhurramAudioRoute.SpectrumBarHeightConverter.Convert
+  nameWithType: SpectrumBarHeightConverter.Convert
+- uid: KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name: ConvertBack(object, Type, object, CultureInfo)
+  href: api/KhurramAudioRoute.SpectrumBarHeightConverter.html#KhurramAudioRoute_SpectrumBarHeightConverter_ConvertBack_System_Object_System_Type_System_Object_System_Globalization_CultureInfo_
+  commentId: M:KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)
+  name.vb: ConvertBack(Object, Type, Object, CultureInfo)
+  fullName: KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack(object, System.Type, object, System.Globalization.CultureInfo)
+  fullName.vb: KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack(Object, System.Type, Object, System.Globalization.CultureInfo)
+  nameWithType: SpectrumBarHeightConverter.ConvertBack(object, Type, object, CultureInfo)
+  nameWithType.vb: SpectrumBarHeightConverter.ConvertBack(Object, Type, Object, CultureInfo)
+- uid: KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack*
+  name: ConvertBack
+  href: api/KhurramAudioRoute.SpectrumBarHeightConverter.html#KhurramAudioRoute_SpectrumBarHeightConverter_ConvertBack_
+  commentId: Overload:KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack
+  isSpec: "True"
+  fullName: KhurramAudioRoute.SpectrumBarHeightConverter.ConvertBack
+  nameWithType: SpectrumBarHeightConverter.ConvertBack
+- uid: KhurramAudioRoute.Tests
+  name: KhurramAudioRoute.Tests
+  href: api/KhurramAudioRoute.Tests.html
+  commentId: N:KhurramAudioRoute.Tests
+  fullName: KhurramAudioRoute.Tests
+  nameWithType: KhurramAudioRoute.Tests
+- uid: KhurramAudioRoute.Tests.AudioCoreTester
+  name: AudioCoreTester
+  href: api/KhurramAudioRoute.Tests.AudioCoreTester.html
+  commentId: T:KhurramAudioRoute.Tests.AudioCoreTester
+  fullName: KhurramAudioRoute.Tests.AudioCoreTester
+  nameWithType: AudioCoreTester
+- uid: KhurramAudioRoute.Tests.AudioCoreTester.RunTests
+  name: RunTests()
+  href: api/KhurramAudioRoute.Tests.AudioCoreTester.html#KhurramAudioRoute_Tests_AudioCoreTester_RunTests
+  commentId: M:KhurramAudioRoute.Tests.AudioCoreTester.RunTests
+  fullName: KhurramAudioRoute.Tests.AudioCoreTester.RunTests()
+  nameWithType: AudioCoreTester.RunTests()
+- uid: KhurramAudioRoute.Tests.AudioCoreTester.RunTests*
+  name: RunTests
+  href: api/KhurramAudioRoute.Tests.AudioCoreTester.html#KhurramAudioRoute_Tests_AudioCoreTester_RunTests_
+  commentId: Overload:KhurramAudioRoute.Tests.AudioCoreTester.RunTests
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Tests.AudioCoreTester.RunTests
+  nameWithType: AudioCoreTester.RunTests
+- uid: KhurramAudioRoute.Tests.SilenceProvider
+  name: SilenceProvider
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html
+  commentId: T:KhurramAudioRoute.Tests.SilenceProvider
+  fullName: KhurramAudioRoute.Tests.SilenceProvider
+  nameWithType: SilenceProvider
+- uid: KhurramAudioRoute.Tests.SilenceProvider.#ctor(NAudio.Wave.WaveFormat)
+  name: SilenceProvider(WaveFormat)
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider__ctor_NAudio_Wave_WaveFormat_
+  commentId: M:KhurramAudioRoute.Tests.SilenceProvider.#ctor(NAudio.Wave.WaveFormat)
+  name.vb: New(WaveFormat)
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.SilenceProvider(NAudio.Wave.WaveFormat)
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.New(NAudio.Wave.WaveFormat)
+  nameWithType: SilenceProvider.SilenceProvider(WaveFormat)
+  nameWithType.vb: SilenceProvider.New(WaveFormat)
+- uid: KhurramAudioRoute.Tests.SilenceProvider.#ctor*
+  name: SilenceProvider
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider__ctor_
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.SilenceProvider
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.New
+  nameWithType: SilenceProvider.SilenceProvider
+  nameWithType.vb: SilenceProvider.New
+- uid: KhurramAudioRoute.Tests.SilenceProvider.Read(System.Byte[],System.Int32,System.Int32)
+  name: Read(byte[], int, int)
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_Read_System_Byte___System_Int32_System_Int32_
+  commentId: M:KhurramAudioRoute.Tests.SilenceProvider.Read(System.Byte[],System.Int32,System.Int32)
+  name.vb: Read(Byte(), Integer, Integer)
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.Read(byte[], int, int)
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.Read(Byte(), Integer, Integer)
+  nameWithType: SilenceProvider.Read(byte[], int, int)
+  nameWithType.vb: SilenceProvider.Read(Byte(), Integer, Integer)
+- uid: KhurramAudioRoute.Tests.SilenceProvider.Read*
+  name: Read
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_Read_
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.Read
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.Read
+  nameWithType: SilenceProvider.Read
+- uid: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_WaveFormat
+  commentId: P:KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  nameWithType: SilenceProvider.WaveFormat
+- uid: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat*
+  name: WaveFormat
+  href: api/KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_WaveFormat_
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  isSpec: "True"
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  nameWithType: SilenceProvider.WaveFormat
+- uid: KhurramAudioRoute.ViewModels
+  name: KhurramAudioRoute.ViewModels
+  href: api/KhurramAudioRoute.ViewModels.html
+  commentId: N:KhurramAudioRoute.ViewModels
+  fullName: KhurramAudioRoute.ViewModels
+  nameWithType: KhurramAudioRoute.ViewModels
+- uid: KhurramAudioRoute.ViewModels.DashboardSection
+  name: DashboardSection
+  href: api/KhurramAudioRoute.ViewModels.DashboardSection.html
+  commentId: T:KhurramAudioRoute.ViewModels.DashboardSection
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection
+  nameWithType: DashboardSection
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  name: Applications
+  href: api/KhurramAudioRoute.ViewModels.DashboardSection.html#KhurramAudioRoute_ViewModels_DashboardSection_Applications
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  nameWithType: DashboardSection.Applications
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  name: Microphones
+  href: api/KhurramAudioRoute.ViewModels.DashboardSection.html#KhurramAudioRoute_ViewModels_DashboardSection_Microphones
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  nameWithType: DashboardSection.Microphones
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  name: Outputs
+  href: api/KhurramAudioRoute.ViewModels.DashboardSection.html#KhurramAudioRoute_ViewModels_DashboardSection_Outputs
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  nameWithType: DashboardSection.Outputs
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  name: Tools
+  href: api/KhurramAudioRoute.ViewModels.DashboardSection.html#KhurramAudioRoute_ViewModels_DashboardSection_Tools
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  nameWithType: DashboardSection.Tools
+- uid: KhurramAudioRoute.ViewModels.MainViewModel
+  name: MainViewModel
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html
+  commentId: T:KhurramAudioRoute.ViewModels.MainViewModel
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel
+  nameWithType: MainViewModel
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets(KhurramAudioRoute.Core.AudioDevice)
+  name: ApplyDeviceDuplicateTargets(AudioDevice?)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargets_KhurramAudioRoute_Core_AudioDevice_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets(KhurramAudioRoute.Core.AudioDevice)
+  name.vb: ApplyDeviceDuplicateTargets(AudioDevice)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets(KhurramAudioRoute.Core.AudioDevice?)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets(KhurramAudioRoute.Core.AudioDevice)
+  nameWithType: MainViewModel.ApplyDeviceDuplicateTargets(AudioDevice?)
+  nameWithType.vb: MainViewModel.ApplyDeviceDuplicateTargets(AudioDevice)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets*
+  name: ApplyDeviceDuplicateTargets
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargets_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets
+  nameWithType: MainViewModel.ApplyDeviceDuplicateTargets
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand
+  name: ApplyDeviceDuplicateTargetsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargetsCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand
+  nameWithType: MainViewModel.ApplyDeviceDuplicateTargetsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand*
+  name: ApplyDeviceDuplicateTargetsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargetsCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand
+  nameWithType: MainViewModel.ApplyDeviceDuplicateTargetsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection
+  name: CurrentSection
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_CurrentSection
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection
+  nameWithType: MainViewModel.CurrentSection
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection*
+  name: CurrentSection
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_CurrentSection_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection
+  nameWithType: MainViewModel.CurrentSection
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Devices
+  name: Devices
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Devices
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.Devices
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Devices
+  nameWithType: MainViewModel.Devices
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Devices*
+  name: Devices
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Devices_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.Devices
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Devices
+  nameWithType: MainViewModel.Devices
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying
+  name: IsTestTonePlaying
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_IsTestTonePlaying
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying
+  nameWithType: MainViewModel.IsTestTonePlaying
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying*
+  name: IsTestTonePlaying
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_IsTestTonePlaying_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying
+  nameWithType: MainViewModel.IsTestTonePlaying
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice
+  name: MasterDevice
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_MasterDevice
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice
+  nameWithType: MainViewModel.MasterDevice
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice*
+  name: MasterDevice
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_MasterDevice_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice
+  nameWithType: MainViewModel.MasterDevice
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Microphones
+  name: Microphones
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Microphones
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.Microphones
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Microphones
+  nameWithType: MainViewModel.Microphones
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Microphones*
+  name: Microphones
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Microphones_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.Microphones
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Microphones
+  nameWithType: MainViewModel.Microphones
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshData
+  name: RefreshData()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshData
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.RefreshData
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshData()
+  nameWithType: MainViewModel.RefreshData()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshData*
+  name: RefreshData
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshData_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.RefreshData
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshData
+  nameWithType: MainViewModel.RefreshData
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand
+  name: RefreshDataCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshDataCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand
+  nameWithType: MainViewModel.RefreshDataCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand*
+  name: RefreshDataCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshDataCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand
+  nameWithType: MainViewModel.RefreshDataCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters
+  name: RefreshMeters()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshMeters
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters()
+  nameWithType: MainViewModel.RefreshMeters()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters*
+  name: RefreshMeters
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshMeters_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters
+  nameWithType: MainViewModel.RefreshMeters
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ResetApp(KhurramAudioRoute.Core.AppAudioSession)
+  name: ResetApp(AppAudioSession?)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ResetApp_KhurramAudioRoute_Core_AppAudioSession_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ResetApp(KhurramAudioRoute.Core.AppAudioSession)
+  name.vb: ResetApp(AppAudioSession)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ResetApp(KhurramAudioRoute.Core.AppAudioSession?)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.ResetApp(KhurramAudioRoute.Core.AppAudioSession)
+  nameWithType: MainViewModel.ResetApp(AppAudioSession?)
+  nameWithType.vb: MainViewModel.ResetApp(AppAudioSession)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ResetApp*
+  name: ResetApp
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ResetApp_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ResetApp
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ResetApp
+  nameWithType: MainViewModel.ResetApp
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand
+  name: ResetAppCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ResetAppCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand
+  nameWithType: MainViewModel.ResetAppCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand*
+  name: ResetAppCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ResetAppCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand
+  nameWithType: MainViewModel.ResetAppCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RouteApp(KhurramAudioRoute.Core.AppAudioSession)
+  name: RouteApp(AppAudioSession?)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RouteApp_KhurramAudioRoute_Core_AppAudioSession_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.RouteApp(KhurramAudioRoute.Core.AppAudioSession)
+  name.vb: RouteApp(AppAudioSession)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RouteApp(KhurramAudioRoute.Core.AppAudioSession?)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.RouteApp(KhurramAudioRoute.Core.AppAudioSession)
+  nameWithType: MainViewModel.RouteApp(AppAudioSession?)
+  nameWithType.vb: MainViewModel.RouteApp(AppAudioSession)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RouteApp*
+  name: RouteApp
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RouteApp_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.RouteApp
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RouteApp
+  nameWithType: MainViewModel.RouteApp
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand
+  name: RouteAppCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RouteAppCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand
+  nameWithType: MainViewModel.RouteAppCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand*
+  name: RouteAppCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RouteAppCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand
+  nameWithType: MainViewModel.RouteAppCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Sessions
+  name: Sessions
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Sessions
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.Sessions
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Sessions
+  nameWithType: MainViewModel.Sessions
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.Sessions*
+  name: Sessions
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_Sessions_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.Sessions
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.Sessions
+  nameWithType: MainViewModel.Sessions
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice(KhurramAudioRoute.Core.AudioDevice)
+  name: SetDefaultDevice(AudioDevice)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDevice_KhurramAudioRoute_Core_AudioDevice_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice(KhurramAudioRoute.Core.AudioDevice)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice(KhurramAudioRoute.Core.AudioDevice)
+  nameWithType: MainViewModel.SetDefaultDevice(AudioDevice)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice*
+  name: SetDefaultDevice
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDevice_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice
+  nameWithType: MainViewModel.SetDefaultDevice
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand
+  name: SetDefaultDeviceCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDeviceCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand
+  nameWithType: MainViewModel.SetDefaultDeviceCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand*
+  name: SetDefaultDeviceCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDeviceCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand
+  nameWithType: MainViewModel.SetDefaultDeviceCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications
+  name: ShowApplications()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowApplications
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications()
+  nameWithType: MainViewModel.ShowApplications()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications*
+  name: ShowApplications
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowApplications_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications
+  nameWithType: MainViewModel.ShowApplications
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand
+  name: ShowApplicationsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowApplicationsCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand
+  nameWithType: MainViewModel.ShowApplicationsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand*
+  name: ShowApplicationsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowApplicationsCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand
+  nameWithType: MainViewModel.ShowApplicationsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones
+  name: ShowMicrophones()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophones
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones()
+  nameWithType: MainViewModel.ShowMicrophones()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones*
+  name: ShowMicrophones
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophones_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones
+  nameWithType: MainViewModel.ShowMicrophones
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand
+  name: ShowMicrophonesCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophonesCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand
+  nameWithType: MainViewModel.ShowMicrophonesCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand*
+  name: ShowMicrophonesCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophonesCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand
+  nameWithType: MainViewModel.ShowMicrophonesCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs
+  name: ShowOutputs()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputs
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs()
+  nameWithType: MainViewModel.ShowOutputs()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs*
+  name: ShowOutputs
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputs_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs
+  nameWithType: MainViewModel.ShowOutputs
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand
+  name: ShowOutputsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputsCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand
+  nameWithType: MainViewModel.ShowOutputsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand*
+  name: ShowOutputsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputsCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand
+  nameWithType: MainViewModel.ShowOutputsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowTools
+  name: ShowTools()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowTools
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ShowTools
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowTools()
+  nameWithType: MainViewModel.ShowTools()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowTools*
+  name: ShowTools
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowTools_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowTools
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowTools
+  nameWithType: MainViewModel.ShowTools
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand
+  name: ShowToolsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowToolsCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand
+  nameWithType: MainViewModel.ShowToolsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand*
+  name: ShowToolsCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowToolsCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand
+  nameWithType: MainViewModel.ShowToolsCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate(KhurramAudioRoute.Core.AudioDevice)
+  name: ToggleDeviceDuplicate(AudioDevice?)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicate_KhurramAudioRoute_Core_AudioDevice_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate(KhurramAudioRoute.Core.AudioDevice)
+  name.vb: ToggleDeviceDuplicate(AudioDevice)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate(KhurramAudioRoute.Core.AudioDevice?)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate(KhurramAudioRoute.Core.AudioDevice)
+  nameWithType: MainViewModel.ToggleDeviceDuplicate(AudioDevice?)
+  nameWithType.vb: MainViewModel.ToggleDeviceDuplicate(AudioDevice)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate*
+  name: ToggleDeviceDuplicate
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicate_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate
+  nameWithType: MainViewModel.ToggleDeviceDuplicate
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand
+  name: ToggleDeviceDuplicateCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicateCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand
+  nameWithType: MainViewModel.ToggleDeviceDuplicateCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand*
+  name: ToggleDeviceDuplicateCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicateCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand
+  nameWithType: MainViewModel.ToggleDeviceDuplicateCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate(KhurramAudioRoute.Core.AppAudioSession)
+  name: ToggleDuplicate(AppAudioSession?)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicate_KhurramAudioRoute_Core_AppAudioSession_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate(KhurramAudioRoute.Core.AppAudioSession)
+  name.vb: ToggleDuplicate(AppAudioSession)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate(KhurramAudioRoute.Core.AppAudioSession?)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate(KhurramAudioRoute.Core.AppAudioSession)
+  nameWithType: MainViewModel.ToggleDuplicate(AppAudioSession?)
+  nameWithType.vb: MainViewModel.ToggleDuplicate(AppAudioSession)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate*
+  name: ToggleDuplicate
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicate_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate
+  nameWithType: MainViewModel.ToggleDuplicate
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand
+  name: ToggleDuplicateCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicateCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand
+  nameWithType: MainViewModel.ToggleDuplicateCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand*
+  name: ToggleDuplicateCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicateCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand
+  nameWithType: MainViewModel.ToggleDuplicateCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone
+  name: ToggleTestTone()
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestTone
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone()
+  nameWithType: MainViewModel.ToggleTestTone()
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone*
+  name: ToggleTestTone
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestTone_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone
+  nameWithType: MainViewModel.ToggleTestTone
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand
+  name: ToggleTestToneCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestToneCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand
+  nameWithType: MainViewModel.ToggleTestToneCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand*
+  name: ToggleTestToneCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestToneCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand
+  nameWithType: MainViewModel.ToggleTestToneCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume(System.Double)
+  name: UpdateMasterVolume(double)
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolume_System_Double_
+  commentId: M:KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume(System.Double)
+  name.vb: UpdateMasterVolume(Double)
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume(double)
+  fullName.vb: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume(Double)
+  nameWithType: MainViewModel.UpdateMasterVolume(double)
+  nameWithType.vb: MainViewModel.UpdateMasterVolume(Double)
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume*
+  name: UpdateMasterVolume
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolume_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume
+  nameWithType: MainViewModel.UpdateMasterVolume
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand
+  name: UpdateMasterVolumeCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolumeCommand
+  commentId: P:KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand
+  nameWithType: MainViewModel.UpdateMasterVolumeCommand
+- uid: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand*
+  name: UpdateMasterVolumeCommand
+  href: api/KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolumeCommand_
+  commentId: Overload:KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand
+  isSpec: "True"
+  fullName: KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand
+  nameWithType: MainViewModel.UpdateMasterVolumeCommand

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Audio Router V2 Plan </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Audio Router V2 Plan ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/PLAN.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="audio-router-v2-plan">Audio Router V2 Plan</h1>
+
+<h2 id="current-direction">Current Direction</h2>
+<ul>
+<li><code>Applications</code> should be route-only.</li>
+<li><code>Outputs</code> should become the home for default-device management and future device duplication.</li>
+<li><code>Mic Devices</code> should show capture devices now and gain routing/monitoring later.</li>
+<li>Advanced device controls like volume, EQ, and duplication should stay collapsed by default to save space.</li>
+</ul>
+<h2 id="done">Done</h2>
+<ul>
+<li>[x] Modernized the WPF shell into a dark dashboard layout.</li>
+<li>[x] Added left navigation with <code>Outputs</code>, <code>Applications</code>, <code>Mic Devices</code>, and <code>Other Options</code>.</li>
+<li>[x] Made <code>Outputs</code> the default page on startup.</li>
+<li>[x] Restored <code>Applications</code> to route-only UI with per-app dropdown plus <code>Route</code> button.</li>
+<li>[x] Added live application level meters and volume sliders.</li>
+<li>[x] Added microphone device discovery and a separate mic page.</li>
+<li>[x] Added compact output cards with explicit <code>Set Default</code> action.</li>
+<li>[x] Added responsive startup sizing so the window opens around 60% of screen height.</li>
+<li>[x] Added collapsed <code>Advanced</code> space on output cards for future volume, EQ, and duplicate controls.</li>
+<li>[x] Fixed the XAML parse crash caused by the invalid <code>Equalizer24</code> symbol token.</li>
+</ul>
+<h2 id="in-progress">In Progress</h2>
+<ul>
+<li>[ ] EQ is now active for duplicated audio and has presets, but still needs deeper tuning and maybe saved profiles.</li>
+<li>[ ] Device duplication still needs runtime testing under rapid device changes and device unplug/replug cases.</li>
+<li>[ ] Output-device volume UI could still use polish, but the control is now functional.</li>
+<li>[ ] Latency tuning can still be exposed as user-configurable presets later if needed.</li>
+</ul>
+<h2 id="next-task">Next Task</h2>
+<ul>
+<li>[x] Implement device-level duplication from the <code>Outputs</code> page.</li>
+<li>[x] Make source device and target devices explicit in the UI.</li>
+<li>[x] Key duplication sessions by source device instead of app/process.</li>
+<li>[x] Preserve active duplicate sessions across refreshes and reflect their selections back into the UI.</li>
+<li>[x] Reapply target changes automatically while a source device is already duplicating.</li>
+<li>[x] Allow one target device to be turned off with live target management instead of full session restart.</li>
+<li>[x] Add busy/update state so duplication changes do not feel frozen during rapid target edits.</li>
+</ul>
+<h2 id="after-next-task">After Next Task</h2>
+<ul>
+<li>[x] Replace the disabled <code>Duplicate</code> toggle with real mirror and duplicate actions.</li>
+<li>[x] Add writable output-device volume control.</li>
+<li>[x] Add baseline output-device latency and buffer tuning in the duplication engine.</li>
+<li>[x] Add an actual EQ or DSP pipeline for duplicated audio in the advanced section.</li>
+<li>[ ] Add optional persistent expanded and collapsed advanced-card state if needed.</li>
+</ul>
+<h2 id="later">Later</h2>
+<ul>
+<li>[ ] Add microphone routing and monitoring behavior.</li>
+<li>[ ] Improve duplication latency and synchronization stability.</li>
+<li>[ ] Add soundboard and utility tools if still wanted.</li>
+<li>[ ] Add tray and minimize behavior plus packaging improvements.</li>
+</ul>
+<h2 id="testing-checklist">Testing Checklist</h2>
+<ul>
+<li>[ ] Route Chrome to Device A and Edge to Device B.</li>
+<li>[ ] Confirm both apps stay isolated when no duplication is active.</li>
+<li>[ ] Duplicate Device A to Device C and confirm only Device A audio is mirrored.</li>
+<li>[ ] Turn off one duplicate target and confirm other targets continue.</li>
+<li>[ ] Validate default-device switching still works after duplication changes.</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/PLAN.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

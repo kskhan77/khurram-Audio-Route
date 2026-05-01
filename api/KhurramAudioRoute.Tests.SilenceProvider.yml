@@ -1,0 +1,574 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Tests.SilenceProvider
+  commentId: T:KhurramAudioRoute.Tests.SilenceProvider
+  id: SilenceProvider
+  parent: KhurramAudioRoute.Tests
+  children:
+  - KhurramAudioRoute.Tests.SilenceProvider.#ctor(NAudio.Wave.WaveFormat)
+  - KhurramAudioRoute.Tests.SilenceProvider.Read(System.Byte[],System.Int32,System.Int32)
+  - KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  langs:
+  - csharp
+  - vb
+  name: SilenceProvider
+  nameWithType: SilenceProvider
+  fullName: KhurramAudioRoute.Tests.SilenceProvider
+  type: Class
+  source:
+    remote:
+      path: CoreTests.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SilenceProvider
+    path: CoreTests.cs
+    startLine: 100
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Tests
+  summary: Helper to provide silence for testing
+  example: []
+  syntax:
+    content: 'public class SilenceProvider : IWaveProvider'
+    content.vb: Public Class SilenceProvider Implements IWaveProvider
+  inheritance:
+  - System.Object
+  implements:
+  - NAudio.Wave.IWaveProvider
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  commentId: P:KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  id: WaveFormat
+  parent: KhurramAudioRoute.Tests.SilenceProvider
+  langs:
+  - csharp
+  - vb
+  name: WaveFormat
+  nameWithType: SilenceProvider.WaveFormat
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  type: Property
+  source:
+    remote:
+      path: CoreTests.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: WaveFormat
+    path: CoreTests.cs
+    startLine: 102
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Tests
+  summary: Gets the WaveFormat of this WaveProvider.
+  example: []
+  syntax:
+    content: public WaveFormat WaveFormat { get; }
+    parameters: []
+    return:
+      type: NAudio.Wave.WaveFormat
+      description: The wave format.
+    content.vb: Public ReadOnly Property WaveFormat As WaveFormat
+  overload: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat*
+  implements:
+  - NAudio.Wave.IWaveProvider.WaveFormat
+- uid: KhurramAudioRoute.Tests.SilenceProvider.#ctor(NAudio.Wave.WaveFormat)
+  commentId: M:KhurramAudioRoute.Tests.SilenceProvider.#ctor(NAudio.Wave.WaveFormat)
+  id: '#ctor(NAudio.Wave.WaveFormat)'
+  parent: KhurramAudioRoute.Tests.SilenceProvider
+  langs:
+  - csharp
+  - vb
+  name: SilenceProvider(WaveFormat)
+  nameWithType: SilenceProvider.SilenceProvider(WaveFormat)
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.SilenceProvider(NAudio.Wave.WaveFormat)
+  type: Constructor
+  source:
+    remote:
+      path: CoreTests.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: .ctor
+    path: CoreTests.cs
+    startLine: 103
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Tests
+  syntax:
+    content: public SilenceProvider(WaveFormat format)
+    parameters:
+    - id: format
+      type: NAudio.Wave.WaveFormat
+    content.vb: Public Sub New(format As WaveFormat)
+  overload: KhurramAudioRoute.Tests.SilenceProvider.#ctor*
+  nameWithType.vb: SilenceProvider.New(WaveFormat)
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.New(NAudio.Wave.WaveFormat)
+  name.vb: New(WaveFormat)
+- uid: KhurramAudioRoute.Tests.SilenceProvider.Read(System.Byte[],System.Int32,System.Int32)
+  commentId: M:KhurramAudioRoute.Tests.SilenceProvider.Read(System.Byte[],System.Int32,System.Int32)
+  id: Read(System.Byte[],System.Int32,System.Int32)
+  parent: KhurramAudioRoute.Tests.SilenceProvider
+  langs:
+  - csharp
+  - vb
+  name: Read(byte[], int, int)
+  nameWithType: SilenceProvider.Read(byte[], int, int)
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.Read(byte[], int, int)
+  type: Method
+  source:
+    remote:
+      path: CoreTests.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Read
+    path: CoreTests.cs
+    startLine: 104
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Tests
+  summary: Fill the specified buffer with wave data.
+  example: []
+  syntax:
+    content: public int Read(byte[] buffer, int offset, int count)
+    parameters:
+    - id: buffer
+      type: System.Byte[]
+      description: The buffer to fill of wave data.
+    - id: offset
+      type: System.Int32
+      description: Offset into buffer
+    - id: count
+      type: System.Int32
+      description: The number of bytes to read
+    return:
+      type: System.Int32
+      description: the number of bytes written to the buffer.
+    content.vb: Public Function Read(buffer As Byte(), offset As Integer, count As Integer) As Integer
+  overload: KhurramAudioRoute.Tests.SilenceProvider.Read*
+  implements:
+  - NAudio.Wave.IWaveProvider.Read(System.Byte[],System.Int32,System.Int32)
+  nameWithType.vb: SilenceProvider.Read(Byte(), Integer, Integer)
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.Read(Byte(), Integer, Integer)
+  name.vb: Read(Byte(), Integer, Integer)
+references:
+- uid: KhurramAudioRoute.Tests
+  commentId: N:KhurramAudioRoute.Tests
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Tests
+  nameWithType: KhurramAudioRoute.Tests
+  fullName: KhurramAudioRoute.Tests
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Tests
+    name: Tests
+    href: KhurramAudioRoute.Tests.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Tests
+    name: Tests
+    href: KhurramAudioRoute.Tests.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NAudio.Wave.IWaveProvider
+  commentId: T:NAudio.Wave.IWaveProvider
+  parent: NAudio.Wave
+  isExternal: true
+  name: IWaveProvider
+  nameWithType: IWaveProvider
+  fullName: NAudio.Wave.IWaveProvider
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NAudio.Wave
+  commentId: N:NAudio.Wave
+  isExternal: true
+  name: NAudio.Wave
+  nameWithType: NAudio.Wave
+  fullName: NAudio.Wave
+  spec.csharp:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+  spec.vb:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+- uid: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat*
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+  href: KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_WaveFormat
+  name: WaveFormat
+  nameWithType: SilenceProvider.WaveFormat
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.WaveFormat
+- uid: NAudio.Wave.IWaveProvider.WaveFormat
+  commentId: P:NAudio.Wave.IWaveProvider.WaveFormat
+  parent: NAudio.Wave.IWaveProvider
+  isExternal: true
+  name: WaveFormat
+  nameWithType: IWaveProvider.WaveFormat
+  fullName: NAudio.Wave.IWaveProvider.WaveFormat
+- uid: NAudio.Wave.WaveFormat
+  commentId: T:NAudio.Wave.WaveFormat
+  parent: NAudio.Wave
+  isExternal: true
+  name: WaveFormat
+  nameWithType: WaveFormat
+  fullName: NAudio.Wave.WaveFormat
+- uid: KhurramAudioRoute.Tests.SilenceProvider.#ctor*
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.#ctor
+  href: KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider__ctor_NAudio_Wave_WaveFormat_
+  name: SilenceProvider
+  nameWithType: SilenceProvider.SilenceProvider
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.SilenceProvider
+  nameWithType.vb: SilenceProvider.New
+  fullName.vb: KhurramAudioRoute.Tests.SilenceProvider.New
+  name.vb: New
+- uid: KhurramAudioRoute.Tests.SilenceProvider.Read*
+  commentId: Overload:KhurramAudioRoute.Tests.SilenceProvider.Read
+  href: KhurramAudioRoute.Tests.SilenceProvider.html#KhurramAudioRoute_Tests_SilenceProvider_Read_System_Byte___System_Int32_System_Int32_
+  name: Read
+  nameWithType: SilenceProvider.Read
+  fullName: KhurramAudioRoute.Tests.SilenceProvider.Read
+- uid: NAudio.Wave.IWaveProvider.Read(System.Byte[],System.Int32,System.Int32)
+  commentId: M:NAudio.Wave.IWaveProvider.Read(System.Byte[],System.Int32,System.Int32)
+  parent: NAudio.Wave.IWaveProvider
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: Read(byte[], int, int)
+  nameWithType: IWaveProvider.Read(byte[], int, int)
+  fullName: NAudio.Wave.IWaveProvider.Read(byte[], int, int)
+  nameWithType.vb: IWaveProvider.Read(Byte(), Integer, Integer)
+  fullName.vb: NAudio.Wave.IWaveProvider.Read(Byte(), Integer, Integer)
+  name.vb: Read(Byte(), Integer, Integer)
+  spec.csharp:
+  - uid: NAudio.Wave.IWaveProvider.Read(System.Byte[],System.Int32,System.Int32)
+    name: Read
+    isExternal: true
+  - name: (
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: NAudio.Wave.IWaveProvider.Read(System.Byte[],System.Int32,System.Int32)
+    name: Read
+    isExternal: true
+  - name: (
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer

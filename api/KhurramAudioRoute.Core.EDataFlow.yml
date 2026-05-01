@@ -1,0 +1,166 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.EDataFlow
+  commentId: T:KhurramAudioRoute.Core.EDataFlow
+  id: EDataFlow
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  - KhurramAudioRoute.Core.EDataFlow.eAll
+  - KhurramAudioRoute.Core.EDataFlow.eCapture
+  - KhurramAudioRoute.Core.EDataFlow.eRender
+  langs:
+  - csharp
+  - vb
+  name: EDataFlow
+  nameWithType: EDataFlow
+  fullName: KhurramAudioRoute.Core.EDataFlow
+  type: Enum
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: EDataFlow
+    path: Core/AudioRouterNative.cs
+    startLine: 8
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public enum EDataFlow
+    content.vb: Public Enum EDataFlow
+- uid: KhurramAudioRoute.Core.EDataFlow.eRender
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eRender
+  id: eRender
+  parent: KhurramAudioRoute.Core.EDataFlow
+  langs:
+  - csharp
+  - vb
+  name: eRender
+  nameWithType: EDataFlow.eRender
+  fullName: KhurramAudioRoute.Core.EDataFlow.eRender
+  type: Field
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: eRender
+    path: Core/AudioRouterNative.cs
+    startLine: 8
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: eRender = 0
+    return:
+      type: KhurramAudioRoute.Core.EDataFlow
+- uid: KhurramAudioRoute.Core.EDataFlow.eCapture
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eCapture
+  id: eCapture
+  parent: KhurramAudioRoute.Core.EDataFlow
+  langs:
+  - csharp
+  - vb
+  name: eCapture
+  nameWithType: EDataFlow.eCapture
+  fullName: KhurramAudioRoute.Core.EDataFlow.eCapture
+  type: Field
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: eCapture
+    path: Core/AudioRouterNative.cs
+    startLine: 8
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: eCapture = 1
+    return:
+      type: KhurramAudioRoute.Core.EDataFlow
+- uid: KhurramAudioRoute.Core.EDataFlow.eAll
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.eAll
+  id: eAll
+  parent: KhurramAudioRoute.Core.EDataFlow
+  langs:
+  - csharp
+  - vb
+  name: eAll
+  nameWithType: EDataFlow.eAll
+  fullName: KhurramAudioRoute.Core.EDataFlow.eAll
+  type: Field
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: eAll
+    path: Core/AudioRouterNative.cs
+    startLine: 8
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: eAll = 2
+    return:
+      type: KhurramAudioRoute.Core.EDataFlow
+- uid: KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  commentId: F:KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  id: EDataFlow_enum_count
+  parent: KhurramAudioRoute.Core.EDataFlow
+  langs:
+  - csharp
+  - vb
+  name: EDataFlow_enum_count
+  nameWithType: EDataFlow.EDataFlow_enum_count
+  fullName: KhurramAudioRoute.Core.EDataFlow.EDataFlow_enum_count
+  type: Field
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: EDataFlow_enum_count
+    path: Core/AudioRouterNative.cs
+    startLine: 8
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: EDataFlow_enum_count = 3
+    return:
+      type: KhurramAudioRoute.Core.EDataFlow
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: KhurramAudioRoute.Core.EDataFlow
+  commentId: T:KhurramAudioRoute.Core.EDataFlow
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.EDataFlow.html
+  name: EDataFlow
+  nameWithType: EDataFlow
+  fullName: KhurramAudioRoute.Core.EDataFlow

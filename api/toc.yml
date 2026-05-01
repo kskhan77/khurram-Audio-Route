@@ -1,0 +1,119 @@
+### YamlMime:TableOfContent
+items:
+- uid: KhurramAudioRoute
+  name: KhurramAudioRoute
+  type: Namespace
+  items:
+  - uid: KhurramAudioRoute.ActivityBrushConverter
+    name: ActivityBrushConverter
+    type: Class
+  - uid: KhurramAudioRoute.App
+    name: App
+    type: Class
+  - uid: KhurramAudioRoute.InverseBooleanConverter
+    name: InverseBooleanConverter
+    type: Class
+  - uid: KhurramAudioRoute.InverseBooleanToVisibilityConverter
+    name: InverseBooleanToVisibilityConverter
+    type: Class
+  - uid: KhurramAudioRoute.MainWindow
+    name: MainWindow
+    type: Class
+  - uid: KhurramAudioRoute.NullToCollapsedConverter
+    name: NullToCollapsedConverter
+    type: Class
+  - uid: KhurramAudioRoute.PeakToHeightConverter
+    name: PeakToHeightConverter
+    type: Class
+  - uid: KhurramAudioRoute.SectionVisibilityConverter
+    name: SectionVisibilityConverter
+    type: Class
+  - uid: KhurramAudioRoute.SpectrumBarHeightConverter
+    name: SpectrumBarHeightConverter
+    type: Class
+- uid: KhurramAudioRoute.Controls
+  name: KhurramAudioRoute.Controls
+  type: Namespace
+  items:
+  - uid: KhurramAudioRoute.Controls.SpectrumMeter
+    name: SpectrumMeter
+    type: Class
+- uid: KhurramAudioRoute.Core
+  name: KhurramAudioRoute.Core
+  type: Namespace
+  items:
+  - uid: KhurramAudioRoute.Core.AppAudioSession
+    name: AppAudioSession
+    type: Class
+  - uid: KhurramAudioRoute.Core.AudioDevice
+    name: AudioDevice
+    type: Class
+  - uid: KhurramAudioRoute.Core.AudioRouterNative
+    name: AudioRouterNative
+    type: Class
+  - uid: KhurramAudioRoute.Core.BassEngine
+    name: BassEngine
+    type: Class
+  - uid: KhurramAudioRoute.Core.DelaySampleProvider
+    name: DelaySampleProvider
+    type: Class
+  - uid: KhurramAudioRoute.Core.DeviceManager
+    name: DeviceManager
+    type: Class
+  - uid: KhurramAudioRoute.Core.DeviceSelection
+    name: DeviceSelection
+    type: Class
+  - uid: KhurramAudioRoute.Core.DuplicationManager
+    name: DuplicationManager
+    type: Class
+  - uid: KhurramAudioRoute.Core.DuplicationSession
+    name: DuplicationSession
+    type: Class
+  - uid: KhurramAudioRoute.Core.DuplicationTarget
+    name: DuplicationTarget
+    type: Class
+  - uid: KhurramAudioRoute.Core.EDataFlow
+    name: EDataFlow
+    type: Enum
+  - uid: KhurramAudioRoute.Core.ERole
+    name: ERole
+    type: Enum
+  - uid: KhurramAudioRoute.Core.EqualizerSampleProvider
+    name: EqualizerSampleProvider
+    type: Class
+  - uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+    name: IAudioPolicyConfigFactory
+    type: Interface
+  - uid: KhurramAudioRoute.Core.IAudioPolicyConfigWin10
+    name: IAudioPolicyConfigWin10
+    type: Interface
+  - uid: KhurramAudioRoute.Core.IPolicyConfig
+    name: IPolicyConfig
+    type: Interface
+  - uid: KhurramAudioRoute.Core.PolicyConfigClient
+    name: PolicyConfigClient
+    type: Class
+  - uid: KhurramAudioRoute.Core.SessionManager
+    name: SessionManager
+    type: Class
+- uid: KhurramAudioRoute.Tests
+  name: KhurramAudioRoute.Tests
+  type: Namespace
+  items:
+  - uid: KhurramAudioRoute.Tests.AudioCoreTester
+    name: AudioCoreTester
+    type: Class
+  - uid: KhurramAudioRoute.Tests.SilenceProvider
+    name: SilenceProvider
+    type: Class
+- uid: KhurramAudioRoute.ViewModels
+  name: KhurramAudioRoute.ViewModels
+  type: Namespace
+  items:
+  - uid: KhurramAudioRoute.ViewModels.DashboardSection
+    name: DashboardSection
+    type: Enum
+  - uid: KhurramAudioRoute.ViewModels.MainViewModel
+    name: MainViewModel
+    type: Class
+memberLayout: SamePage

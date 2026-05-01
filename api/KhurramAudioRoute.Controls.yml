@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Controls
+  commentId: N:KhurramAudioRoute.Controls
+  id: KhurramAudioRoute.Controls
+  children:
+  - KhurramAudioRoute.Controls.SpectrumMeter
+  langs:
+  - csharp
+  - vb
+  name: KhurramAudioRoute.Controls
+  nameWithType: KhurramAudioRoute.Controls
+  fullName: KhurramAudioRoute.Controls
+  type: Namespace
+  assemblies:
+  - KhurramAudioRoute
+references:
+- uid: KhurramAudioRoute.Controls.SpectrumMeter
+  commentId: T:KhurramAudioRoute.Controls.SpectrumMeter
+  href: KhurramAudioRoute.Controls.SpectrumMeter.html
+  name: SpectrumMeter
+  nameWithType: SpectrumMeter
+  fullName: KhurramAudioRoute.Controls.SpectrumMeter

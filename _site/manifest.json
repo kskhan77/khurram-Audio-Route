@@ -1,0 +1,615 @@
+{
+  "source_base_path": "C:/Users/KhurramShafique/OneDrive - Continental Expedited Services, Inc/Desktop/audio/audio-router/src/AudioRouterV2",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "CLAUDE.md",
+      "output": {
+        ".html": {
+          "relative_path": "CLAUDE.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "PLAN.md",
+      "output": {
+        ".html": {
+          "relative_path": "PLAN.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "TECHNICAL_GUIDE.md",
+      "output": {
+        ".html": {
+          "relative_path": "TECHNICAL_GUIDE.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.ActivityBrushConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.ActivityBrushConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.ActivityBrushConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.ActivityBrushConverter.yml\" sourcestartlinenumber=\"1\">Produces a brighter accent when a device or app is actively playing.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.App.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.App.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.App",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.App.yml\" sourcestartlinenumber=\"1\">Interaction logic for App.xaml</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Controls.SpectrumMeter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Controls.SpectrumMeter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Controls.SpectrumMeter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Controls.SpectrumMeter.yml\" sourcestartlinenumber=\"1\">SpectrumMeter</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Controls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Controls.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Controls",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.AppAudioSession.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.AppAudioSession.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.AppAudioSession",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Core.AppAudioSession.yml\" sourcestartlinenumber=\"1\">A base class for objects of which the properties must be observable.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.AudioDevice.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.AudioDevice.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.AudioDevice",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.AudioRouterNative.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.AudioRouterNative.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.AudioRouterNative",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.BassEngine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.BassEngine.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.BassEngine",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Core.BassEngine.yml\" sourcestartlinenumber=\"1\">The high-end audio engine powered by BASS.\nHandles professional EQ, multi-device synchronization, and 7.1/Atmos foundations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DelaySampleProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DelaySampleProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DelaySampleProvider",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Core.DelaySampleProvider.yml\" sourcestartlinenumber=\"1\">Inserts up to N milliseconds of delay between source and output. Use it to\nalign mirror targets that run on different transports - a Bluetooth speaker\narrives ~150-300 ms later than a wired DAC, so delaying the wired side by\nthe same amount keeps the room in phase.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DeviceManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DeviceManager.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DeviceManager",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DeviceSelection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DeviceSelection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DeviceSelection",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Core.DeviceSelection.yml\" sourcestartlinenumber=\"1\">A base class for objects of which the properties must be observable.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DuplicationManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DuplicationManager.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DuplicationManager",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DuplicationSession.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DuplicationSession.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DuplicationSession",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.DuplicationTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.DuplicationTarget.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.DuplicationTarget",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.EDataFlow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.EDataFlow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.EDataFlow",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.ERole.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.ERole.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.ERole",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.EqualizerSampleProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.EqualizerSampleProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.EqualizerSampleProvider",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.IAudioPolicyConfigFactory",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.IAudioPolicyConfigWin10.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.IAudioPolicyConfigWin10",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.IPolicyConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.IPolicyConfig.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.IPolicyConfig",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.PolicyConfigClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.PolicyConfigClient.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.PolicyConfigClient",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.SessionManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.SessionManager.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core.SessionManager",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Core.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Core",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.InverseBooleanConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.InverseBooleanConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.InverseBooleanConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.InverseBooleanConverter.yml\" sourcestartlinenumber=\"1\">Inverts a boolean value. Useful for binding IsMuted to a &quot;Power/Active&quot; toggle.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.InverseBooleanToVisibilityConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.InverseBooleanToVisibilityConverter.yml\" sourcestartlinenumber=\"1\">True → Collapsed, False → Visible. Used to hide controls when a flag is set\n(e.g. hide the &quot;Set Default&quot; button when the device is already default).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.MainWindow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.MainWindow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.MainWindow",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.MainWindow.yml\" sourcestartlinenumber=\"1\">Interaction logic for MainWindow.xaml</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.NullToCollapsedConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.NullToCollapsedConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.NullToCollapsedConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.NullToCollapsedConverter.yml\" sourcestartlinenumber=\"1\">Hides a panel until its DataContext is non-null. Used so the master output\nstrip stays collapsed during the brief startup window before the default device is loaded.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.PeakToHeightConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.PeakToHeightConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.PeakToHeightConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.PeakToHeightConverter.yml\" sourcestartlinenumber=\"1\">Converts a 0.0-1.0 value to a height based on a multiplier (parameter).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.SectionVisibilityConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.SectionVisibilityConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.SectionVisibilityConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.SectionVisibilityConverter.yml\" sourcestartlinenumber=\"1\">Shows a section only when the bound enum matches the requested section name.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.SpectrumBarHeightConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.SpectrumBarHeightConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.SpectrumBarHeightConverter",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.SpectrumBarHeightConverter.yml\" sourcestartlinenumber=\"1\">Generates staggered meter-bar heights from a single peak value to create a simple spectrum effect.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Tests.AudioCoreTester.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Tests.AudioCoreTester.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Tests.AudioCoreTester",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Tests.AudioCoreTester.yml\" sourcestartlinenumber=\"1\">A simple test harness to verify the Equalizer and Core logic without a full unit test runner.\nRun this from a console or a debug session to verify integrity.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Tests.SilenceProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Tests.SilenceProvider.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Tests.SilenceProvider",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.Tests.SilenceProvider.yml\" sourcestartlinenumber=\"1\">Helper to provide silence for testing</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.Tests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.Tests.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.Tests",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.ViewModels.DashboardSection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.ViewModels.DashboardSection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.ViewModels.DashboardSection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.ViewModels.MainViewModel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.ViewModels.MainViewModel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.ViewModels.MainViewModel",
+      "Summary": "<p sourcefile=\"api/KhurramAudioRoute.ViewModels.MainViewModel.yml\" sourcestartlinenumber=\"1\">A base class for objects of which the properties must be observable.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.ViewModels.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.ViewModels.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute.ViewModels",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/KhurramAudioRoute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/KhurramAudioRoute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "KhurramAudioRoute",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "plan-sound-enhancment.md",
+      "output": {
+        ".html": {
+          "relative_path": "plan-sound-enhancment.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

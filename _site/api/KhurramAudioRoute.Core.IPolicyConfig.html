@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Interface IPolicyConfig </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Interface IPolicyConfig ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/new/feature/sound-bass-branding/apiSpec/new?filename=KhurramAudioRoute_Core_IPolicyConfig.md&amp;value=---%0Auid%3A%20KhurramAudioRoute.Core.IPolicyConfig%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="KhurramAudioRoute.Core.IPolicyConfig">
+
+
+
+  <h1 id="KhurramAudioRoute_Core_IPolicyConfig" data-uid="KhurramAudioRoute.Core.IPolicyConfig" class="text-break">
+Interface IPolicyConfig  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="KhurramAudioRoute.html">KhurramAudioRoute</a>.<a class="xref" href="KhurramAudioRoute.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>KhurramAudioRoute.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Guid(&quot;F8679F50-850A-41CF-9C72-430F290290C8&quot;)]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IPolicyConfig</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_GetDeviceFormat_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_GetDeviceFormat_System_String_System_Int32_System_IntPtr__" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)">
+  GetDeviceFormat(string, int, out nint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetDeviceFormat(string pszDeviceName, int bDefault, out nint ppFormat)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>bDefault</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+    <dt><code>ppFormat</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_GetMixFormat_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_GetMixFormat_System_String_System_IntPtr__" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)">
+  GetMixFormat(string, out nint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetMixFormat(string pszDeviceName, out nint ppFormat)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>ppFormat</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_GetProcessingPeriod_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_GetProcessingPeriod_System_String_System_Int32_System_Int64__System_Int64__" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)">
+  GetProcessingPeriod(string, int, out long, out long)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetProcessingPeriod(string pszDeviceName, int bDefault, out long pmftDefaultPeriod, out long pmftMinimumPeriod)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>bDefault</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+    <dt><code>pmftDefaultPeriod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+    <dt><code>pmftMinimumPeriod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_GetPropertyValue_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_GetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr__" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)">
+  GetPropertyValue(string, int, nint, out nint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetPropertyValue(string pszDeviceName, int bFxStore, nint key, out nint pv)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>bFxStore</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+    <dt><code>pv</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_GetShareMode_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetShareMode*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_GetShareMode_System_String_System_Int32__" data-uid="KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)">
+  GetShareMode(string, out int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetShareMode(string pszDeviceName, out int pMode)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>pMode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_ResetDeviceFormat_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_ResetDeviceFormat_System_String_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)">
+  ResetDeviceFormat(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ResetDeviceFormat(string pszDeviceName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetDefaultEndpoint_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetDefaultEndpoint_System_String_KhurramAudioRoute_Core_ERole_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)">
+  SetDefaultEndpoint(string, ERole)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetDefaultEndpoint(string pszDeviceName, ERole eRole)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>eRole</code> <a class="xref" href="KhurramAudioRoute.Core.ERole.html">ERole</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetDeviceFormat_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetDeviceFormat_System_String_System_IntPtr_System_IntPtr_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)">
+  SetDeviceFormat(string, nint, nint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetDeviceFormat(string pszDeviceName, nint pEndpointFormat, nint pMixFormat)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>pEndpointFormat</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+    <dt><code>pMixFormat</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetEndpointVisibility_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetEndpointVisibility_System_String_System_Int32_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)">
+  SetEndpointVisibility(string, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetEndpointVisibility(string pszDeviceName, int bVisible)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>bVisible</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetProcessingPeriod_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetProcessingPeriod_System_String_System_Int64_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)">
+  SetProcessingPeriod(string, long)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetProcessingPeriod(string pszDeviceName, long pmftPeriod)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>pmftPeriod</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetPropertyValue_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)">
+  SetPropertyValue(string, int, nint, nint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetPropertyValue(string pszDeviceName, int bFxStore, nint key, nint pv)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>bFxStore</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+    <dt><code>key</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+    <dt><code>pv</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.intptr">nint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_Core_IPolicyConfig_SetShareMode_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetShareMode*"></a>
+
+  <h3 id="KhurramAudioRoute_Core_IPolicyConfig_SetShareMode_System_String_System_Int32_" data-uid="KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)">
+  SetShareMode(string, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int SetShareMode(string pszDeviceName, int mode)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pszDeviceName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>mode</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/Core/AudioRouterNative.cs/#L12" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

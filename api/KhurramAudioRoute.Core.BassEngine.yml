@@ -1,0 +1,650 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.BassEngine
+  commentId: T:KhurramAudioRoute.Core.BassEngine
+  id: BassEngine
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(System.String@)
+  - KhurramAudioRoute.Core.BassEngine.Free
+  - KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(System.String)
+  - KhurramAudioRoute.Core.BassEngine.InitializeDevice(System.Int32)
+  - KhurramAudioRoute.Core.BassEngine.PlayTestTone(System.String)
+  - KhurramAudioRoute.Core.BassEngine.StopTestTone
+  - KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(System.String,System.Single[])
+  langs:
+  - csharp
+  - vb
+  name: BassEngine
+  nameWithType: BassEngine
+  fullName: KhurramAudioRoute.Core.BassEngine
+  type: Class
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: BassEngine
+    path: Core/BassEngine.cs
+    startLine: 16
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: >-
+    The high-end audio engine powered by BASS.
+
+    Handles professional EQ, multi-device synchronization, and 7.1/Atmos foundations.
+  example: []
+  syntax:
+    content: public static class BassEngine
+    content.vb: Public Module BassEngine
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(System.String@)
+  commentId: M:KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(System.String@)
+  id: CheckNativeDlls(System.String@)
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: CheckNativeDlls(out string)
+  nameWithType: BassEngine.CheckNativeDlls(out string)
+  fullName: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(out string)
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: CheckNativeDlls
+    path: Core/BassEngine.cs
+    startLine: 23
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Checks if the required BASS native DLLs are present in the application directory.
+  example: []
+  syntax:
+    content: public static bool CheckNativeDlls(out string missingFiles)
+    parameters:
+    - id: missingFiles
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function CheckNativeDlls(missingFiles As String) As Boolean
+  overload: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls*
+  nameWithType.vb: BassEngine.CheckNativeDlls(String)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls(String)
+  name.vb: CheckNativeDlls(String)
+- uid: KhurramAudioRoute.Core.BassEngine.InitializeDevice(System.Int32)
+  commentId: M:KhurramAudioRoute.Core.BassEngine.InitializeDevice(System.Int32)
+  id: InitializeDevice(System.Int32)
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: InitializeDevice(int)
+  nameWithType: BassEngine.InitializeDevice(int)
+  fullName: KhurramAudioRoute.Core.BassEngine.InitializeDevice(int)
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: InitializeDevice
+    path: Core/BassEngine.cs
+    startLine: 44
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Initializes the BASS engine for a specific device.
+  example: []
+  syntax:
+    content: public static bool InitializeDevice(int deviceIndex)
+    parameters:
+    - id: deviceIndex
+      type: System.Int32
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function InitializeDevice(deviceIndex As Integer) As Boolean
+  overload: KhurramAudioRoute.Core.BassEngine.InitializeDevice*
+  nameWithType.vb: BassEngine.InitializeDevice(Integer)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.InitializeDevice(Integer)
+  name.vb: InitializeDevice(Integer)
+- uid: KhurramAudioRoute.Core.BassEngine.Free
+  commentId: M:KhurramAudioRoute.Core.BassEngine.Free
+  id: Free
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: Free()
+  nameWithType: BassEngine.Free()
+  fullName: KhurramAudioRoute.Core.BassEngine.Free()
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Free
+    path: Core/BassEngine.cs
+    startLine: 76
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Frees all BASS resources.
+  example: []
+  syntax:
+    content: public static void Free()
+    content.vb: Public Shared Sub Free()
+  overload: KhurramAudioRoute.Core.BassEngine.Free*
+- uid: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(System.String,System.Single[])
+  commentId: M:KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(System.String,System.Single[])
+  id: UpdateEqualizer(System.String,System.Single[])
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: UpdateEqualizer(string, float[])
+  nameWithType: BassEngine.UpdateEqualizer(string, float[])
+  fullName: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(string, float[])
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: UpdateEqualizer
+    path: Core/BassEngine.cs
+    startLine: 95
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: >-
+    Applies high-precision EQ to a device. 
+
+    For single-device mode, we create a loopback capture to intercept Windows audio.
+  example: []
+  syntax:
+    content: public static void UpdateEqualizer(string deviceId, float[] gains)
+    parameters:
+    - id: deviceId
+      type: System.String
+    - id: gains
+      type: System.Single[]
+    content.vb: Public Shared Sub UpdateEqualizer(deviceId As String, gains As Single())
+  overload: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer*
+  nameWithType.vb: BassEngine.UpdateEqualizer(String, Single())
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer(String, Single())
+  name.vb: UpdateEqualizer(String, Single())
+- uid: KhurramAudioRoute.Core.BassEngine.PlayTestTone(System.String)
+  commentId: M:KhurramAudioRoute.Core.BassEngine.PlayTestTone(System.String)
+  id: PlayTestTone(System.String)
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: PlayTestTone(string)
+  nameWithType: BassEngine.PlayTestTone(string)
+  fullName: KhurramAudioRoute.Core.BassEngine.PlayTestTone(string)
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: PlayTestTone
+    path: Core/BassEngine.cs
+    startLine: 176
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: >-
+    Plays a professional-grade test tone using BASS.
+
+    This verifies that the native DLLs are loaded and the audio driver is responding.
+  example: []
+  syntax:
+    content: public static bool PlayTestTone(string deviceId)
+    parameters:
+    - id: deviceId
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function PlayTestTone(deviceId As String) As Boolean
+  overload: KhurramAudioRoute.Core.BassEngine.PlayTestTone*
+  nameWithType.vb: BassEngine.PlayTestTone(String)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.PlayTestTone(String)
+  name.vb: PlayTestTone(String)
+- uid: KhurramAudioRoute.Core.BassEngine.StopTestTone
+  commentId: M:KhurramAudioRoute.Core.BassEngine.StopTestTone
+  id: StopTestTone
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: StopTestTone()
+  nameWithType: BassEngine.StopTestTone()
+  fullName: KhurramAudioRoute.Core.BassEngine.StopTestTone()
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: StopTestTone
+    path: Core/BassEngine.cs
+    startLine: 224
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Stops the BASS test tone.
+  example: []
+  syntax:
+    content: public static void StopTestTone()
+    content.vb: Public Shared Sub StopTestTone()
+  overload: KhurramAudioRoute.Core.BassEngine.StopTestTone*
+- uid: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(System.String)
+  commentId: M:KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(System.String)
+  id: GetDeviceIndex(System.String)
+  parent: KhurramAudioRoute.Core.BassEngine
+  langs:
+  - csharp
+  - vb
+  name: GetDeviceIndex(string)
+  nameWithType: BassEngine.GetDeviceIndex(string)
+  fullName: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(string)
+  type: Method
+  source:
+    remote:
+      path: Core/BassEngine.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetDeviceIndex
+    path: Core/BassEngine.cs
+    startLine: 237
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Gets the BASS device index from a Windows Device ID (GUID string).
+  example: []
+  syntax:
+    content: public static int GetDeviceIndex(string deviceId)
+    parameters:
+    - id: deviceId
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetDeviceIndex(deviceId As String) As Integer
+  overload: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex*
+  nameWithType.vb: BassEngine.GetDeviceIndex(String)
+  fullName.vb: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex(String)
+  name.vb: GetDeviceIndex(String)
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.CheckNativeDlls
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_CheckNativeDlls_System_String__
+  name: CheckNativeDlls
+  nameWithType: BassEngine.CheckNativeDlls
+  fullName: KhurramAudioRoute.Core.BassEngine.CheckNativeDlls
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: KhurramAudioRoute.Core.BassEngine.InitializeDevice*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.InitializeDevice
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_InitializeDevice_System_Int32_
+  name: InitializeDevice
+  nameWithType: BassEngine.InitializeDevice
+  fullName: KhurramAudioRoute.Core.BassEngine.InitializeDevice
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: KhurramAudioRoute.Core.BassEngine.Free*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.Free
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_Free
+  name: Free
+  nameWithType: BassEngine.Free
+  fullName: KhurramAudioRoute.Core.BassEngine.Free
+- uid: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.UpdateEqualizer
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_UpdateEqualizer_System_String_System_Single___
+  name: UpdateEqualizer
+  nameWithType: BassEngine.UpdateEqualizer
+  fullName: KhurramAudioRoute.Core.BassEngine.UpdateEqualizer
+- uid: System.Single[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float[]
+  nameWithType: float[]
+  fullName: float[]
+  nameWithType.vb: Single()
+  fullName.vb: Single()
+  name.vb: Single()
+  spec.csharp:
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: (
+  - name: )
+- uid: KhurramAudioRoute.Core.BassEngine.PlayTestTone*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.PlayTestTone
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_PlayTestTone_System_String_
+  name: PlayTestTone
+  nameWithType: BassEngine.PlayTestTone
+  fullName: KhurramAudioRoute.Core.BassEngine.PlayTestTone
+- uid: KhurramAudioRoute.Core.BassEngine.StopTestTone*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.StopTestTone
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_StopTestTone
+  name: StopTestTone
+  nameWithType: BassEngine.StopTestTone
+  fullName: KhurramAudioRoute.Core.BassEngine.StopTestTone
+- uid: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex*
+  commentId: Overload:KhurramAudioRoute.Core.BassEngine.GetDeviceIndex
+  href: KhurramAudioRoute.Core.BassEngine.html#KhurramAudioRoute_Core_BassEngine_GetDeviceIndex_System_String_
+  name: GetDeviceIndex
+  nameWithType: BassEngine.GetDeviceIndex
+  fullName: KhurramAudioRoute.Core.BassEngine.GetDeviceIndex

@@ -1,0 +1,660 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.IPolicyConfig
+  commentId: T:KhurramAudioRoute.Core.IPolicyConfig
+  id: IPolicyConfig
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  - KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)
+  - KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  - KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  - KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)
+  - KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  - KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: IPolicyConfig
+  nameWithType: IPolicyConfig
+  fullName: KhurramAudioRoute.Core.IPolicyConfig
+  type: Interface
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: IPolicyConfig
+    path: Core/AudioRouterNative.cs
+    startLine: 11
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: >-
+      [Guid("F8679F50-850A-41CF-9C72-430F290290C8")]
+
+      [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+
+      public interface IPolicyConfig
+    content.vb: >-
+      <Guid("F8679F50-850A-41CF-9C72-430F290290C8")>
+
+      <InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
+
+      Public Interface IPolicyConfig
+  attributes:
+  - type: System.Runtime.InteropServices.GuidAttribute
+    ctor: System.Runtime.InteropServices.GuidAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: F8679F50-850A-41CF-9C72-430F290290C8
+  - type: System.Runtime.InteropServices.InterfaceTypeAttribute
+    ctor: System.Runtime.InteropServices.InterfaceTypeAttribute.#ctor(System.Runtime.InteropServices.ComInterfaceType)
+    arguments:
+    - type: System.Runtime.InteropServices.ComInterfaceType
+      value: 1
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(System.String,System.IntPtr@)
+  id: GetMixFormat(System.String,System.IntPtr@)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: GetMixFormat(string, out nint)
+  nameWithType: IPolicyConfig.GetMixFormat(string, out nint)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(string, out nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetMixFormat
+    path: Core/AudioRouterNative.cs
+    startLine: 14
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetMixFormat(string pszDeviceName, out nint ppFormat)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: ppFormat
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function GetMixFormat(pszDeviceName As String, ppFormat As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat*
+  nameWithType.vb: IPolicyConfig.GetMixFormat(String, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat(String, System.IntPtr)
+  name.vb: GetMixFormat(String, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  id: GetDeviceFormat(System.String,System.Int32,System.IntPtr@)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: GetDeviceFormat(string, int, out nint)
+  nameWithType: IPolicyConfig.GetDeviceFormat(string, int, out nint)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(string, int, out nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetDeviceFormat
+    path: Core/AudioRouterNative.cs
+    startLine: 15
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetDeviceFormat(string pszDeviceName, int bDefault, out nint ppFormat)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: bDefault
+      type: System.Int32
+    - id: ppFormat
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function GetDeviceFormat(pszDeviceName As String, bDefault As Integer, ppFormat As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat*
+  nameWithType.vb: IPolicyConfig.GetDeviceFormat(String, Integer, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat(String, Integer, System.IntPtr)
+  name.vb: GetDeviceFormat(String, Integer, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(System.String)
+  id: ResetDeviceFormat(System.String)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: ResetDeviceFormat(string)
+  nameWithType: IPolicyConfig.ResetDeviceFormat(string)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(string)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: ResetDeviceFormat
+    path: Core/AudioRouterNative.cs
+    startLine: 16
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int ResetDeviceFormat(string pszDeviceName)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Function ResetDeviceFormat(pszDeviceName As String) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat*
+  nameWithType.vb: IPolicyConfig.ResetDeviceFormat(String)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat(String)
+  name.vb: ResetDeviceFormat(String)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  id: SetDeviceFormat(System.String,System.IntPtr,System.IntPtr)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetDeviceFormat(string, nint, nint)
+  nameWithType: IPolicyConfig.SetDeviceFormat(string, nint, nint)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(string, nint, nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetDeviceFormat
+    path: Core/AudioRouterNative.cs
+    startLine: 17
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetDeviceFormat(string pszDeviceName, nint pEndpointFormat, nint pMixFormat)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: pEndpointFormat
+      type: System.IntPtr
+    - id: pMixFormat
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function SetDeviceFormat(pszDeviceName As String, pEndpointFormat As IntPtr, pMixFormat As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat*
+  nameWithType.vb: IPolicyConfig.SetDeviceFormat(String, IntPtr, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat(String, System.IntPtr, System.IntPtr)
+  name.vb: SetDeviceFormat(String, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  id: GetProcessingPeriod(System.String,System.Int32,System.Int64@,System.Int64@)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: GetProcessingPeriod(string, int, out long, out long)
+  nameWithType: IPolicyConfig.GetProcessingPeriod(string, int, out long, out long)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(string, int, out long, out long)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetProcessingPeriod
+    path: Core/AudioRouterNative.cs
+    startLine: 18
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetProcessingPeriod(string pszDeviceName, int bDefault, out long pmftDefaultPeriod, out long pmftMinimumPeriod)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: bDefault
+      type: System.Int32
+    - id: pmftDefaultPeriod
+      type: System.Int64
+    - id: pmftMinimumPeriod
+      type: System.Int64
+    return:
+      type: System.Int32
+    content.vb: Function GetProcessingPeriod(pszDeviceName As String, bDefault As Integer, pmftDefaultPeriod As Long, pmftMinimumPeriod As Long) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod*
+  nameWithType.vb: IPolicyConfig.GetProcessingPeriod(String, Integer, Long, Long)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod(String, Integer, Long, Long)
+  name.vb: GetProcessingPeriod(String, Integer, Long, Long)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(System.String,System.Int64)
+  id: SetProcessingPeriod(System.String,System.Int64)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetProcessingPeriod(string, long)
+  nameWithType: IPolicyConfig.SetProcessingPeriod(string, long)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(string, long)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetProcessingPeriod
+    path: Core/AudioRouterNative.cs
+    startLine: 19
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetProcessingPeriod(string pszDeviceName, long pmftPeriod)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: pmftPeriod
+      type: System.Int64
+    return:
+      type: System.Int32
+    content.vb: Function SetProcessingPeriod(pszDeviceName As String, pmftPeriod As Long) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod*
+  nameWithType.vb: IPolicyConfig.SetProcessingPeriod(String, Long)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod(String, Long)
+  name.vb: SetProcessingPeriod(String, Long)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(System.String,System.Int32@)
+  id: GetShareMode(System.String,System.Int32@)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: GetShareMode(string, out int)
+  nameWithType: IPolicyConfig.GetShareMode(string, out int)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(string, out int)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetShareMode
+    path: Core/AudioRouterNative.cs
+    startLine: 20
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetShareMode(string pszDeviceName, out int pMode)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: pMode
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Function GetShareMode(pszDeviceName As String, pMode As Integer) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode*
+  nameWithType.vb: IPolicyConfig.GetShareMode(String, Integer)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode(String, Integer)
+  name.vb: GetShareMode(String, Integer)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(System.String,System.Int32)
+  id: SetShareMode(System.String,System.Int32)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetShareMode(string, int)
+  nameWithType: IPolicyConfig.SetShareMode(string, int)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(string, int)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetShareMode
+    path: Core/AudioRouterNative.cs
+    startLine: 21
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetShareMode(string pszDeviceName, int mode)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: mode
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Function SetShareMode(pszDeviceName As String, mode As Integer) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode*
+  nameWithType.vb: IPolicyConfig.SetShareMode(String, Integer)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode(String, Integer)
+  name.vb: SetShareMode(String, Integer)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  id: GetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr@)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: GetPropertyValue(string, int, nint, out nint)
+  nameWithType: IPolicyConfig.GetPropertyValue(string, int, nint, out nint)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(string, int, nint, out nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetPropertyValue
+    path: Core/AudioRouterNative.cs
+    startLine: 22
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetPropertyValue(string pszDeviceName, int bFxStore, nint key, out nint pv)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: bFxStore
+      type: System.Int32
+    - id: key
+      type: System.IntPtr
+    - id: pv
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function GetPropertyValue(pszDeviceName As String, bFxStore As Integer, key As IntPtr, pv As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue*
+  nameWithType.vb: IPolicyConfig.GetPropertyValue(String, Integer, IntPtr, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue(String, Integer, System.IntPtr, System.IntPtr)
+  name.vb: GetPropertyValue(String, Integer, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  id: SetPropertyValue(System.String,System.Int32,System.IntPtr,System.IntPtr)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetPropertyValue(string, int, nint, nint)
+  nameWithType: IPolicyConfig.SetPropertyValue(string, int, nint, nint)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(string, int, nint, nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetPropertyValue
+    path: Core/AudioRouterNative.cs
+    startLine: 23
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetPropertyValue(string pszDeviceName, int bFxStore, nint key, nint pv)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: bFxStore
+      type: System.Int32
+    - id: key
+      type: System.IntPtr
+    - id: pv
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function SetPropertyValue(pszDeviceName As String, bFxStore As Integer, key As IntPtr, pv As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue*
+  nameWithType.vb: IPolicyConfig.SetPropertyValue(String, Integer, IntPtr, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue(String, Integer, System.IntPtr, System.IntPtr)
+  name.vb: SetPropertyValue(String, Integer, IntPtr, IntPtr)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  id: SetDefaultEndpoint(System.String,KhurramAudioRoute.Core.ERole)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetDefaultEndpoint(string, ERole)
+  nameWithType: IPolicyConfig.SetDefaultEndpoint(string, ERole)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(string, KhurramAudioRoute.Core.ERole)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetDefaultEndpoint
+    path: Core/AudioRouterNative.cs
+    startLine: 24
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetDefaultEndpoint(string pszDeviceName, ERole eRole)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: eRole
+      type: KhurramAudioRoute.Core.ERole
+    return:
+      type: System.Int32
+    content.vb: Function SetDefaultEndpoint(pszDeviceName As String, eRole As ERole) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint*
+  nameWithType.vb: IPolicyConfig.SetDefaultEndpoint(String, ERole)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint(String, KhurramAudioRoute.Core.ERole)
+  name.vb: SetDefaultEndpoint(String, ERole)
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)
+  commentId: M:KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(System.String,System.Int32)
+  id: SetEndpointVisibility(System.String,System.Int32)
+  parent: KhurramAudioRoute.Core.IPolicyConfig
+  langs:
+  - csharp
+  - vb
+  name: SetEndpointVisibility(string, int)
+  nameWithType: IPolicyConfig.SetEndpointVisibility(string, int)
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(string, int)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetEndpointVisibility
+    path: Core/AudioRouterNative.cs
+    startLine: 25
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetEndpointVisibility(string pszDeviceName, int bVisible)
+    parameters:
+    - id: pszDeviceName
+      type: System.String
+    - id: bVisible
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Function SetEndpointVisibility(pszDeviceName As String, bVisible As Integer) As Integer
+  overload: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility*
+  nameWithType.vb: IPolicyConfig.SetEndpointVisibility(String, Integer)
+  fullName.vb: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility(String, Integer)
+  name.vb: SetEndpointVisibility(String, Integer)
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetMixFormat_System_String_System_IntPtr__
+  name: GetMixFormat
+  nameWithType: IPolicyConfig.GetMixFormat
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetMixFormat
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetDeviceFormat_System_String_System_Int32_System_IntPtr__
+  name: GetDeviceFormat
+  nameWithType: IPolicyConfig.GetDeviceFormat
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_ResetDeviceFormat_System_String_
+  name: ResetDeviceFormat
+  nameWithType: IPolicyConfig.ResetDeviceFormat
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.ResetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDeviceFormat_System_String_System_IntPtr_System_IntPtr_
+  name: SetDeviceFormat
+  nameWithType: IPolicyConfig.SetDeviceFormat
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDeviceFormat
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetProcessingPeriod_System_String_System_Int32_System_Int64__System_Int64__
+  name: GetProcessingPeriod
+  nameWithType: IPolicyConfig.GetProcessingPeriod
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetProcessingPeriod
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetProcessingPeriod_System_String_System_Int64_
+  name: SetProcessingPeriod
+  nameWithType: IPolicyConfig.SetProcessingPeriod
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetProcessingPeriod
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetShareMode
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetShareMode_System_String_System_Int32__
+  name: GetShareMode
+  nameWithType: IPolicyConfig.GetShareMode
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetShareMode
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetShareMode
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetShareMode_System_String_System_Int32_
+  name: SetShareMode
+  nameWithType: IPolicyConfig.SetShareMode
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetShareMode
+- uid: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_GetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr__
+  name: GetPropertyValue
+  nameWithType: IPolicyConfig.GetPropertyValue
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.GetPropertyValue
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetPropertyValue_System_String_System_Int32_System_IntPtr_System_IntPtr_
+  name: SetPropertyValue
+  nameWithType: IPolicyConfig.SetPropertyValue
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetPropertyValue
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetDefaultEndpoint_System_String_KhurramAudioRoute_Core_ERole_
+  name: SetDefaultEndpoint
+  nameWithType: IPolicyConfig.SetDefaultEndpoint
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetDefaultEndpoint
+- uid: KhurramAudioRoute.Core.ERole
+  commentId: T:KhurramAudioRoute.Core.ERole
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.ERole.html
+  name: ERole
+  nameWithType: ERole
+  fullName: KhurramAudioRoute.Core.ERole
+- uid: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility*
+  commentId: Overload:KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility
+  href: KhurramAudioRoute.Core.IPolicyConfig.html#KhurramAudioRoute_Core_IPolicyConfig_SetEndpointVisibility_System_String_System_Int32_
+  name: SetEndpointVisibility
+  nameWithType: IPolicyConfig.SetEndpointVisibility
+  fullName: KhurramAudioRoute.Core.IPolicyConfig.SetEndpointVisibility

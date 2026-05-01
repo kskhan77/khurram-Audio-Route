@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Khurram Audio Route </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Khurram Audio Route ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/README.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="khurram-audio-route">Khurram Audio Route</h1>
+
+<h2 id="-quick-technical-overview">🚀 Quick Technical Overview</h2>
+<p>This is a modern rewrite of Audio Router for Windows 11. Unlike the original, it uses <strong>Zero Injection</strong>. It does not modify other programs; instead, it uses native Windows COM interfaces and WASAPI Loopback.</p>
+<h3 id="architecture-mvvm">Architecture (MVVM)</h3>
+<ul>
+<li><strong>Views</strong>: <code>MainWindow.xaml</code> - The UI layout.</li>
+<li><strong>ViewModels</strong>: <code>MainViewModel.cs</code> - Logic connecting the UI to the Audio engine.</li>
+<li><strong>Core (The &quot;Brain&quot;)</strong>:
+<ul>
+<li><code>AudioRouterNative.cs</code>: Uses undocumented Windows API <code>IAudioPolicyConfig</code> to move apps between devices.</li>
+<li><code>DeviceManager.cs</code>: Handles listing speakers/headphones using the <strong>CSCore</strong> library.</li>
+<li><code>SessionManager.cs</code>: Finds which apps are currently playing sound.</li>
+<li><code>DuplicationManager.cs</code>: Uses <strong>NAudio</strong> to capture audio from an app and play it to a second device.</li>
+</ul>
+</li>
+</ul>
+<h2 id="-project-status-v10-alpha">🛠 Project Status (v1.0-Alpha)</h2>
+<h3 id="-completed-phase-1--2">✅ COMPLETED (Phase 1 &amp; 2)</h3>
+<ul>
+<li>[x] <strong>Native Windows 11 Routing</strong>: Move Chrome/Edge/Spotify to different devices without crashes.</li>
+<li>[x] <strong>Audio Duplication</strong>: Play one app on two devices at once (Basic Engine).</li>
+<li>[x] <strong>Modern UI</strong>: WPF-based list with auto-refresh and device selection.</li>
+<li>[x] <strong>Portable Build</strong>: Set up for .NET 10 &quot;Single File&quot; deployment.</li>
+</ul>
+<h3 id="-in-progress--todo-phase-3--4">🚧 IN PROGRESS / TODO (Phase 3 &amp; 4)</h3>
+<ul>
+<li>[ ] <strong>Advanced Duplication (Phase 3)</strong>:
+<ul>
+<li>[ ] Per-process loopback (currently captures global device audio for simplicity).</li>
+<li>[ ] Multi-device sync (reduce echo/latency).</li>
+</ul>
+</li>
+<li>[ ] <strong>Sound Controller (EQ)</strong>:
+<ul>
+<li>[ ] Add 10-band Equalizer for duplicated streams.</li>
+</ul>
+</li>
+<li>[ ] <strong>Microphone Features</strong>:
+<ul>
+<li>[ ] Route/Duplicate Mic input to output devices.</li>
+</ul>
+</li>
+<li>[ ] <strong>Soundboard</strong>:
+<ul>
+<li>[ ] Hotkey support to play MP3/WAV files into specific channels.</li>
+</ul>
+</li>
+<li>[ ] <strong>UI Polish</strong>:
+<ul>
+<li>[ ] Add app icons to the list.</li>
+<li>[ ] System Tray &quot;Minimize to tray&quot; support.</li>
+</ul>
+</li>
+</ul>
+<h2 id="-developer-reference">📖 Developer Reference</h2>
+<ul>
+<li><strong>Adding a New Feature</strong>:
+<ol>
+<li>Add the core logic in <code>Core/</code>.</li>
+<li>Add a <code>RelayCommand</code> in <code>MainViewModel.cs</code>.</li>
+<li>Bind a <code>Button</code> in <code>MainWindow.xaml</code>.</li>
+</ol>
+</li>
+<li><strong>Why CSCore + NAudio?</strong>:
+<ul>
+<li><code>CSCore</code> is used for high-level Device/Session management.</li>
+<li><code>NAudio</code> is used for the complex Buffer/Duplication logic because of its superior <code>BufferedWaveProvider</code>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><em>Created April 29, 2026</em></p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/README.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

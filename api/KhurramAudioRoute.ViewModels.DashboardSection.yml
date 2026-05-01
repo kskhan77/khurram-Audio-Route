@@ -1,0 +1,166 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.ViewModels.DashboardSection
+  commentId: T:KhurramAudioRoute.ViewModels.DashboardSection
+  id: DashboardSection
+  parent: KhurramAudioRoute.ViewModels
+  children:
+  - KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  - KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  - KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  - KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  langs:
+  - csharp
+  - vb
+  name: DashboardSection
+  nameWithType: DashboardSection
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection
+  type: Enum
+  source:
+    remote:
+      path: ViewModels/MainViewModel.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: DashboardSection
+    path: ViewModels/MainViewModel.cs
+    startLine: 16
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.ViewModels
+  syntax:
+    content: public enum DashboardSection
+    content.vb: Public Enum DashboardSection
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  id: Outputs
+  parent: KhurramAudioRoute.ViewModels.DashboardSection
+  langs:
+  - csharp
+  - vb
+  name: Outputs
+  nameWithType: DashboardSection.Outputs
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Outputs
+  type: Field
+  source:
+    remote:
+      path: ViewModels/MainViewModel.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Outputs
+    path: ViewModels/MainViewModel.cs
+    startLine: 18
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.ViewModels
+  syntax:
+    content: Outputs = 0
+    return:
+      type: KhurramAudioRoute.ViewModels.DashboardSection
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  id: Applications
+  parent: KhurramAudioRoute.ViewModels.DashboardSection
+  langs:
+  - csharp
+  - vb
+  name: Applications
+  nameWithType: DashboardSection.Applications
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Applications
+  type: Field
+  source:
+    remote:
+      path: ViewModels/MainViewModel.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Applications
+    path: ViewModels/MainViewModel.cs
+    startLine: 19
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.ViewModels
+  syntax:
+    content: Applications = 1
+    return:
+      type: KhurramAudioRoute.ViewModels.DashboardSection
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  id: Microphones
+  parent: KhurramAudioRoute.ViewModels.DashboardSection
+  langs:
+  - csharp
+  - vb
+  name: Microphones
+  nameWithType: DashboardSection.Microphones
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Microphones
+  type: Field
+  source:
+    remote:
+      path: ViewModels/MainViewModel.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Microphones
+    path: ViewModels/MainViewModel.cs
+    startLine: 20
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.ViewModels
+  syntax:
+    content: Microphones = 2
+    return:
+      type: KhurramAudioRoute.ViewModels.DashboardSection
+- uid: KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  commentId: F:KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  id: Tools
+  parent: KhurramAudioRoute.ViewModels.DashboardSection
+  langs:
+  - csharp
+  - vb
+  name: Tools
+  nameWithType: DashboardSection.Tools
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection.Tools
+  type: Field
+  source:
+    remote:
+      path: ViewModels/MainViewModel.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Tools
+    path: ViewModels/MainViewModel.cs
+    startLine: 21
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.ViewModels
+  syntax:
+    content: Tools = 3
+    return:
+      type: KhurramAudioRoute.ViewModels.DashboardSection
+references:
+- uid: KhurramAudioRoute.ViewModels
+  commentId: N:KhurramAudioRoute.ViewModels
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.ViewModels
+  nameWithType: KhurramAudioRoute.ViewModels
+  fullName: KhurramAudioRoute.ViewModels
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.ViewModels
+    name: ViewModels
+    href: KhurramAudioRoute.ViewModels.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.ViewModels
+    name: ViewModels
+    href: KhurramAudioRoute.ViewModels.html
+- uid: KhurramAudioRoute.ViewModels.DashboardSection
+  commentId: T:KhurramAudioRoute.ViewModels.DashboardSection
+  parent: KhurramAudioRoute.ViewModels
+  href: KhurramAudioRoute.ViewModels.DashboardSection.html
+  name: DashboardSection
+  nameWithType: DashboardSection
+  fullName: KhurramAudioRoute.ViewModels.DashboardSection

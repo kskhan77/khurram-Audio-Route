@@ -1,0 +1,700 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.DuplicationTarget
+  commentId: T:KhurramAudioRoute.Core.DuplicationTarget
+  id: DuplicationTarget
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.DuplicationTarget.#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)
+  - KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  - KhurramAudioRoute.Core.DuplicationTarget.Delay
+  - KhurramAudioRoute.Core.DuplicationTarget.Device
+  - KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  - KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  - KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  - KhurramAudioRoute.Core.DuplicationTarget.Player
+  langs:
+  - csharp
+  - vb
+  name: DuplicationTarget
+  nameWithType: DuplicationTarget
+  fullName: KhurramAudioRoute.Core.DuplicationTarget
+  type: Class
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: DuplicationTarget
+    path: Core/DuplicationManager.cs
+    startLine: 13
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: 'public sealed class DuplicationTarget : IDisposable'
+    content.vb: Public NotInheritable Class DuplicationTarget Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  id: DeviceId
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: DeviceId
+  nameWithType: DuplicationTarget.DeviceId
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: DeviceId
+    path: Core/DuplicationManager.cs
+    startLine: 15
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public string DeviceId { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property DeviceId As String
+  overload: KhurramAudioRoute.Core.DuplicationTarget.DeviceId*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Device
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Device
+  id: Device
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Device
+  nameWithType: DuplicationTarget.Device
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Device
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Device
+    path: Core/DuplicationManager.cs
+    startLine: 16
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public MMDevice Device { get; }
+    parameters: []
+    return:
+      type: NAudio.CoreAudioApi.MMDevice
+    content.vb: Public ReadOnly Property Device As MMDevice
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Device*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Player
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Player
+  id: Player
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Player
+  nameWithType: DuplicationTarget.Player
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Player
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Player
+    path: Core/DuplicationManager.cs
+    startLine: 17
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public IWavePlayer Player { get; }
+    parameters: []
+    return:
+      type: NAudio.Wave.IWavePlayer
+    content.vb: Public ReadOnly Property Player As IWavePlayer
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Player*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  id: Buffer
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Buffer
+  nameWithType: DuplicationTarget.Buffer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Buffer
+    path: Core/DuplicationManager.cs
+    startLine: 18
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public BufferedWaveProvider Buffer { get; }
+    parameters: []
+    return:
+      type: NAudio.Wave.BufferedWaveProvider
+    content.vb: Public ReadOnly Property Buffer As BufferedWaveProvider
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Buffer*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  id: Equalizer
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Equalizer
+  nameWithType: DuplicationTarget.Equalizer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Equalizer
+    path: Core/DuplicationManager.cs
+    startLine: 19
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public EqualizerSampleProvider Equalizer { get; }
+    parameters: []
+    return:
+      type: KhurramAudioRoute.Core.EqualizerSampleProvider
+    content.vb: Public ReadOnly Property Equalizer As EqualizerSampleProvider
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Equalizer*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Delay
+  commentId: P:KhurramAudioRoute.Core.DuplicationTarget.Delay
+  id: Delay
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Delay
+  nameWithType: DuplicationTarget.Delay
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Delay
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Delay
+    path: Core/DuplicationManager.cs
+    startLine: 20
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public DelaySampleProvider Delay { get; }
+    parameters: []
+    return:
+      type: KhurramAudioRoute.Core.DelaySampleProvider
+    content.vb: Public ReadOnly Property Delay As DelaySampleProvider
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Delay*
+- uid: KhurramAudioRoute.Core.DuplicationTarget.#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)
+  commentId: M:KhurramAudioRoute.Core.DuplicationTarget.#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)
+  id: '#ctor(System.String,NAudio.CoreAudioApi.MMDevice,NAudio.Wave.IWavePlayer,NAudio.Wave.BufferedWaveProvider,KhurramAudioRoute.Core.EqualizerSampleProvider,KhurramAudioRoute.Core.DelaySampleProvider)'
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: DuplicationTarget(string, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  nameWithType: DuplicationTarget.DuplicationTarget(string, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DuplicationTarget(string, NAudio.CoreAudioApi.MMDevice, NAudio.Wave.IWavePlayer, NAudio.Wave.BufferedWaveProvider, KhurramAudioRoute.Core.EqualizerSampleProvider, KhurramAudioRoute.Core.DelaySampleProvider)
+  type: Constructor
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: .ctor
+    path: Core/DuplicationManager.cs
+    startLine: 22
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public DuplicationTarget(string deviceId, MMDevice device, IWavePlayer player, BufferedWaveProvider buffer, EqualizerSampleProvider equalizer, DelaySampleProvider delay)
+    parameters:
+    - id: deviceId
+      type: System.String
+    - id: device
+      type: NAudio.CoreAudioApi.MMDevice
+    - id: player
+      type: NAudio.Wave.IWavePlayer
+    - id: buffer
+      type: NAudio.Wave.BufferedWaveProvider
+    - id: equalizer
+      type: KhurramAudioRoute.Core.EqualizerSampleProvider
+    - id: delay
+      type: KhurramAudioRoute.Core.DelaySampleProvider
+    content.vb: Public Sub New(deviceId As String, device As MMDevice, player As IWavePlayer, buffer As BufferedWaveProvider, equalizer As EqualizerSampleProvider, delay As DelaySampleProvider)
+  overload: KhurramAudioRoute.Core.DuplicationTarget.#ctor*
+  nameWithType.vb: DuplicationTarget.New(String, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationTarget.New(String, NAudio.CoreAudioApi.MMDevice, NAudio.Wave.IWavePlayer, NAudio.Wave.BufferedWaveProvider, KhurramAudioRoute.Core.EqualizerSampleProvider, KhurramAudioRoute.Core.DelaySampleProvider)
+  name.vb: New(String, MMDevice, IWavePlayer, BufferedWaveProvider, EqualizerSampleProvider, DelaySampleProvider)
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  commentId: M:KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  id: Dispose
+  parent: KhurramAudioRoute.Core.DuplicationTarget
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: DuplicationTarget.Dispose()
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Dispose()
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Dispose
+    path: Core/DuplicationManager.cs
+    startLine: 38
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: KhurramAudioRoute.Core.DuplicationTarget.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: KhurramAudioRoute.Core.DuplicationTarget.DeviceId*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_DeviceId
+  name: DeviceId
+  nameWithType: DuplicationTarget.DeviceId
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DeviceId
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Device*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Device
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Device
+  name: Device
+  nameWithType: DuplicationTarget.Device
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Device
+- uid: NAudio.CoreAudioApi.MMDevice
+  commentId: T:NAudio.CoreAudioApi.MMDevice
+  parent: NAudio.CoreAudioApi
+  isExternal: true
+  name: MMDevice
+  nameWithType: MMDevice
+  fullName: NAudio.CoreAudioApi.MMDevice
+- uid: NAudio.CoreAudioApi
+  commentId: N:NAudio.CoreAudioApi
+  isExternal: true
+  name: NAudio.CoreAudioApi
+  nameWithType: NAudio.CoreAudioApi
+  fullName: NAudio.CoreAudioApi
+  spec.csharp:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.CoreAudioApi
+    name: CoreAudioApi
+    isExternal: true
+  spec.vb:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.CoreAudioApi
+    name: CoreAudioApi
+    isExternal: true
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Player*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Player
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Player
+  name: Player
+  nameWithType: DuplicationTarget.Player
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Player
+- uid: NAudio.Wave.IWavePlayer
+  commentId: T:NAudio.Wave.IWavePlayer
+  parent: NAudio.Wave
+  isExternal: true
+  name: IWavePlayer
+  nameWithType: IWavePlayer
+  fullName: NAudio.Wave.IWavePlayer
+- uid: NAudio.Wave
+  commentId: N:NAudio.Wave
+  isExternal: true
+  name: NAudio.Wave
+  nameWithType: NAudio.Wave
+  fullName: NAudio.Wave
+  spec.csharp:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+  spec.vb:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Buffer*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Buffer
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Buffer
+  name: Buffer
+  nameWithType: DuplicationTarget.Buffer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Buffer
+- uid: NAudio.Wave.BufferedWaveProvider
+  commentId: T:NAudio.Wave.BufferedWaveProvider
+  parent: NAudio.Wave
+  isExternal: true
+  name: BufferedWaveProvider
+  nameWithType: BufferedWaveProvider
+  fullName: NAudio.Wave.BufferedWaveProvider
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Equalizer*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Equalizer
+  name: Equalizer
+  nameWithType: DuplicationTarget.Equalizer
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Equalizer
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider
+  commentId: T:KhurramAudioRoute.Core.EqualizerSampleProvider
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.EqualizerSampleProvider.html
+  name: EqualizerSampleProvider
+  nameWithType: EqualizerSampleProvider
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Delay*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Delay
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Delay
+  name: Delay
+  nameWithType: DuplicationTarget.Delay
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Delay
+- uid: KhurramAudioRoute.Core.DelaySampleProvider
+  commentId: T:KhurramAudioRoute.Core.DelaySampleProvider
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.DelaySampleProvider.html
+  name: DelaySampleProvider
+  nameWithType: DelaySampleProvider
+  fullName: KhurramAudioRoute.Core.DelaySampleProvider
+- uid: KhurramAudioRoute.Core.DuplicationTarget.#ctor*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.#ctor
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget__ctor_System_String_NAudio_CoreAudioApi_MMDevice_NAudio_Wave_IWavePlayer_NAudio_Wave_BufferedWaveProvider_KhurramAudioRoute_Core_EqualizerSampleProvider_KhurramAudioRoute_Core_DelaySampleProvider_
+  name: DuplicationTarget
+  nameWithType: DuplicationTarget.DuplicationTarget
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.DuplicationTarget
+  nameWithType.vb: DuplicationTarget.New
+  fullName.vb: KhurramAudioRoute.Core.DuplicationTarget.New
+  name.vb: New
+- uid: KhurramAudioRoute.Core.DuplicationTarget.Dispose*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationTarget.Dispose
+  href: KhurramAudioRoute.Core.DuplicationTarget.html#KhurramAudioRoute_Core_DuplicationTarget_Dispose
+  name: Dispose
+  nameWithType: DuplicationTarget.Dispose
+  fullName: KhurramAudioRoute.Core.DuplicationTarget.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )

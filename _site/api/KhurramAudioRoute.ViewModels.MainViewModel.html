@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class MainViewModel </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class MainViewModel ">
+      
+      <meta name="description" content="A base class for objects of which the properties must be observable.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="KhurramAudioRoute.ViewModels.MainViewModel">
+
+
+
+  <h1 id="KhurramAudioRoute_ViewModels_MainViewModel" data-uid="KhurramAudioRoute.ViewModels.MainViewModel" class="text-break">
+Class MainViewModel  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="KhurramAudioRoute.html">KhurramAudioRoute</a>.<a class="xref" href="KhurramAudioRoute.ViewModels.html">ViewModels</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>KhurramAudioRoute.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A base class for objects of which the properties must be observable.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class MainViewModel : ObservableObject, INotifyPropertyChanged, INotifyPropertyChanging</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject">ObservableObject</a></div>
+      <div><span class="xref">MainViewModel</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanging">INotifyPropertyChanging</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanged#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanged(system-componentmodel-propertychangedeventargs)">ObservableObject.OnPropertyChanged(PropertyChangedEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanging#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanging(system-componentmodel-propertychangingeventargs)">ObservableObject.OnPropertyChanging(PropertyChangingEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanged#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanged(system-string)">ObservableObject.OnPropertyChanged(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.onpropertychanging#communitytoolkit-mvvm-componentmodel-observableobject-onpropertychanging(system-string)">ObservableObject.OnPropertyChanging(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0@-0-system-string)">ObservableObject.SetProperty&lt;T&gt;(ref T, T, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0@-0-system-collections-generic-iequalitycomparer((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(ref T, T, IEqualityComparer&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0-0-system-action((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(T, T, Action&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-1(-0-0-system-collections-generic-iequalitycomparer((-0))-system-action((-0))-system-string)">ObservableObject.SetProperty&lt;T&gt;(T, T, IEqualityComparer&lt;T&gt;, Action&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-2(-1-1-0-system-action((-0-1))-system-string)">ObservableObject.SetProperty&lt;TModel, T&gt;(T, T, TModel, Action&lt;TModel, T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setproperty#communitytoolkit-mvvm-componentmodel-observableobject-setproperty-2(-1-1-system-collections-generic-iequalitycomparer((-1))-0-system-action((-0-1))-system-string)">ObservableObject.SetProperty&lt;TModel, T&gt;(T, T, IEqualityComparer&lt;T&gt;, TModel, Action&lt;TModel, T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier@-system-threading-tasks-task-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion(ref ObservableObject.TaskNotifier, Task, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier@-system-threading-tasks-task-system-action((system-threading-tasks-task))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion(ref ObservableObject.TaskNotifier, Task, Action&lt;Task&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion-1(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier((-0))@-system-threading-tasks-task((-0))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion&lt;T&gt;(ref ObservableObject.TaskNotifier&lt;T&gt;, Task&lt;T&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.setpropertyandnotifyoncompletion#communitytoolkit-mvvm-componentmodel-observableobject-setpropertyandnotifyoncompletion-1(communitytoolkit-mvvm-componentmodel-observableobject-tasknotifier((-0))@-system-threading-tasks-task((-0))-system-action((system-threading-tasks-task((-0))))-system-string)">ObservableObject.SetPropertyAndNotifyOnCompletion&lt;T&gt;(ref ObservableObject.TaskNotifier&lt;T&gt;, Task&lt;T&gt;, Action&lt;Task&lt;T&gt;&gt;, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.propertychanged">ObservableObject.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.componentmodel.observableobject.propertychanging">ObservableObject.PropertyChanging</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargetsCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargetsCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargetsCommand">
+  ApplyDeviceDuplicateTargetsCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargets_KhurramAudioRoute_Core_AudioDevice_">ApplyDeviceDuplicateTargets(AudioDevice?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IAsyncRelayCommand&lt;AudioDevice?&gt; ApplyDeviceDuplicateTargetsCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_CurrentSection_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_CurrentSection" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.CurrentSection">
+  CurrentSection
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public DashboardSection CurrentSection { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="KhurramAudioRoute.ViewModels.DashboardSection.html">DashboardSection</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_Devices_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Devices*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_Devices" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Devices">
+  Devices
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public ObservableCollection&lt;AudioDevice&gt; Devices { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_IsTestTonePlaying_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_IsTestTonePlaying" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.IsTestTonePlaying">
+  IsTestTonePlaying
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public bool IsTestTonePlaying { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_MasterDevice_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_MasterDevice" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.MasterDevice">
+  MasterDevice
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public AudioDevice? MasterDevice { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_Microphones_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Microphones*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_Microphones" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Microphones">
+  Microphones
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public ObservableCollection&lt;AudioDevice&gt; Microphones { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshDataCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshDataCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshDataCommand">
+  RefreshDataCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RefreshData">RefreshData()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand RefreshDataCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ResetAppCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ResetAppCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ResetAppCommand">
+  ResetAppCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ResetApp_KhurramAudioRoute_Core_AppAudioSession_">ResetApp(AppAudioSession?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand&lt;AppAudioSession?&gt; ResetAppCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_RouteAppCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_RouteAppCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RouteAppCommand">
+  RouteAppCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_RouteApp_KhurramAudioRoute_Core_AppAudioSession_">RouteApp(AppAudioSession?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IAsyncRelayCommand&lt;AppAudioSession?&gt; RouteAppCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_Sessions_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Sessions*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_Sessions" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.Sessions">
+  Sessions
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public ObservableCollection&lt;AppAudioSession&gt; Sessions { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.observablecollection-1">ObservableCollection</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDeviceCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDeviceCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDeviceCommand">
+  SetDefaultDeviceCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDevice_KhurramAudioRoute_Core_AudioDevice_">SetDefaultDevice(AudioDevice)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand&lt;AudioDevice&gt; SetDefaultDeviceCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowApplicationsCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowApplicationsCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowApplicationsCommand">
+  ShowApplicationsCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowApplications">ShowApplications()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand ShowApplicationsCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophonesCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophonesCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophonesCommand">
+  ShowMicrophonesCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophones">ShowMicrophones()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand ShowMicrophonesCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputsCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputsCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputsCommand">
+  ShowOutputsCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputs">ShowOutputs()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand ShowOutputsCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowToolsCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowToolsCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowToolsCommand">
+  ShowToolsCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ShowTools">ShowTools()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand ShowToolsCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicateCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicateCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicateCommand">
+  ToggleDeviceDuplicateCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicate_KhurramAudioRoute_Core_AudioDevice_">ToggleDeviceDuplicate(AudioDevice?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IAsyncRelayCommand&lt;AudioDevice?&gt; ToggleDeviceDuplicateCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicateCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicateCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicateCommand">
+  ToggleDuplicateCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicate_KhurramAudioRoute_Core_AppAudioSession_">ToggleDuplicate(AppAudioSession?)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IAsyncRelayCommand&lt;AppAudioSession?&gt; ToggleDuplicateCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.iasyncrelaycommand-1">IAsyncRelayCommand</a>&lt;<a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestToneCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestToneCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestToneCommand">
+  ToggleTestToneCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestTone">ToggleTestTone()</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand ToggleTestToneCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand">IRelayCommand</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolumeCommand_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolumeCommand" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolumeCommand">
+  UpdateMasterVolumeCommand
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand&lt;T&gt;</a> instance wrapping <a class="xref" href="KhurramAudioRoute.ViewModels.MainViewModel.html#KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolume_System_Double_">UpdateMasterVolume(double)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ExcludeFromCodeCoverage]
+public IRelayCommand&lt;double&gt; UpdateMasterVolumeCommand { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/communitytoolkit.mvvm.input.irelaycommand-1">IRelayCommand</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargets_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ApplyDeviceDuplicateTargets_KhurramAudioRoute_Core_AudioDevice_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ApplyDeviceDuplicateTargets(KhurramAudioRoute.Core.AudioDevice)">
+  ApplyDeviceDuplicateTargets(AudioDevice?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L346"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public Task ApplyDeviceDuplicateTargets(AudioDevice? sourceDevice)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>sourceDevice</code> <a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshData_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshData*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshData" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshData">
+  RefreshData()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void RefreshData()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshMeters_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_RefreshMeters" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RefreshMeters">
+  RefreshMeters()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RefreshMeters()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ResetApp_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ResetApp*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ResetApp_KhurramAudioRoute_Core_AppAudioSession_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ResetApp(KhurramAudioRoute.Core.AppAudioSession)">
+  ResetApp(AppAudioSession?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L520"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ResetApp(AppAudioSession? session)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>session</code> <a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_RouteApp_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RouteApp*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_RouteApp_KhurramAudioRoute_Core_AppAudioSession_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.RouteApp(KhurramAudioRoute.Core.AppAudioSession)">
+  RouteApp(AppAudioSession?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L426"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public Task RouteApp(AppAudioSession? session)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>session</code> <a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDevice_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_SetDefaultDevice_KhurramAudioRoute_Core_AudioDevice_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.SetDefaultDevice(KhurramAudioRoute.Core.AudioDevice)">
+  SetDefaultDevice(AudioDevice)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void SetDefaultDevice(AudioDevice device)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>device</code> <a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowApplications_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowApplications" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowApplications">
+  ShowApplications()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L321"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ShowApplications()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophones_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowMicrophones" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowMicrophones">
+  ShowMicrophones()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L324"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ShowMicrophones()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputs_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowOutputs" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowOutputs">
+  ShowOutputs()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ShowOutputs()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ShowTools_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowTools*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ShowTools" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ShowTools">
+  ShowTools()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ShowTools()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicate_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDeviceDuplicate_KhurramAudioRoute_Core_AudioDevice_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDeviceDuplicate(KhurramAudioRoute.Core.AudioDevice)">
+  ToggleDeviceDuplicate(AudioDevice?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public Task ToggleDeviceDuplicate(AudioDevice? sourceDevice)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>sourceDevice</code> <a class="xref" href="KhurramAudioRoute.Core.AudioDevice.html">AudioDevice</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicate_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleDuplicate_KhurramAudioRoute_Core_AppAudioSession_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleDuplicate(KhurramAudioRoute.Core.AppAudioSession)">
+  ToggleDuplicate(AppAudioSession?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L458"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public Task ToggleDuplicate(AppAudioSession? session)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>session</code> <a class="xref" href="KhurramAudioRoute.Core.AppAudioSession.html">AppAudioSession</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestTone_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_ToggleTestTone" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.ToggleTestTone">
+  ToggleTestTone()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void ToggleTestTone()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolume_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume*"></a>
+
+  <h3 id="KhurramAudioRoute_ViewModels_MainViewModel_UpdateMasterVolume_System_Double_" data-uid="KhurramAudioRoute.ViewModels.MainViewModel.UpdateMasterVolume(System.Double)">
+  UpdateMasterVolume(double)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/ViewModels/MainViewModel.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[RelayCommand]
+public void UpdateMasterVolume(double value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

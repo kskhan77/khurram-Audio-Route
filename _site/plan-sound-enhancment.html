@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>SonicFlow Sound Enhancement Plan </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="SonicFlow Sound Enhancement Plan ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/plan-sound-enhancment.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="sonicflow-sound-enhancement-plan">SonicFlow Sound Enhancement Plan</h1>
+
+<p>This document outlines the transition from basic audio routing to high-end, professional-grade sound processing using <strong>BASS</strong>, <strong>Cavern</strong>, and <strong>Windows Spatial Audio</strong>.</p>
+<h2 id="1-current-limitation-why-eq-only-works-on-mirrored-devices">1. Current Limitation: Why EQ only works on &quot;Mirrored&quot; devices</h2>
+<p>Currently, the application uses <strong>NAudio WasapiLoopbackCapture</strong>.</p>
+<ul>
+<li>It &quot;listens&quot; to the audio already playing on a source device.</li>
+<li>It then creates a <strong>new</strong> stream, applies the EQ, and sends it to the <strong>Target</strong> devices.</li>
+<li><strong>The Problem:</strong> It cannot &quot;intercept&quot; the sound on the original single device without creating a loop (feedback). To fix this, we need a <strong>Global DSP Hook</strong> or a <strong>Virtual Audio Cable</strong> approach, which is where the new libraries come in.</li>
+</ul>
+<hr>
+<h2 id="2-professional-libraries-comparison">2. Professional Libraries Comparison</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Library</th>
+<th style="text-align: left;">Role in SonicFlow</th>
+<th style="text-align: left;">Key Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>BASS (ManagedBass)</strong></td>
+<td style="text-align: left;"><strong>Core Engine &amp; Sync</strong></td>
+<td style="text-align: left;">Professional 31-band EQ, micro-latency sync between 5.1/7.1 setups, and matrix mixing.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Cavern</strong></td>
+<td style="text-align: left;"><strong>3D &amp; Atmos Rendering</strong></td>
+<td style="text-align: left;">Object-based audio. Can take Stereo and &quot;upmix&quot; it to 7.1.4 or virtualize 7.1 onto Headphones.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Windows Spatial</strong></td>
+<td style="text-align: left;"><strong>System Integration</strong></td>
+<td style="text-align: left;">Uses the native Windows 11/10 &quot;Spatial Sound&quot; engine for hardware-accelerated Dolby Atmos.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-enhancement-roadmap">3. Enhancement Roadmap</h2>
+<h3 id="phase-1-bass-integration-single-device-eq">Phase 1: BASS Integration (Single Device EQ)</h3>
+<ul>
+<li><strong>Goal:</strong> Enable EQ even if only one device is used.</li>
+<li><strong>Method:</strong> Instead of Loopback, we will initialize the output device through BASS.</li>
+<li><strong>Feature:</strong> 30-band Graphic EQ and Peak Limiter (to prevent distortion).</li>
+<li><strong>No-Break Guarantee:</strong> The duplication (mirroring) buttons and sliders in the UI will stay exactly the same. We are only changing the &quot;engine&quot; under the hood. Existing NAudio logic will be kept as a backup until BASS is fully tested.</li>
+</ul>
+<h3 id="phase-2-multi-device-precision-sync--duplication">Phase 2: Multi-Device Precision Sync &amp; Duplication</h3>
+<ul>
+<li><strong>Goal:</strong> Upgrade duplication to BASS for perfect alignment.</li>
+<li><strong>Improvement:</strong> By moving duplication to the BASS Mixer, the EQ will finally work on the <strong>Main Speaker</strong> and the <strong>Mirrored Speakers</strong> at the same time.</li>
+</ul>
+<h3 id="phase-3-spatial-audio--3d-cavern">Phase 3: Spatial Audio &amp; 3D (Cavern)</h3>
+<ul>
+<li><strong>Goal:</strong> &quot;Cinema Sound&quot; for any device.</li>
+<li><strong>Features:</strong>
+<ul>
+<li><strong>Virtual Surround:</strong> 7.1 environment for Stereo Headphones.</li>
+<li><strong>Upmixing:</strong> Turning standard YouTube/Spotify music into immersive 5.1.</li>
+<li><strong>Room Modeling:</strong> Simulate the acoustics of a studio or theater.</li>
+</ul>
+</li>
+</ul>
+<h3 id="phase-4-dolby-atmos-native">Phase 4: Dolby Atmos (Native)</h3>
+<ul>
+<li><strong>Goal:</strong> Official Atmos support.</li>
+<li><strong>Method:</strong> Integrate <code>ISpatialAudioClient</code> to route object-based audio directly into the Windows spatial pipeline.</li>
+</ul>
+<hr>
+<h2 id="4-technical-requirements">4. Technical Requirements</h2>
+<ul>
+<li><strong>Native DLLs:</strong> <code>bass.dll</code>, <code>bassmix.dll</code>, <code>bass_fx.dll</code> must be included in the application folder.</li>
+<li><strong>CPU Usage:</strong> Professional DSP requires more CPU. We will implement &quot;Quality Profiles&quot; (Low, Medium, High).</li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/plan-sound-enhancment.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  commentId: T:KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  id: IAudioPolicyConfigFactory
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  - KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  - KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  langs:
+  - csharp
+  - vb
+  name: IAudioPolicyConfigFactory
+  nameWithType: IAudioPolicyConfigFactory
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  type: Interface
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: IAudioPolicyConfigFactory
+    path: Core/AudioRouterNative.cs
+    startLine: 31
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: >-
+      [Guid("ab413d1a-19c0-4576-9979-7b06703345a0")]
+
+      [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+
+      public interface IAudioPolicyConfigFactory
+    content.vb: >-
+      <Guid("ab413d1a-19c0-4576-9979-7b06703345a0")>
+
+      <InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
+
+      Public Interface IAudioPolicyConfigFactory
+  attributes:
+  - type: System.Runtime.InteropServices.GuidAttribute
+    ctor: System.Runtime.InteropServices.GuidAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ab413d1a-19c0-4576-9979-7b06703345a0
+  - type: System.Runtime.InteropServices.InterfaceTypeAttribute
+    ctor: System.Runtime.InteropServices.InterfaceTypeAttribute.#ctor(System.Runtime.InteropServices.ComInterfaceType)
+    arguments:
+    - type: System.Runtime.InteropServices.ComInterfaceType
+      value: 1
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  id: SetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr)
+  parent: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  langs:
+  - csharp
+  - vb
+  name: SetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, nint)
+  nameWithType: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, nint)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(uint, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetPersistedDefaultAudioEndpoint
+    path: Core/AudioRouterNative.cs
+    startLine: 34
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int SetPersistedDefaultAudioEndpoint(uint processId, EDataFlow flow, ERole role, nint hstrDeviceId)
+    parameters:
+    - id: processId
+      type: System.UInt32
+    - id: flow
+      type: KhurramAudioRoute.Core.EDataFlow
+    - id: role
+      type: KhurramAudioRoute.Core.ERole
+    - id: hstrDeviceId
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function SetPersistedDefaultAudioEndpoint(processId As UInteger, flow As EDataFlow, role As ERole, hstrDeviceId As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint*
+  nameWithType.vb: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint(UInteger, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, System.IntPtr)
+  name.vb: SetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  id: GetPersistedDefaultAudioEndpoint(System.UInt32,KhurramAudioRoute.Core.EDataFlow,KhurramAudioRoute.Core.ERole,System.IntPtr@)
+  parent: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  langs:
+  - csharp
+  - vb
+  name: GetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, out nint)
+  nameWithType: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(uint, EDataFlow, ERole, out nint)
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(uint, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, out nint)
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetPersistedDefaultAudioEndpoint
+    path: Core/AudioRouterNative.cs
+    startLine: 35
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int GetPersistedDefaultAudioEndpoint(uint processId, EDataFlow flow, ERole role, out nint hstrDeviceId)
+    parameters:
+    - id: processId
+      type: System.UInt32
+    - id: flow
+      type: KhurramAudioRoute.Core.EDataFlow
+    - id: role
+      type: KhurramAudioRoute.Core.ERole
+    - id: hstrDeviceId
+      type: System.IntPtr
+    return:
+      type: System.Int32
+    content.vb: Function GetPersistedDefaultAudioEndpoint(processId As UInteger, flow As EDataFlow, role As ERole, hstrDeviceId As IntPtr) As Integer
+  overload: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint*
+  nameWithType.vb: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+  fullName.vb: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint(UInteger, KhurramAudioRoute.Core.EDataFlow, KhurramAudioRoute.Core.ERole, System.IntPtr)
+  name.vb: GetPersistedDefaultAudioEndpoint(UInteger, EDataFlow, ERole, IntPtr)
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  commentId: M:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  id: ClearAllPersistedApplicationDefaultEndpoints
+  parent: KhurramAudioRoute.Core.IAudioPolicyConfigFactory
+  langs:
+  - csharp
+  - vb
+  name: ClearAllPersistedApplicationDefaultEndpoints()
+  nameWithType: IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints()
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints()
+  type: Method
+  source:
+    remote:
+      path: Core/AudioRouterNative.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: ClearAllPersistedApplicationDefaultEndpoints
+    path: Core/AudioRouterNative.cs
+    startLine: 36
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: int ClearAllPersistedApplicationDefaultEndpoints()
+    return:
+      type: System.Int32
+    content.vb: Function ClearAllPersistedApplicationDefaultEndpoints() As Integer
+  overload: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints*
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint*
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+  href: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_SetPersistedDefaultAudioEndpoint_System_UInt32_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_IntPtr_
+  name: SetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.SetPersistedDefaultAudioEndpoint
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uint32
+  name: uint
+  nameWithType: uint
+  fullName: uint
+  nameWithType.vb: UInteger
+  fullName.vb: UInteger
+  name.vb: UInteger
+- uid: KhurramAudioRoute.Core.EDataFlow
+  commentId: T:KhurramAudioRoute.Core.EDataFlow
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.EDataFlow.html
+  name: EDataFlow
+  nameWithType: EDataFlow
+  fullName: KhurramAudioRoute.Core.EDataFlow
+- uid: KhurramAudioRoute.Core.ERole
+  commentId: T:KhurramAudioRoute.Core.ERole
+  parent: KhurramAudioRoute.Core
+  href: KhurramAudioRoute.Core.ERole.html
+  name: ERole
+  nameWithType: ERole
+  fullName: KhurramAudioRoute.Core.ERole
+- uid: System.IntPtr
+  commentId: T:System.IntPtr
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.intptr
+  name: nint
+  nameWithType: nint
+  fullName: nint
+  nameWithType.vb: IntPtr
+  fullName.vb: System.IntPtr
+  name.vb: IntPtr
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint*
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+  href: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_GetPersistedDefaultAudioEndpoint_System_UInt32_KhurramAudioRoute_Core_EDataFlow_KhurramAudioRoute_Core_ERole_System_IntPtr__
+  name: GetPersistedDefaultAudioEndpoint
+  nameWithType: IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.GetPersistedDefaultAudioEndpoint
+- uid: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints*
+  commentId: Overload:KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  href: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.html#KhurramAudioRoute_Core_IAudioPolicyConfigFactory_ClearAllPersistedApplicationDefaultEndpoints
+  name: ClearAllPersistedApplicationDefaultEndpoints
+  nameWithType: IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints
+  fullName: KhurramAudioRoute.Core.IAudioPolicyConfigFactory.ClearAllPersistedApplicationDefaultEndpoints

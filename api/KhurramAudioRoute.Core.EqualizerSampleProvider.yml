@@ -1,0 +1,588 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider
+  commentId: T:KhurramAudioRoute.Core.EqualizerSampleProvider
+  id: EqualizerSampleProvider
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Single[])
+  - KhurramAudioRoute.Core.EqualizerSampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  - KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(System.Single[])
+  - KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  langs:
+  - csharp
+  - vb
+  name: EqualizerSampleProvider
+  nameWithType: EqualizerSampleProvider
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider
+  type: Class
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: EqualizerSampleProvider
+    path: Core/DuplicationManager.cs
+    startLine: 126
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: 'public sealed class EqualizerSampleProvider : ISampleProvider'
+    content.vb: Public NotInheritable Class EqualizerSampleProvider Implements ISampleProvider
+  inheritance:
+  - System.Object
+  implements:
+  - NAudio.Wave.ISampleProvider
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Single[])
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor(NAudio.Wave.ISampleProvider,System.Single[])
+  id: '#ctor(NAudio.Wave.ISampleProvider,System.Single[])'
+  parent: KhurramAudioRoute.Core.EqualizerSampleProvider
+  langs:
+  - csharp
+  - vb
+  name: EqualizerSampleProvider(ISampleProvider, float[]?)
+  nameWithType: EqualizerSampleProvider.EqualizerSampleProvider(ISampleProvider, float[]?)
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.EqualizerSampleProvider(NAudio.Wave.ISampleProvider, float[]?)
+  type: Constructor
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: .ctor
+    path: Core/DuplicationManager.cs
+    startLine: 139
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public EqualizerSampleProvider(ISampleProvider source, float[]? gains = null)
+    parameters:
+    - id: source
+      type: NAudio.Wave.ISampleProvider
+    - id: gains
+      type: System.Single[]
+    content.vb: Public Sub New(source As ISampleProvider, gains As Single() = Nothing)
+  overload: KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor*
+  nameWithType.vb: EqualizerSampleProvider.New(ISampleProvider, Single())
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.New(NAudio.Wave.ISampleProvider, Single())
+  name.vb: New(ISampleProvider, Single())
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  commentId: P:KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  id: WaveFormat
+  parent: KhurramAudioRoute.Core.EqualizerSampleProvider
+  langs:
+  - csharp
+  - vb
+  name: WaveFormat
+  nameWithType: EqualizerSampleProvider.WaveFormat
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: WaveFormat
+    path: Core/DuplicationManager.cs
+    startLine: 149
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Gets the WaveFormat of this Sample Provider.
+  example: []
+  syntax:
+    content: public WaveFormat WaveFormat { get; }
+    parameters: []
+    return:
+      type: NAudio.Wave.WaveFormat
+      description: The wave format.
+    content.vb: Public ReadOnly Property WaveFormat As WaveFormat
+  overload: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat*
+  implements:
+  - NAudio.Wave.ISampleProvider.WaveFormat
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  id: Read(System.Single[],System.Int32,System.Int32)
+  parent: KhurramAudioRoute.Core.EqualizerSampleProvider
+  langs:
+  - csharp
+  - vb
+  name: Read(float[], int, int)
+  nameWithType: EqualizerSampleProvider.Read(float[], int, int)
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(float[], int, int)
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Read
+    path: Core/DuplicationManager.cs
+    startLine: 151
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Fill the specified buffer with 32 bit floating point samples
+  example: []
+  syntax:
+    content: public int Read(float[] buffer, int offset, int count)
+    parameters:
+    - id: buffer
+      type: System.Single[]
+      description: The buffer to fill with samples.
+    - id: offset
+      type: System.Int32
+      description: Offset into buffer
+    - id: count
+      type: System.Int32
+      description: The number of samples to read
+    return:
+      type: System.Int32
+      description: the number of samples written to the buffer.
+    content.vb: Public Function Read(buffer As Single(), offset As Integer, count As Integer) As Integer
+  overload: KhurramAudioRoute.Core.EqualizerSampleProvider.Read*
+  implements:
+  - NAudio.Wave.ISampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  nameWithType.vb: EqualizerSampleProvider.Read(Single(), Integer, Integer)
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.Read(Single(), Integer, Integer)
+  name.vb: Read(Single(), Integer, Integer)
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(System.Single[])
+  commentId: M:KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(System.Single[])
+  id: UpdateGains(System.Single[])
+  parent: KhurramAudioRoute.Core.EqualizerSampleProvider
+  langs:
+  - csharp
+  - vb
+  name: UpdateGains(float[])
+  nameWithType: EqualizerSampleProvider.UpdateGains(float[])
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(float[])
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: UpdateGains
+    path: Core/DuplicationManager.cs
+    startLine: 172
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public void UpdateGains(float[] gains)
+    parameters:
+    - id: gains
+      type: System.Single[]
+    content.vb: Public Sub UpdateGains(gains As Single())
+  overload: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains*
+  nameWithType.vb: EqualizerSampleProvider.UpdateGains(Single())
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains(Single())
+  name.vb: UpdateGains(Single())
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: NAudio.Wave.ISampleProvider
+  commentId: T:NAudio.Wave.ISampleProvider
+  parent: NAudio.Wave
+  isExternal: true
+  name: ISampleProvider
+  nameWithType: ISampleProvider
+  fullName: NAudio.Wave.ISampleProvider
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: NAudio.Wave
+  commentId: N:NAudio.Wave
+  isExternal: true
+  name: NAudio.Wave
+  nameWithType: NAudio.Wave
+  fullName: NAudio.Wave
+  spec.csharp:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+  spec.vb:
+  - uid: NAudio
+    name: NAudio
+    isExternal: true
+  - name: .
+  - uid: NAudio.Wave
+    name: Wave
+    isExternal: true
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor*
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.#ctor
+  href: KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider__ctor_NAudio_Wave_ISampleProvider_System_Single___
+  name: EqualizerSampleProvider
+  nameWithType: EqualizerSampleProvider.EqualizerSampleProvider
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.EqualizerSampleProvider
+  nameWithType.vb: EqualizerSampleProvider.New
+  fullName.vb: KhurramAudioRoute.Core.EqualizerSampleProvider.New
+  name.vb: New
+- uid: System.Single[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float[]
+  nameWithType: float[]
+  fullName: float[]
+  nameWithType.vb: Single()
+  fullName.vb: Single()
+  name.vb: Single()
+  spec.csharp:
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: (
+  - name: )
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat*
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+  href: KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_WaveFormat
+  name: WaveFormat
+  nameWithType: EqualizerSampleProvider.WaveFormat
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.WaveFormat
+- uid: NAudio.Wave.ISampleProvider.WaveFormat
+  commentId: P:NAudio.Wave.ISampleProvider.WaveFormat
+  parent: NAudio.Wave.ISampleProvider
+  isExternal: true
+  name: WaveFormat
+  nameWithType: ISampleProvider.WaveFormat
+  fullName: NAudio.Wave.ISampleProvider.WaveFormat
+- uid: NAudio.Wave.WaveFormat
+  commentId: T:NAudio.Wave.WaveFormat
+  parent: NAudio.Wave
+  isExternal: true
+  name: WaveFormat
+  nameWithType: WaveFormat
+  fullName: NAudio.Wave.WaveFormat
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.Read*
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.Read
+  href: KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_Read_System_Single___System_Int32_System_Int32_
+  name: Read
+  nameWithType: EqualizerSampleProvider.Read
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.Read
+- uid: NAudio.Wave.ISampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  commentId: M:NAudio.Wave.ISampleProvider.Read(System.Single[],System.Int32,System.Int32)
+  parent: NAudio.Wave.ISampleProvider
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: Read(float[], int, int)
+  nameWithType: ISampleProvider.Read(float[], int, int)
+  fullName: NAudio.Wave.ISampleProvider.Read(float[], int, int)
+  nameWithType.vb: ISampleProvider.Read(Single(), Integer, Integer)
+  fullName.vb: NAudio.Wave.ISampleProvider.Read(Single(), Integer, Integer)
+  name.vb: Read(Single(), Integer, Integer)
+  spec.csharp:
+  - uid: NAudio.Wave.ISampleProvider.Read(System.Single[],System.Int32,System.Int32)
+    name: Read
+    isExternal: true
+  - name: (
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '['
+  - name: ']'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: NAudio.Wave.ISampleProvider.Read(System.Single[],System.Int32,System.Int32)
+    name: Read
+    isExternal: true
+  - name: (
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: (
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains*
+  commentId: Overload:KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains
+  href: KhurramAudioRoute.Core.EqualizerSampleProvider.html#KhurramAudioRoute_Core_EqualizerSampleProvider_UpdateGains_System_Single___
+  name: UpdateGains
+  nameWithType: EqualizerSampleProvider.UpdateGains
+  fullName: KhurramAudioRoute.Core.EqualizerSampleProvider.UpdateGains

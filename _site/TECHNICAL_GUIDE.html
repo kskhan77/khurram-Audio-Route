@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Audio Router V2 - Technical Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Audio Router V2 - Technical Documentation ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/TECHNICAL_GUIDE.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="audio-router-v2---technical-documentation">Audio Router V2 - Technical Documentation</h1>
+
+<h2 id="-architecture-overview">🏗 Architecture Overview</h2>
+<p>Audio Router V2 is a high-performance Windows audio utility built with <strong>.NET 10</strong> and <strong>WPF</strong>. It follows a strictly decoupled <strong>MVVM (Model-View-ViewModel)</strong> pattern, bridging high-level C# orchestration with low-level Windows audio internals.</p>
+<h3 id="-core-components">🧩 Core Components</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Responsibility</th>
+<th style="text-align: left;">Primary Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Native Routing</strong></td>
+<td style="text-align: left;">Interacts with undocumented Windows COM interfaces to move apps between devices.</td>
+<td style="text-align: left;"><code>AudioRouterNative.cs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Duplication Engine</strong></td>
+<td style="text-align: left;">Handles real-time audio mirroring with latency and EQ compensation.</td>
+<td style="text-align: left;"><code>DuplicationManager.cs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DSP Engine</strong></td>
+<td style="text-align: left;">Provides professional-grade EQ and signal processing via BASS.</td>
+<td style="text-align: left;"><code>BassEngine.cs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Hardware Manager</strong></td>
+<td style="text-align: left;">Enumerates and monitors WASAPI audio endpoints.</td>
+<td style="text-align: left;"><code>DeviceManager.cs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Session Manager</strong></td>
+<td style="text-align: left;">Discovers and controls individual application audio streams.</td>
+<td style="text-align: left;"><code>SessionManager.cs</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-audio-engine-logic">🎧 Audio Engine Logic</h2>
+<h3 id="1-per-app-routing-the-bridge">1. Per-App Routing (The &quot;Bridge&quot;)</h3>
+<p>The routing logic bypasses standard Windows UI by directly calling the <code>IPolicyConfig</code> and <code>IAudioPolicyConfigFactory</code> COM interfaces.</p>
+<ul>
+<li><strong>Windows 11 Support</strong>: Uses PID-based routing with manual <code>HSTRING</code> handle management via <code>combase.dll</code>.</li>
+<li><strong>Windows 10 Support</strong>: Fallback to path-based routing for legacy builds.</li>
+<li><strong>Migration Force</strong>: After a routing change, the app executes a Mute → Wait (250ms) → Unmute sequence. This forces the application's audio client to re-initialize and migrate to the new endpoint immediately.</li>
+</ul>
+<h3 id="2-low-latency-duplication-the-mirror">2. Low-Latency Duplication (The &quot;Mirror&quot;)</h3>
+<p>Duplication uses a &quot;Capture once, Fan-out&quot; architecture:</p>
+<ol>
+<li><strong>Capture</strong>: A <code>WasapiLoopbackCapture</code> instance listens to the source device's output.</li>
+<li><strong>Buffer</strong>: Audio data is fed into a <code>BufferedWaveProvider</code>.</li>
+<li><strong>Processing</strong>:
+<ul>
+<li><strong>Resampling</strong>: Uses <code>WdlResamplingSampleProvider</code> if sample rates mismatch.</li>
+<li><strong>Equalization</strong>: <code>EqualizerSampleProvider</code> applies a 10-band ISO-octave EQ.</li>
+<li><strong>Latency Sync</strong>: <code>DelaySampleProvider</code> inserts a ring-buffered delay (up to 800ms) to align wired glasses with Bluetooth devices.</li>
+</ul>
+</li>
+<li><strong>Playback</strong>: Independent <code>WasapiOut</code> players deliver the processed stream to target devices.</li>
+</ol>
+<h3 id="3-dsp--enhancement-bass">3. DSP &amp; Enhancement (BASS)</h3>
+<p>The <code>BassEngine</code> provides a professional alternative to the NAudio pipeline:</p>
+<ul>
+<li><strong>Loopback</strong>: Captures system sound via <code>BassWasapi</code>.</li>
+<li><strong>Mixer</strong>: Feeds captured audio into a <code>BassMix</code> stream.</li>
+<li><strong>EQ</strong>: Applies high-precision <code>PeakEQ</code> effects.</li>
+<li><strong>Test Tones</strong>: Generates professional-grade noise profiles for diagnostic verification.</li>
+</ul>
+<hr>
+<h2 id="-developer-guide">🛠 Developer Guide</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li><strong>Native DLLs</strong>: <code>bass.dll</code>, <code>bassmix.dll</code>, and <code>bass_fx.dll</code> must reside in the <code>Native/</code> directory or the executable root.</li>
+<li><strong>Framework</strong>: .NET 10 SDK.</li>
+</ul>
+<h3 id="initialization-sequence">Initialization Sequence</h3>
+<ol>
+<li><code>App.xaml.cs</code> starts the application.</li>
+<li><code>MainViewModel</code> is instantiated as the <code>DataContext</code> for <code>MainWindow</code>.</li>
+<li><code>RefreshData()</code> is called to populate the device and session lists.</li>
+<li>A 220ms <code>CompositionTarget.Rendering</code> or Timer-based loop starts <code>RefreshMeters()</code>, which polls the WASAPI peak values and updates the UI.</li>
+</ol>
+<h3 id="adding-a-new-processor">Adding a New Processor</h3>
+<p>To add a new DSP effect:</p>
+<ol>
+<li>Implement the effect in <code>Core/BassEngine.cs</code> (for global) or as an <code>ISampleProvider</code> in <code>Core/DuplicationManager.cs</code> (for mirrored).</li>
+<li>Add a property in <code>AudioDevice.cs</code> to hold the parameter.</li>
+<li>Update <code>MainViewModel.OnOutputDevicePropertyChanged</code> to push the new parameter into the engine.</li>
+</ol>
+<hr>
+<h2 id="-future-documentation-docfx">📝 Future Documentation (DocFX)</h2>
+<p>This project is structured for <strong>DocFX</strong> integration. To generate full API documentation:</p>
+<ol>
+<li>Install DocFX: <code>dotnet tool install -g docfx</code>.</li>
+<li>Run <code>docfx init</code> to create a configuration.</li>
+<li>Use <code>docfx metadata</code> to extract XML comments from the code.</li>
+<li>Use <code>docfx build</code> to generate the HTML documentation site.</li>
+</ol>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/kskhan77/khurram-Audio-Route/blob/feature/sound-bass-branding/TECHNICAL_GUIDE.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

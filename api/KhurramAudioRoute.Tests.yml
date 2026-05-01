@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Tests
+  commentId: N:KhurramAudioRoute.Tests
+  id: KhurramAudioRoute.Tests
+  children:
+  - KhurramAudioRoute.Tests.AudioCoreTester
+  - KhurramAudioRoute.Tests.SilenceProvider
+  langs:
+  - csharp
+  - vb
+  name: KhurramAudioRoute.Tests
+  nameWithType: KhurramAudioRoute.Tests
+  fullName: KhurramAudioRoute.Tests
+  type: Namespace
+  assemblies:
+  - KhurramAudioRoute
+references:
+- uid: KhurramAudioRoute.Tests.AudioCoreTester
+  commentId: T:KhurramAudioRoute.Tests.AudioCoreTester
+  href: KhurramAudioRoute.Tests.AudioCoreTester.html
+  name: AudioCoreTester
+  nameWithType: AudioCoreTester
+  fullName: KhurramAudioRoute.Tests.AudioCoreTester
+- uid: KhurramAudioRoute.Tests.SilenceProvider
+  commentId: T:KhurramAudioRoute.Tests.SilenceProvider
+  href: KhurramAudioRoute.Tests.SilenceProvider.html
+  name: SilenceProvider
+  nameWithType: SilenceProvider
+  fullName: KhurramAudioRoute.Tests.SilenceProvider

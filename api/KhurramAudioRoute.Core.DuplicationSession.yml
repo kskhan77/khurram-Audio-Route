@@ -1,0 +1,800 @@
+### YamlMime:ManagedReference
+items:
+- uid: KhurramAudioRoute.Core.DuplicationSession
+  commentId: T:KhurramAudioRoute.Core.DuplicationSession
+  id: DuplicationSession
+  parent: KhurramAudioRoute.Core
+  children:
+  - KhurramAudioRoute.Core.DuplicationSession.#ctor(System.String)
+  - KhurramAudioRoute.Core.DuplicationSession.Dispose
+  - KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(System.String)
+  - KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  - KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(System.String,System.Int32)
+  - KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  - KhurramAudioRoute.Core.DuplicationSession.Stop
+  - KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(System.Single[])
+  langs:
+  - csharp
+  - vb
+  name: DuplicationSession
+  nameWithType: DuplicationSession
+  fullName: KhurramAudioRoute.Core.DuplicationSession
+  type: Class
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: DuplicationSession
+    path: Core/DuplicationManager.cs
+    startLine: 199
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: 'public class DuplicationSession : IDisposable'
+    content.vb: Public Class DuplicationSession Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  commentId: P:KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  id: SessionKey
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: SessionKey
+  nameWithType: DuplicationSession.SessionKey
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  type: Property
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SessionKey
+    path: Core/DuplicationManager.cs
+    startLine: 218
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public string SessionKey { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property SessionKey As String
+  overload: KhurramAudioRoute.Core.DuplicationSession.SessionKey*
+- uid: KhurramAudioRoute.Core.DuplicationSession.#ctor(System.String)
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: DuplicationSession(string)
+  nameWithType: DuplicationSession.DuplicationSession(string)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.DuplicationSession(string)
+  type: Constructor
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: .ctor
+    path: Core/DuplicationManager.cs
+    startLine: 220
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public DuplicationSession(string sessionKey)
+    parameters:
+    - id: sessionKey
+      type: System.String
+    content.vb: Public Sub New(sessionKey As String)
+  overload: KhurramAudioRoute.Core.DuplicationSession.#ctor*
+  nameWithType.vb: DuplicationSession.New(String)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.New(String)
+  name.vb: New(String)
+- uid: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  id: StartOrUpdate(System.String,System.Collections.Generic.IEnumerable{System.String},System.Single[])
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: StartOrUpdate(string, IEnumerable<string>, float[])
+  nameWithType: DuplicationSession.StartOrUpdate(string, IEnumerable<string>, float[])
+  fullName: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(string, System.Collections.Generic.IEnumerable<string>, float[])
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: StartOrUpdate
+    path: Core/DuplicationManager.cs
+    startLine: 362
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains)
+    parameters:
+    - id: sourceDeviceId
+      type: System.String
+    - id: targetDeviceIds
+      type: System.Collections.Generic.IEnumerable{System.String}
+    - id: equalizerGains
+      type: System.Single[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function StartOrUpdate(sourceDeviceId As String, targetDeviceIds As IEnumerable(Of String), equalizerGains As Single()) As Boolean
+  overload: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate*
+  nameWithType.vb: DuplicationSession.StartOrUpdate(String, IEnumerable(Of String), Single())
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate(String, System.Collections.Generic.IEnumerable(Of String), Single())
+  name.vb: StartOrUpdate(String, IEnumerable(Of String), Single())
+- uid: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(System.Single[])
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(System.Single[])
+  id: UpdateEqualizer(System.Single[])
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: UpdateEqualizer(float[])
+  nameWithType: DuplicationSession.UpdateEqualizer(float[])
+  fullName: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(float[])
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: UpdateEqualizer
+    path: Core/DuplicationManager.cs
+    startLine: 413
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public void UpdateEqualizer(float[] equalizerGains)
+    parameters:
+    - id: equalizerGains
+      type: System.Single[]
+    content.vb: Public Sub UpdateEqualizer(equalizerGains As Single())
+  overload: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer*
+  nameWithType.vb: DuplicationSession.UpdateEqualizer(Single())
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer(Single())
+  name.vb: UpdateEqualizer(Single())
+- uid: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(System.String,System.Int32)
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(System.String,System.Int32)
+  id: SetTargetLatency(System.String,System.Int32)
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: SetTargetLatency(string, int)
+  nameWithType: DuplicationSession.SetTargetLatency(string, int)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(string, int)
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: SetTargetLatency
+    path: Core/DuplicationManager.cs
+    startLine: 422
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public void SetTargetLatency(string targetDeviceId, int latencyMs)
+    parameters:
+    - id: targetDeviceId
+      type: System.String
+    - id: latencyMs
+      type: System.Int32
+    content.vb: Public Sub SetTargetLatency(targetDeviceId As String, latencyMs As Integer)
+  overload: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency*
+  nameWithType.vb: DuplicationSession.SetTargetLatency(String, Integer)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency(String, Integer)
+  name.vb: SetTargetLatency(String, Integer)
+- uid: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(System.String)
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(System.String)
+  id: GetTargetLatency(System.String)
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: GetTargetLatency(string)
+  nameWithType: DuplicationSession.GetTargetLatency(string)
+  fullName: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(string)
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: GetTargetLatency
+    path: Core/DuplicationManager.cs
+    startLine: 433
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public int GetTargetLatency(string targetDeviceId)
+    parameters:
+    - id: targetDeviceId
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Function GetTargetLatency(targetDeviceId As String) As Integer
+  overload: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency*
+  nameWithType.vb: DuplicationSession.GetTargetLatency(String)
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency(String)
+  name.vb: GetTargetLatency(String)
+- uid: KhurramAudioRoute.Core.DuplicationSession.Stop
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.Stop
+  id: Stop
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: Stop()
+  nameWithType: DuplicationSession.Stop()
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Stop()
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Stop
+    path: Core/DuplicationManager.cs
+    startLine: 441
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  syntax:
+    content: public void Stop()
+    content.vb: Public Sub [Stop]()
+  overload: KhurramAudioRoute.Core.DuplicationSession.Stop*
+- uid: KhurramAudioRoute.Core.DuplicationSession.Dispose
+  commentId: M:KhurramAudioRoute.Core.DuplicationSession.Dispose
+  id: Dispose
+  parent: KhurramAudioRoute.Core.DuplicationSession
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: DuplicationSession.Dispose()
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Dispose()
+  type: Method
+  source:
+    remote:
+      path: Core/DuplicationManager.cs
+      branch: feature/sound-bass-branding
+      repo: https://github.com/kskhan77/khurram-Audio-Route.git
+    id: Dispose
+    path: Core/DuplicationManager.cs
+    startLine: 453
+  assemblies:
+  - KhurramAudioRoute
+  namespace: KhurramAudioRoute.Core
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: KhurramAudioRoute.Core.DuplicationSession.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+references:
+- uid: KhurramAudioRoute.Core
+  commentId: N:KhurramAudioRoute.Core
+  href: KhurramAudioRoute.html
+  name: KhurramAudioRoute.Core
+  nameWithType: KhurramAudioRoute.Core
+  fullName: KhurramAudioRoute.Core
+  spec.csharp:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+  spec.vb:
+  - uid: KhurramAudioRoute
+    name: KhurramAudioRoute
+    href: KhurramAudioRoute.html
+  - name: .
+  - uid: KhurramAudioRoute.Core
+    name: Core
+    href: KhurramAudioRoute.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: KhurramAudioRoute.Core.DuplicationSession.SessionKey*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.SessionKey
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SessionKey
+  name: SessionKey
+  nameWithType: DuplicationSession.SessionKey
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SessionKey
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: KhurramAudioRoute.Core.DuplicationSession.#ctor*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.#ctor
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession__ctor_System_String_
+  name: DuplicationSession
+  nameWithType: DuplicationSession.DuplicationSession
+  fullName: KhurramAudioRoute.Core.DuplicationSession.DuplicationSession
+  nameWithType.vb: DuplicationSession.New
+  fullName.vb: KhurramAudioRoute.Core.DuplicationSession.New
+  name.vb: New
+- uid: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_StartOrUpdate_System_String_System_Collections_Generic_IEnumerable_System_String__System_Single___
+  name: StartOrUpdate
+  nameWithType: DuplicationSession.StartOrUpdate
+  fullName: KhurramAudioRoute.Core.DuplicationSession.StartOrUpdate
+- uid: System.Collections.Generic.IEnumerable{System.String}
+  commentId: T:System.Collections.Generic.IEnumerable{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<string>
+  nameWithType: IEnumerable<string>
+  fullName: System.Collections.Generic.IEnumerable<string>
+  nameWithType.vb: IEnumerable(Of String)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of String)
+  name.vb: IEnumerable(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Single[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float[]
+  nameWithType: float[]
+  fullName: float[]
+  nameWithType.vb: Single()
+  fullName.vb: Single()
+  name.vb: Single()
+  spec.csharp:
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: (
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_UpdateEqualizer_System_Single___
+  name: UpdateEqualizer
+  nameWithType: DuplicationSession.UpdateEqualizer
+  fullName: KhurramAudioRoute.Core.DuplicationSession.UpdateEqualizer
+- uid: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_SetTargetLatency_System_String_System_Int32_
+  name: SetTargetLatency
+  nameWithType: DuplicationSession.SetTargetLatency
+  fullName: KhurramAudioRoute.Core.DuplicationSession.SetTargetLatency
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_GetTargetLatency_System_String_
+  name: GetTargetLatency
+  nameWithType: DuplicationSession.GetTargetLatency
+  fullName: KhurramAudioRoute.Core.DuplicationSession.GetTargetLatency
+- uid: KhurramAudioRoute.Core.DuplicationSession.Stop*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.Stop
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Stop
+  name: Stop
+  nameWithType: DuplicationSession.Stop
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Stop
+- uid: KhurramAudioRoute.Core.DuplicationSession.Dispose*
+  commentId: Overload:KhurramAudioRoute.Core.DuplicationSession.Dispose
+  href: KhurramAudioRoute.Core.DuplicationSession.html#KhurramAudioRoute_Core_DuplicationSession_Dispose
+  name: Dispose
+  nameWithType: DuplicationSession.Dispose
+  fullName: KhurramAudioRoute.Core.DuplicationSession.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
