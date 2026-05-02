@@ -318,6 +318,13 @@ namespace KhurramAudioRoute.ViewModels
             if (e.PropertyName == nameof(AudioDevice.SourceLatencyMs))
             {
                 DuplicationManager.SetSourceLatency(sourceDevice.Id, sourceDevice.SourceLatencyMs);
+                return;
+            }
+
+            if (e.PropertyName == nameof(AudioDevice.SpatialPreset))
+            {
+                if (!string.IsNullOrWhiteSpace(sourceDevice.Id))
+                    BassEngine.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
             }
         }
 

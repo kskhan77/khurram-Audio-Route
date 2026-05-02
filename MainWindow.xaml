@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:KhurramAudioRoute.ViewModels"
         xmlns:local="clr-namespace:KhurramAudioRoute"
+        xmlns:core="clr-namespace:KhurramAudioRoute.Core"
         xmlns:ctrl="clr-namespace:KhurramAudioRoute.Controls"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:tb="http://www.hardcodet.net/taskbar"
@@ -712,7 +713,23 @@
                                             <!-- Advanced panel (inline) -->
                                             <Border BorderBrush="#1AFFFFFF" BorderThickness="0,1,0,0" Background="#101112"
                                                     Visibility="{Binding IsAdvancedExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                <Grid Margin="18,16,18,18">
+                                                <StackPanel Margin="18,16,18,18">
+
+                                                    <!-- SPATIAL AUDIO (virtual bus only) -->
+                                                    <StackPanel Margin="0,0,0,18"
+                                                                Visibility="{Binding IsSonicFlowVirtual, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <TextBlock Style="{StaticResource SonicSectionHeader}" Text="SPATIAL AUDIO"/>
+                                                        <TextBlock Text="3D upmix, room modeling and HRTF binaural for headphone listening."
+                                                                   Foreground="{StaticResource SonicOutlineBrush}" FontSize="11"
+                                                                   TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                                        <ComboBox Style="{StaticResource SonicComboBox}"
+                                                                  ItemsSource="{x:Static core:AudioDevice.AllSpatialPresets}"
+                                                                  SelectedItem="{Binding SpatialPreset, Mode=TwoWay}"
+                                                                  HorizontalAlignment="Left"
+                                                                  MinWidth="240"/>
+                                                    </StackPanel>
+
+                                                <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="20"/>
@@ -892,6 +909,7 @@
                                                         </WrapPanel>
                                                     </StackPanel>
                                                 </Grid>
+                                                </StackPanel>
                                             </Border>
                                         </StackPanel>
                                     </Border>

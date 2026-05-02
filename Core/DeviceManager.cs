@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using KhurramAudioRoute.Core.Spatial;
 using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
@@ -94,6 +95,17 @@ namespace KhurramAudioRoute.Core
             get => _isSonicFlowVirtual;
             set => SetProperty(ref _isSonicFlowVirtual, value);
         }
+
+        private SpatialPreset _spatialPreset = SpatialPreset.Off;
+        public SpatialPreset SpatialPreset
+        {
+            get => _spatialPreset;
+            set => SetProperty(ref _spatialPreset, value);
+        }
+
+        // Static enum source for the per-card ComboBox binding (XAML can't easily
+        // call Enum.GetValues, and ObjectDataProvider would mean another resource).
+        public static SpatialPreset[] AllSpatialPresets { get; } = Enum.GetValues<SpatialPreset>();
 
         private bool _canHostMirroring = true;
         public bool CanHostMirroring
