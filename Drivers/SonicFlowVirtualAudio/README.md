@@ -42,28 +42,81 @@ Windows audio endpoint enumeration.
 
 ## Local Status
 
-This machine currently has Visual Studio/MSBuild and Windows SDK files, but the WDK
-driver build tools were not found:
+This machine now has the VS 2022 WDK toolchain needed for the driver build.
 
-- `Microsoft.DriverKit.props`
-- `stampinf.exe`
-- `devcon.exe`
+Current validated outputs:
 
-Install the Windows Driver Kit before building or installing the driver package.
+- Staged driver source: `src/SonicFlowVirtualAudio/SonicFlowVirtualAudio`
+- Driver binary: `SonicFlowVirtualAudio.sys`
+- Stamped INF: `SonicFlowVirtualAudio.inf`
+- Test certificate: `SonicFlowVirtualAudio.cer`
+- Signed catalog: `SonicFlowVirtualAudio.cat`
+- Clean test package: `out/x64/Debug`
 
 ## Build Path
 
 1. Install Visual Studio C++ desktop workload and the Windows Driver Kit.
-2. Run `.\import-sysvad.ps1`.
-3. Run `.\build-driver.ps1` to build the unchanged SysVAD sample first.
-4. Open `upstream\Windows-driver-samples\audio\sysvad\sysvad.sln`.
-4. Rename the sample to `SonicFlowVirtualAudio`.
-5. Reduce the sample to one virtual render endpoint.
-6. Set the INF hardware ID to `Root\SonicFlowVirtualAudio`.
-7. Build x64 Debug first.
-8. Install on a test machine with test signing enabled.
-9. Confirm Windows Sound shows `SonicFlow Virtual Speaker`.
-10. Open SonicFlow and use `Set Virtual Default`.
+2. If MSBuild reports `WindowsKernelModeDriver10.0` missing, close Visual Studio
+   Installer and run `.\install-vs2022-wdk-component.ps1`.
+3. Run `.\import-sysvad.ps1`.
+4. Run `.\build-driver.ps1` to build the unchanged SysVAD `TabletAudioSample` driver first.
+5. Run `.\stage-sonicflow-driver.ps1`.
+6. Use `RENAME_MAP.md` to rename the staged source to `SonicFlowVirtualAudio`.
+7. Run `.\build-driver.ps1 -Staged`.
+8. Run `.\package-driver.ps1`.
+9. Install on a test machine with test signing enabled.
+10. Confirm Windows Sound shows `SonicFlow Virtual Speaker`.
+11. Open SonicFlow and use `Set Virtual Default`.
+
+The full upstream SysVAD solution includes optional APO samples that require ATL.
+The first SonicFlow driver does not need those APO projects because SonicFlow owns
+EQ and DSP in the user-mode app.
+
+## Test Install
+
+Run these from an elevated PowerShell window after `package-driver.ps1` succeeds:
+
+```powershell
+.\install-test-driver.ps1 -EnableTestSigning
+```
+
+Reboot, then run:
+
+```powershell
+.\install-test-driver.ps1
+```
+
+If `bcdedit` reports that test signing is blocked, disable Secure Boot for driver
+development or use a production driver-signing flow.
+
+> Warning: do not disable Secure Boot on a BitLocker-encrypted machine without
+> first suspending BitLocker (`manage-bde -protectors -disable C:`) or having
+> the recovery key on hand. Toggling Secure Boot invalidates the TPM PCR seal
+> and Windows will demand the recovery key on the next boot.
+
+## Dev Fallback: VB-CABLE
+
+When the SonicFlow driver cannot be installed locally (Secure Boot enforced on
+a BitLocker-encrypted work laptop, no recovery key, etc.), use VB-Audio's
+pre-signed VB-CABLE as the virtual bus during development. It installs without
+test-signing and exposes the same render/capture endpoint pair the SonicFlow
+driver eventually will.
+
+1. Download the original VB-CABLE pack from <https://vb-audio.com/Cable/>.
+   The free pack is enough; the A+B and C+D donationware extensions only add
+   more independent cables (not needed for SonicFlow's single virtual bus).
+2. Unzip and right-click `VBCABLE_Setup_x64.exe` -> Run as administrator.
+3. Click **Install Driver**, accept the signed-driver prompt, reboot.
+4. After reboot you should see `CABLE Input` under Sound -> Output and
+   `CABLE Output` under Sound -> Input.
+
+The SonicFlow app's `Core/SonicFlowVirtualAudio.cs` recognises VB-CABLE's
+`CABLE Input` endpoint as the virtual bus alongside the shipped `SonicFlow
+Virtual Speaker`, so no rebuild is needed - the device card and "Set Virtual
+Default" command light up automatically.
+
+This is the dev-only fallback documented in `PLAN.md`. The shipped product
+must still ride on the SonicFlow-owned driver.
 
 ## Runtime Flow
 

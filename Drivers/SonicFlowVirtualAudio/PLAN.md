@@ -32,7 +32,7 @@ The WPF app already knows how to detect the future virtual endpoint through
 
 ### Phase 1 - App Contract
 
-Status: started.
+Status: implemented for the first UI/device contract.
 
 - Detect `SonicFlow Virtual Speaker`.
 - Show the virtual-device status card.
@@ -42,22 +42,23 @@ Status: started.
 
 ### Phase 2 - Driver Import
 
-Status: next.
+Status: SonicFlow rename/package builds; endpoint reduction still pending.
 
 - Install the Windows Driver Kit.
 - Import Microsoft's SysVAD sample.
 - Reduce it to one render endpoint.
-- Rename it to SonicFlow.
-- Set hardware ID to `Root\SonicFlowVirtualAudio`.
-- Set endpoint name to `SonicFlow Virtual Speaker`.
+- Rename it to SonicFlow. Done for the staged build.
+- Set hardware ID to `Root\SonicFlowVirtualAudio`. Done.
+- Set endpoint name to `SonicFlow Virtual Speaker`. Done for the primary render endpoint.
 
 ### Phase 3 - First Test Driver
 
-Status: blocked until WDK exists.
+Status: x64 Debug SonicFlow package builds and test-signs.
 
-- Build x64 Debug.
+- Build x64 Debug. Done.
+- Generate and sign `SonicFlowVirtualAudio.cat`. Done.
 - Enable test signing on a test Windows machine.
-- Install the package with DevCon or PnPUtil.
+- Install the package with DevCon.
 - Verify the endpoint appears in Windows Sound settings.
 - Verify SonicFlow detects it and can set it as default.
 

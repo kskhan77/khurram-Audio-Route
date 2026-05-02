@@ -9,12 +9,23 @@ namespace KhurramAudioRoute.Core
         public const string ProductCaptureName = "SonicFlow Virtual Output";
         public const string HardwareId = "Root\\SonicFlowVirtualAudio";
 
+        // Friendly-name / endpoint-id substrings that mark a render endpoint as the
+        // virtual bus the SonicFlow pipeline should target. The SonicFlow-branded
+        // markers are the shipped product driver. The VB-CABLE markers let the app
+        // light up against VB-Audio's pre-signed virtual cable on machines where the
+        // SonicFlow driver cannot be installed (Secure Boot / BitLocker locked dev
+        // boxes). VB-CABLE A+B and C+D extension packs are matched by the same
+        // "cable input" / "vb-audio" tokens.
         private static readonly string[] RenderNameMarkers =
         {
             "sonicflow virtual",
             "sonicflow speaker",
             "sonicflow audio",
-            "sysvad"
+            "sysvad",
+            "cable input",
+            "vb-audio virtual cable",
+            "vb-audio point",
+            "vb-cable"
         };
 
         public static bool IsVirtualRenderEndpoint(string? endpointId, string? friendlyName)
