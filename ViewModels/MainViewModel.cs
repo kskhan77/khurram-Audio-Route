@@ -271,6 +271,12 @@ namespace KhurramAudioRoute.ViewModels
 
                 source.PropertyChanged += (_, e) => OnOutputDevicePropertyChanged(source, e);
 
+                // Restore persisted spatial preset. Done after the PropertyChanged
+                // handler is wired so the engine + save path runs naturally; the
+                // re-save is value-equal so it's a no-op write at worst.
+                if (!string.IsNullOrWhiteSpace(source.Id))
+                    source.SpatialPreset = UserSettings.GetSpatialPreset(source.Id);
+
                 source.IsDuplicating = DuplicationManager.IsDuplicating(source.Id);
                 source.IsAdvancedExpanded = wasExpanded;
                 UpdateDuplicateStatus(source);
@@ -324,7 +330,10 @@ namespace KhurramAudioRoute.ViewModels
             if (e.PropertyName == nameof(AudioDevice.SpatialPreset))
             {
                 if (!string.IsNullOrWhiteSpace(sourceDevice.Id))
+                {
                     BassEngine.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
+                    UserSettings.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
+                }
             }
         }
 
