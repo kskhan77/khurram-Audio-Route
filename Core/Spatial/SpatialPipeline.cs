@@ -111,7 +111,7 @@ namespace KhurramAudioRoute.Core.Spatial
                 SpatialPreset.HeadphoneStereoPlus  => new SpatialPipeline(new ISpatialStage[] { new CrossfeedStage() }),
                 SpatialPreset.HeadphoneCinema      => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new CavernUpmixStage(targetLayout: ChannelLayout.Surround_7_1),
+                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_7_1),
                     new ConvolutionRoomStage(RoomImpulseResponse.SmallTheater),
                     new CavernBinauralStage()
                 }),
@@ -122,13 +122,13 @@ namespace KhurramAudioRoute.Core.Spatial
                 }),
                 SpatialPreset.HeadphoneConcertHall => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new CavernUpmixStage(targetLayout: ChannelLayout.Surround_5_1),
+                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_5_1),
                     new ConvolutionRoomStage(RoomImpulseResponse.ConcertHall),
                     new CavernBinauralStage()
                 }),
                 SpatialPreset.Speakers_5_1         => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new CavernUpmixStage(targetLayout: ChannelLayout.Surround_5_1)
+                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_5_1)
                 }),
                 SpatialPreset.GameMode             => new SpatialPipeline(new ISpatialStage[]
                 {
@@ -165,24 +165,93 @@ namespace KhurramAudioRoute.Core.Spatial
         }
     }
 
-    /// <summary>Stereo -> 5.1/7.1 upmix backed by Cavern.Format's upconverter.</summary>
-    public sealed class CavernUpmixStage : ISpatialStage
+    /// <summary>
+    /// Stereo -> 5.1/7.1 matrix upmix. Hafler-style derivation:
+    ///   FC  = (L + R) * sqrt(0.5)   (mid; reinforces dialog)
+    ///   BL  = (L - R) * sqrt(0.5)   (side; rear-left placement)
+    ///   BR  = (R - L) * sqrt(0.5)   (side; rear-right placement)
+    ///   LFE = 0                     (no low-pass cross-feed for v1)
+    ///   For 7.1: SL/SR mirror BL/BR at -3dB.
+    ///
+    /// Already-multichannel input (>= 3 ch) is passed through. Mono input is
+    /// duplicated to L/R first. Channel order matches Cavern's
+    /// <see cref="CavernBinauralStage"/> expectations:
+    ///   5.1: FL, FR, FC, LFE, BL, BR
+    ///   7.1: FL, FR, FC, LFE, SL, SR, BL, BR  (sides before backs — Cavern's
+    ///        convention, NOT Microsoft WaveFormatExtensible ordering).
+    /// </summary>
+    public sealed class MatrixUpmixStage : ISpatialStage
     {
-        public string Name => "Cavern Upmix";
+        public string Name => "Matrix Upmix";
         public bool Enabled { get; set; } = true;
         public ChannelLayout TargetLayout { get; }
 
-        public CavernUpmixStage(ChannelLayout targetLayout)
+        private static readonly float Mid = (float)System.Math.Sqrt(0.5);
+
+        public MatrixUpmixStage(ChannelLayout targetLayout)
         {
             TargetLayout = targetLayout;
         }
 
         public SpatialBuffer Process(SpatialBuffer input)
         {
-            // TODO: wire Cavern.Format.Renderers (or Cavern.Channels matrix decode)
-            // to expand Stereo/Mono to TargetLayout. Detect already-multichannel
-            // input and bypass.
-            return input;
+            int outChannels = TargetLayout switch
+            {
+                ChannelLayout.Surround_5_1 => 6,
+                ChannelLayout.Surround_7_1 => 8,
+                _ => input.ChannelCount
+            };
+
+            // Bypass: already at or beyond the target layout, or no-op target.
+            if (outChannels == input.ChannelCount || input.ChannelCount >= 3)
+                return input;
+
+            int frames = input.FrameCount;
+            var output = new float[frames * outChannels];
+            var src    = input.Samples;
+            int inCh   = input.ChannelCount;
+
+            for (int f = 0; f < frames; f++)
+            {
+                float L, R;
+                if (inCh == 1)
+                {
+                    L = R = src[f];
+                }
+                else
+                {
+                    L = src[f * inCh];
+                    R = src[f * inCh + 1];
+                }
+
+                float fc = (L + R) * Mid;
+                float bl = (L - R) * Mid;
+                float br = (R - L) * Mid;
+                int o = f * outChannels;
+
+                if (outChannels == 6)
+                {
+                    output[o + 0] = L;     // FL
+                    output[o + 1] = R;     // FR
+                    output[o + 2] = fc;    // FC
+                    output[o + 3] = 0f;    // LFE
+                    output[o + 4] = bl;    // BL
+                    output[o + 5] = br;    // BR
+                }
+                else // 8 channels (7.1)
+                {
+                    output[o + 0] = L;            // FL
+                    output[o + 1] = R;            // FR
+                    output[o + 2] = fc;           // FC
+                    output[o + 3] = 0f;           // LFE
+                    output[o + 4] = bl * Mid;     // SL  (sides at -3dB vs backs)
+                    output[o + 5] = br * Mid;     // SR
+                    output[o + 6] = bl;           // BL
+                    output[o + 7] = br;           // BR
+                }
+            }
+
+            return new SpatialBuffer(output, outChannels, input.SampleRate, TargetLayout);
         }
     }
 

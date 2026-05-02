@@ -113,11 +113,19 @@ Status: implemented with algorithmic IRs (real-IR drop-in supported).
 
 ### 3.4 - Upmix
 
-Status: pending.
+Status: implemented as a hand-rolled matrix (`MatrixUpmixStage`).
 
-- Use `Cavern.Format` upconverter to turn stereo into 5.1 / 7.1 channel
-  buffers. Expose target layout per preset.
-- Gate behind multichannel detection (skip if input is already >= 5 ch).
+- Hafler-style derivation: FC = (L+R)/sqrt(2), BL/BR = +-(L-R)/sqrt(2),
+  LFE = 0. For 7.1, SL/SR mirror BL/BR at -3 dB.
+- Bypassed when input is already multichannel (ChannelCount >= 3).
+- Cavern's `SurroundUpmixer` was evaluated but its callback-based
+  `OnSamplesNeeded` / `IntermediateSources` model didn't fit the
+  `SpatialBuffer Process(...)` contract without significant adapter code
+  and per-frame allocation. The matrix path can be swapped for Cavern's
+  later if quality demands it.
+- Channel order matches `CavernBinauralStage`'s expected layout
+  (5.1: FL,FR,FC,LFE,BL,BR; 7.1: FL,FR,FC,LFE,SL,SR,BL,BR — Cavern
+  convention, not Microsoft WaveFormatExtensible).
 
 ### 3.5 - Preset UI
 
