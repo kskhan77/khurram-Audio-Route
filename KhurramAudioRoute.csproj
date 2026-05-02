@@ -29,11 +29,19 @@
     <Resource Include="Assets\app_icon.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Assets\IR\*.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <ApplicationIcon>Assets\app_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cavern" Version="2.1.0" />
+    <PackageReference Include="Cavern.Format" Version="2.1.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="H.NotifyIcon.Wpf" Version="2.2.0" />
     <PackageReference Include="ManagedBass" Version="3.1.1" />
