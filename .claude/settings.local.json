@@ -5,5 +5,10 @@
     "postgres",
     "code-mode",
     "sequential-thinking"
-  ]
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)"
+    ]
+  }
 }

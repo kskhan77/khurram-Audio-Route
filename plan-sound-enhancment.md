@@ -45,6 +45,7 @@ Currently, the application uses **NAudio WasapiLoopbackCapture**.
     - **Upmixing:** Turning standard YouTube/Spotify music into immersive 5.1.
     - **Room Modeling:** Simulate the acoustics of a studio or theater.
 
+
 ### Phase 4: Dolby Atmos (Native)
 - **Goal:** Official Atmos support.
 - **Method:** Integrate `ISpatialAudioClient` to route object-based audio directly into the Windows spatial pipeline.

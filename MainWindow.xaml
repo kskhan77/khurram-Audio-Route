@@ -6,6 +6,7 @@
         xmlns:vm="clr-namespace:KhurramAudioRoute.ViewModels"
         xmlns:local="clr-namespace:KhurramAudioRoute"
         xmlns:core="clr-namespace:KhurramAudioRoute.Core"
+        xmlns:spatial="clr-namespace:KhurramAudioRoute.Core.Spatial"
         xmlns:ctrl="clr-namespace:KhurramAudioRoute.Controls"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:tb="http://www.hardcodet.net/taskbar"
