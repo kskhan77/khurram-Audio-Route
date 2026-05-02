@@ -87,6 +87,7 @@ namespace KhurramAudioRoute.Core
                 DisposePipeline(pipeline);
             _spatialPipelines.Clear();
             _spatialScratch.Clear();
+            _captureFormats.Clear();
 
             foreach (var dev in _activeDevices)
             {
@@ -114,6 +115,11 @@ namespace KhurramAudioRoute.Core
         // thread and resized on the first callback after a preset change.
         private static readonly ConcurrentDictionary<string, SpatialPipeline> _spatialPipelines = new();
         private static readonly ConcurrentDictionary<string, float[]> _spatialScratch = new();
+
+        // Actual capture format negotiated by BassWasapi.Init for each device. Windows
+        // shared-mode picks the device's mix format (often 48 kHz stereo, but 44.1 kHz
+        // and 5.1/7.1 are valid). Read on the audio thread; written once after init.
+        private static readonly ConcurrentDictionary<string, (int Frequency, int Channels)> _captureFormats = new();
 
         /// <summary>
         /// Selects a spatial preset for the given device. <see cref="SpatialPreset.Off"/>
@@ -149,17 +155,23 @@ namespace KhurramAudioRoute.Core
         }
 
         // Capture-thread hot path. Mutates the WASAPI capture buffer in place when a
-        // pipeline is active. Assumes 32-bit float stereo @ 48 kHz (the format we
-        // requested via WasapiInitFlags = Shared|Float). All current stages preserve
-        // channel count, so the in/out byte length matches and we can write back to
-        // the same IntPtr. If a future stage changes channel count (e.g. real upmix
-        // → speakers), this needs a separate mixer with the matching layout.
+        // pipeline is active. Capture format (sample rate, channels) is whatever
+        // BassWasapi.Init negotiated with Windows shared-mode and was cached into
+        // _captureFormats right after init. Bytes are 32-bit float (Float flag in
+        // WasapiInitFlags). Channel-count-preserving stages can write back to the
+        // same IntPtr; stages that change channel count (future real upmix →
+        // speakers) fall through with the dry buffer until a matching mixer exists.
         private static void ApplySpatialIfActive(string deviceId, IntPtr buffer, int length)
         {
             if (!_spatialPipelines.TryGetValue(deviceId, out var pipeline)) return;
 
             int floatCount = length / sizeof(float);
             if (floatCount == 0) return;
+
+            var (sampleRate, channels) = _captureFormats.TryGetValue(deviceId, out var fmt)
+                ? fmt
+                : (48000, 2);
+            if (channels <= 0) return;
 
             if (!_spatialScratch.TryGetValue(deviceId, out var scratch) || scratch.Length != floatCount)
             {
@@ -171,10 +183,10 @@ namespace KhurramAudioRoute.Core
 
             try
             {
-                var input  = new SpatialBuffer(scratch, channelCount: 2, sampleRate: 48000, ChannelLayout.Stereo);
+                var input  = new SpatialBuffer(scratch, channels, sampleRate, LayoutFor(channels));
                 var output = pipeline.Process(input);
 
-                if (output.ChannelCount == 2 && output.Samples.Length == floatCount)
+                if (output.ChannelCount == channels && output.Samples.Length == floatCount)
                 {
                     Marshal.Copy(output.Samples, 0, buffer, floatCount);
                 }
@@ -186,6 +198,16 @@ namespace KhurramAudioRoute.Core
                 Debug.WriteLine($"Spatial pipeline error on {deviceId}: {ex.Message}");
             }
         }
+
+        private static ChannelLayout LayoutFor(int channels) => channels switch
+        {
+            1 => ChannelLayout.Mono,
+            2 => ChannelLayout.Stereo,
+            4 => ChannelLayout.Quad,
+            6 => ChannelLayout.Surround_5_1,
+            8 => ChannelLayout.Surround_7_1,
+            _ => ChannelLayout.Stereo,
+        };
 
         /// <summary>
         /// Applies high-precision EQ to a device. 
@@ -250,6 +272,8 @@ namespace KhurramAudioRoute.Core
                             {
                                 BassWasapi.Start();
                                 _loopbackHandles[deviceId] = deviceIndex;
+                                var info = BassWasapi.Info;
+                                _captureFormats[deviceId] = (info.Frequency, info.Channels);
                             }
                             else
                             {
