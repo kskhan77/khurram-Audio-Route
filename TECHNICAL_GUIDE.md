@@ -13,6 +13,7 @@ Audio Router V2 is a high-performance Windows audio utility built with **.NET 10
 | **DSP Engine** | Provides professional-grade EQ and signal processing via BASS. | `BassEngine.cs` |
 | **Hardware Manager** | Enumerates and monitors WASAPI audio endpoints. | `DeviceManager.cs` |
 | **Session Manager** | Discovers and controls individual application audio streams. | `SessionManager.cs` |
+| **Virtual Audio Contract** | Detects the future SonicFlow virtual driver endpoint and keeps mirror ownership on that bus. | `SonicFlowVirtualAudio.cs` |
 
 ---
 
@@ -34,7 +35,21 @@ Duplication uses a "Capture once, Fan-out" architecture:
    - **Latency Sync**: `DelaySampleProvider` inserts a ring-buffered delay (up to 800ms) to align wired glasses with Bluetooth devices.
 4. **Playback**: Independent `WasapiOut` players deliver the processed stream to target devices.
 
-### 3. DSP & Enhancement (BASS)
+### 3. Virtual Device Mode
+The product driver path is a dedicated Windows render endpoint named `SonicFlow Virtual Speaker`.
+When that endpoint is installed, it becomes the only device card that can host mirror targets.
+Physical output cards remain standalone for default/volume/mute control.
+
+Runtime flow:
+
+```text
+Windows apps -> SonicFlow Virtual Speaker -> loopback capture -> DSP -> physical outputs
+```
+
+The app-side endpoint contract is implemented in `Core/SonicFlowVirtualAudio.cs`. The WDK driver
+workspace is tracked under `Drivers/SonicFlowVirtualAudio`.
+
+### 4. DSP & Enhancement (BASS)
 The `BassEngine` provides a professional alternative to the NAudio pipeline:
 - **Loopback**: Captures system sound via `BassWasapi`.
 - **Mixer**: Feeds captured audio into a `BassMix` stream.

@@ -88,6 +88,20 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _isDuplicateBusy, value);
         }
 
+        private bool _isSonicFlowVirtual;
+        public bool IsSonicFlowVirtual
+        {
+            get => _isSonicFlowVirtual;
+            set => SetProperty(ref _isSonicFlowVirtual, value);
+        }
+
+        private bool _canHostMirroring = true;
+        public bool CanHostMirroring
+        {
+            get => _canHostMirroring;
+            set => SetProperty(ref _canHostMirroring, value);
+        }
+
         private ObservableCollection<DeviceSelection> _duplicateTargets = new();
         public ObservableCollection<DeviceSelection> DuplicateTargets
         {
@@ -206,7 +220,8 @@ namespace KhurramAudioRoute.Core
                             IsDefault = defaultDevice != null && endpoint.ID == defaultDevice.ID,
                             PeakValue = peak,
                             Volume = vol,
-                            IsMuted = muted
+                            IsMuted = muted,
+                            IsSonicFlowVirtual = SonicFlowVirtualAudio.IsVirtualRenderEndpoint(endpoint.ID, endpoint.FriendlyName)
                         });
                         endpoint.Dispose();
                     }
@@ -295,6 +310,7 @@ namespace KhurramAudioRoute.Core
                         catch { }
 
                         device.IsDefault = defaultDevice != null && endpoint.ID == defaultDevice.ID;
+                        device.IsSonicFlowVirtual = SonicFlowVirtualAudio.IsVirtualRenderEndpoint(endpoint.ID, endpoint.FriendlyName);
                     }
                     catch { }
                     finally { endpoint.Dispose(); }

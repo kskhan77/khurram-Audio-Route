@@ -37,6 +37,18 @@ namespace KhurramAudioRoute.ViewModels
         private AudioDevice? _masterDevice;
 
         [ObservableProperty]
+        private AudioDevice? sonicFlowVirtualDevice;
+
+        [ObservableProperty]
+        private bool isSonicFlowVirtualDeviceInstalled;
+
+        [ObservableProperty]
+        private string sonicFlowVirtualDeviceName = SonicFlowVirtualAudio.ProductRenderName;
+
+        [ObservableProperty]
+        private string sonicFlowVirtualStatus = SonicFlowVirtualAudio.BuildStatus(null);
+
+        [ObservableProperty]
         private DashboardSection currentSection = DashboardSection.Outputs;
 
         [ObservableProperty]
@@ -135,6 +147,20 @@ namespace KhurramAudioRoute.ViewModels
         }
 
         [RelayCommand]
+        public void SetSonicFlowVirtualDefault()
+        {
+            if (SonicFlowVirtualAudio.TrySetAsDefault(SonicFlowVirtualDevice, out var status))
+            {
+                SonicFlowVirtualStatus = status;
+                RefreshData();
+                return;
+            }
+
+            SonicFlowVirtualStatus = status;
+            MessageBox.Show(status, "SonicFlow Virtual Audio", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        [RelayCommand]
         public void RefreshData()
         {
             try
@@ -166,12 +192,16 @@ namespace KhurramAudioRoute.ViewModels
                     .Where(d => !string.IsNullOrWhiteSpace(d.Id))
                     .ToDictionary(d => d.Id!, d => d.SourceLatencyMs);
 
-                var availableDevices = DeviceManager.GetRenderDevices();
+                var availableDevices = SonicFlowVirtualAudio.SortVirtualFirst(DeviceManager.GetRenderDevices()).ToList();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
                 ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded, previousLatencyOffsets, previousSourceLatencies);
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
+                SonicFlowVirtualDevice = SonicFlowVirtualAudio.FindVirtualRenderDevice(availableDevices);
+                IsSonicFlowVirtualDeviceInstalled = SonicFlowVirtualDevice != null;
+                SonicFlowVirtualDeviceName = SonicFlowVirtualDevice?.Name ?? SonicFlowVirtualAudio.ProductRenderName;
+                SonicFlowVirtualStatus = SonicFlowVirtualAudio.BuildStatus(SonicFlowVirtualDevice);
 
                 var activeSessions = SessionManager.GetActiveSessions();
                 foreach (var s in activeSessions)
@@ -198,6 +228,8 @@ namespace KhurramAudioRoute.ViewModels
             IReadOnlyDictionary<string, Dictionary<string, int>>? previousLatencyOffsets = null,
             IReadOnlyDictionary<string, int>? previousSourceLatencies = null)
         {
+            bool hasSonicFlowVirtualDevice = devices.Any(d => d.IsSonicFlowVirtual);
+
             foreach (var source in devices)
             {
                 HashSet<string>? restoredTargetIds = null;
@@ -211,10 +243,11 @@ namespace KhurramAudioRoute.ViewModels
                 previousLatencyOffsets?.TryGetValue(source.Id ?? string.Empty, out latencyMap);
                 previousSourceLatencies?.TryGetValue(source.Id ?? string.Empty, out sourceLatency);
                 source.SourceLatencyMs = sourceLatency;
+                source.CanHostMirroring = !hasSonicFlowVirtualDevice || source.IsSonicFlowVirtual;
 
-                source.DuplicateTargets = new ObservableCollection<DeviceSelection>(
-                    devices
-                        .Where(target => target.Id != source.Id)
+                var targetSelections = source.CanHostMirroring
+                    ? devices
+                        .Where(target => target.Id != source.Id && (!source.IsSonicFlowVirtual || !target.IsSonicFlowVirtual))
                         .Select(target =>
                         {
                             var selection = new DeviceSelection
@@ -225,7 +258,10 @@ namespace KhurramAudioRoute.ViewModels
                             if (latencyMap != null && target.Id != null && latencyMap.TryGetValue(target.Id, out var ms))
                                 selection.LatencyOffsetMs = ms;
                             return selection;
-                        }));
+                        })
+                    : Enumerable.Empty<DeviceSelection>();
+
+                source.DuplicateTargets = new ObservableCollection<DeviceSelection>(targetSelections);
 
                 if (equalizerValues != null && equalizerValues.Length > 0)
                     source.SetEqualizerGains(equalizerValues);
@@ -307,6 +343,12 @@ namespace KhurramAudioRoute.ViewModels
 
         private static void UpdateDuplicateStatus(AudioDevice sourceDevice)
         {
+            if (!sourceDevice.CanHostMirroring)
+            {
+                sourceDevice.DuplicateStatus = "Mirroring is controlled by SonicFlow Virtual Speaker";
+                return;
+            }
+
             if (sourceDevice.IsDuplicateBusy)
             {
                 sourceDevice.DuplicateStatus = "Updating duplicate targets...";
@@ -344,6 +386,13 @@ namespace KhurramAudioRoute.ViewModels
         public async Task ToggleDeviceDuplicate(AudioDevice? sourceDevice)
         {
             if (sourceDevice?.Id == null) return;
+            if (!sourceDevice.CanHostMirroring)
+            {
+                MessageBox.Show(
+                    "Mirror targets are controlled by the SonicFlow virtual device.",
+                    "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
             if (sourceDevice.IsDuplicating)
             {
@@ -363,6 +412,7 @@ namespace KhurramAudioRoute.ViewModels
         private async Task ApplyDeviceDuplicateTargets(AudioDevice? sourceDevice, bool showValidationMessage)
         {
             if (sourceDevice?.Id == null) return;
+            if (!sourceDevice.CanHostMirroring) return;
 
             var gate = GetDuplicateLock(sourceDevice.Id);
             await gate.WaitAsync();

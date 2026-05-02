@@ -49,6 +49,10 @@ bld/
 # Visual Studio Code project settings
 .vscode/
 
+# External Microsoft driver sample import. Keep reduced SonicFlow driver source in
+# Drivers/SonicFlowVirtualAudio/src instead of committing the upstream repo.
+Drivers/SonicFlowVirtualAudio/upstream/
+
 # Logic App local settings file
 local.settings.json
 

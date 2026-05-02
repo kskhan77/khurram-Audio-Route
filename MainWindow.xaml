@@ -527,6 +527,42 @@
                             </Grid>
                         </Border>
 
+                        <Border Style="{StaticResource SonicCard}" Padding="16,14" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="42" Height="42" CornerRadius="21"
+                                        Background="#1A74D1FF" BorderBrush="#4D74D1FF" BorderThickness="1" Margin="0,0,14,0">
+                                    <ui:SymbolIcon Symbol="Speaker224" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="19"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="SONICFLOW VIRTUAL DEVICE" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9" FontWeight="Bold"/>
+                                        <Border Margin="8,0,0,0" Background="#1A74D1FF" BorderBrush="#4D74D1FF" BorderThickness="1" CornerRadius="9" Padding="7,1"
+                                                Visibility="{Binding IsSonicFlowVirtualDeviceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <TextBlock Text="READY" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="Bold"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding SonicFlowVirtualDeviceName}" Foreground="White" FontWeight="SemiBold" FontSize="14" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding SonicFlowVirtualStatus}" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <ui:Button Grid.Column="2"
+                                           Content="Set Virtual Default"
+                                           Icon="Star24"
+                                           Command="{Binding SetSonicFlowVirtualDefaultCommand}"
+                                           IsEnabled="{Binding IsSonicFlowVirtualDeviceInstalled}"
+                                           Appearance="Primary"
+                                           Padding="14,8"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
                         <ItemsControl ItemsSource="{Binding Devices}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -593,6 +629,10 @@
                                                         <Border Margin="6,0,0,0" Background="#1A86DC52" BorderBrush="#86DC52" BorderThickness="1" CornerRadius="9" Padding="7,1"
                                                                 Visibility="{Binding IsDuplicating, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="MIRRORING" Foreground="#86DC52" FontSize="9" FontWeight="Bold"/>
+                                                        </Border>
+                                                        <Border Margin="6,0,0,0" Background="#1A74D1FF" BorderBrush="#4D74D1FF" BorderThickness="1" CornerRadius="9" Padding="7,1"
+                                                                Visibility="{Binding IsSonicFlowVirtual, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <TextBlock Text="VIRTUAL BUS" Foreground="{StaticResource SonicPrimaryBrush}" FontSize="9" FontWeight="Bold"/>
                                                         </Border>
                                                     </StackPanel>
                                                     <TextBlock Text="{Binding DuplicateStatus}" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
@@ -680,7 +720,8 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <!-- LEFT: Duplicate controls -->
-                                                    <StackPanel Grid.Column="0">
+                                                    <StackPanel Grid.Column="0"
+                                                                Visibility="{Binding CanHostMirroring, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Grid Margin="0,0,0,10">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*"/>

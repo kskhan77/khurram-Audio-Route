@@ -22,6 +22,12 @@ Currently, the application uses **NAudio WasapiLoopbackCapture**.
 
 ## 3. Enhancement Roadmap
 
+### Phase 0: SonicFlow Virtual Driver
+- **Goal:** Create a product-owned Windows playback endpoint named `SonicFlow Virtual Speaker`.
+- **Method:** Start from Microsoft's SysVAD WDK sample, reduce it to one virtual render endpoint, and expose it with hardware ID `Root\SonicFlowVirtualAudio`.
+- **App Flow:** Set the virtual endpoint as default, capture it with WASAPI loopback, process EQ/limiter/delay, then fan out to selected physical devices.
+- **UI Rule:** Once the virtual endpoint is installed, mirroring belongs only to the virtual device card. Physical output cards stay standalone.
+
 ### Phase 1: BASS Integration (Single Device EQ)
 - **Goal:** Enable EQ even if only one device is used.
 - **Method:** Instead of Loopback, we will initialize the output device through BASS.
