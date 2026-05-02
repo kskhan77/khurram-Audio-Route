@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using KhurramAudioRoute.Core.Spatial;
 using ManagedBass;
 using ManagedBass.Mix;
 using ManagedBass.Fx;
@@ -81,6 +83,11 @@ namespace KhurramAudioRoute.Core
         /// </summary>
         public static void Free()
         {
+            foreach (var pipeline in _spatialPipelines.Values)
+                DisposePipeline(pipeline);
+            _spatialPipelines.Clear();
+            _spatialScratch.Clear();
+
             foreach (var dev in _activeDevices)
             {
                 Bass.CurrentDevice = dev;
@@ -100,6 +107,85 @@ namespace KhurramAudioRoute.Core
         private static bool _bassWasapiAvailable = true;
         private static readonly HashSet<int> _bassInitFailedDevices = new();
         private static readonly HashSet<string> _wasapiInitFailedDevices = new();
+
+        // Per-device spatial pipeline. Set by the UI via SetSpatialPreset; read on
+        // the BASS WASAPI capture thread inside the loopback callback. ConcurrentDictionary
+        // gives lock-free reads on the hot path; the scratch buffer is owned by the audio
+        // thread and resized on the first callback after a preset change.
+        private static readonly ConcurrentDictionary<string, SpatialPipeline> _spatialPipelines = new();
+        private static readonly ConcurrentDictionary<string, float[]> _spatialScratch = new();
+
+        /// <summary>
+        /// Selects a spatial preset for the given device. <see cref="SpatialPreset.Off"/>
+        /// removes any active pipeline. Takes effect on the next WASAPI callback.
+        /// </summary>
+        public static void SetSpatialPreset(string deviceId, SpatialPreset preset)
+        {
+            if (preset == SpatialPreset.Off)
+            {
+                if (_spatialPipelines.TryRemove(deviceId, out var old))
+                    DisposePipeline(old);
+            }
+            else
+            {
+                var fresh = SpatialPipelineFactory.Create(preset);
+                if (_spatialPipelines.TryGetValue(deviceId, out var old))
+                {
+                    _spatialPipelines[deviceId] = fresh;
+                    DisposePipeline(old);
+                }
+                else
+                {
+                    _spatialPipelines[deviceId] = fresh;
+                }
+            }
+            _spatialScratch.TryRemove(deviceId, out _);
+        }
+
+        private static void DisposePipeline(SpatialPipeline pipeline)
+        {
+            foreach (var stage in pipeline.Stages)
+                if (stage is IDisposable d) d.Dispose();
+        }
+
+        // Capture-thread hot path. Mutates the WASAPI capture buffer in place when a
+        // pipeline is active. Assumes 32-bit float stereo @ 48 kHz (the format we
+        // requested via WasapiInitFlags = Shared|Float). All current stages preserve
+        // channel count, so the in/out byte length matches and we can write back to
+        // the same IntPtr. If a future stage changes channel count (e.g. real upmix
+        // → speakers), this needs a separate mixer with the matching layout.
+        private static void ApplySpatialIfActive(string deviceId, IntPtr buffer, int length)
+        {
+            if (!_spatialPipelines.TryGetValue(deviceId, out var pipeline)) return;
+
+            int floatCount = length / sizeof(float);
+            if (floatCount == 0) return;
+
+            if (!_spatialScratch.TryGetValue(deviceId, out var scratch) || scratch.Length != floatCount)
+            {
+                scratch = new float[floatCount];
+                _spatialScratch[deviceId] = scratch;
+            }
+
+            Marshal.Copy(buffer, scratch, 0, floatCount);
+
+            try
+            {
+                var input  = new SpatialBuffer(scratch, channelCount: 2, sampleRate: 48000, ChannelLayout.Stereo);
+                var output = pipeline.Process(input);
+
+                if (output.ChannelCount == 2 && output.Samples.Length == floatCount)
+                {
+                    Marshal.Copy(output.Samples, 0, buffer, floatCount);
+                }
+                // else: pipeline changed channel count or length; leave the
+                // original buffer untouched and let EQ run on dry capture.
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Spatial pipeline error on {deviceId}: {ex.Message}");
+            }
+        }
 
         /// <summary>
         /// Applies high-precision EQ to a device. 
@@ -155,6 +241,7 @@ namespace KhurramAudioRoute.Core
                             bool wasapiOk = BassWasapi.Init(deviceIndex, 0, 0, (WasapiInitFlags)9, 0.1f, 0.05f,
                                 (buffer, length, user) =>
                                 {
+                                    ApplySpatialIfActive(deviceId, buffer, length);
                                     Bass.StreamPutData(mixerStream, buffer, length);
                                     return length;
                                 });
