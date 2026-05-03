@@ -252,6 +252,14 @@ namespace KhurramAudioRoute.Core
                     {
                         Array.Copy(output.Samples, 0, buffer, offset, processSamples);
                     }
+                    else if (channels == 2
+                             && (output.ChannelCount == 6 || output.ChannelCount == 8)
+                             && output.FrameCount == processSamples / 2
+                             && SpatialFoldDown.TryFoldSurroundToStereo(output.Samples, output.ChannelCount, output.FrameCount, _scratch)
+                             && IsUsableOutput(inputActive, _scratch, processSamples))
+                    {
+                        Array.Copy(_scratch, 0, buffer, offset, processSamples);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -105,7 +105,7 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 
 - **L3 latency** — mic-based auto-sync (chirp + cross-correlate). **Code-complete** on `feature/spatial-audio` (`Core/SyncCalibration/L3/*`, `AutoSyncWindow`, **Auto-sync** button on Outputs); pending hardware QA on real mic + speakers.
 - **L4 latency (predictive defaults)** — **partially shipped:** `Core/Latency/*` name-based Sync seeds + `UserSettings.LatencyClassDefaults` (editable under **Tools** default Sync by class) for new device ids; see [`docs/LATENCY_PLAN.md`](docs/LATENCY_PLAN.md) L4.
-- **Sound upscaling** — **partially shipped:** master stereo-width (`StereoWidthStage` on master path). **Experimental:** Tools toggle **Matrix surround upmix** — bridge targets at **48 kHz / 6 or 8 ch** use `SurroundUpmixer` Hafler expansion instead of generic BASS mixer upmix (`BassEngine`). **Still TODO:** optional `MatrixUpmixStage` inside spatial presets + channel-order profiles per vendor.
+- **Sound upscaling** — **partially shipped:** master stereo-width (`StereoWidthStage` on master path). **Experimental:** Tools toggle **Matrix surround upmix** — bridge targets at **48 kHz / 6 or 8 ch** use `SurroundUpmixer` Hafler expansion instead of generic BASS mixer upmix (`BassEngine`). **Partial:** **5.1 Speakers** spatial preset runs `MatrixUpmixStage` after virtual-surround; stereo callbacks fold down via `SpatialFoldDown`. **Still TODO:** channel-order profiles per vendor; optional **7.1** matrix in presets when layout is known from device.
 - **Applications page** — per-app routing onto the bus + optional EQ overrides (`PLAN.md` scope creep).
 - **Microphones page** — [`docs/MIC_CHAIN_PLAN.md`](docs/MIC_CHAIN_PLAN.md).
 - **Soundboard / utility tools** if still wanted.

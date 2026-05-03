@@ -103,18 +103,29 @@ namespace KhurramAudioRoute.Core.Spatial
 
     public static class SpatialPipelineFactory
     {
-        public static SpatialPipeline Create(SpatialPreset preset)
+        /// <summary>
+        /// Builds the stage list for <paramref name="preset"/>. Non-Off presets
+        /// always begin with a master-controlled <see cref="StereoWidthStage"/>
+        /// (<c>StereoWidthStage.MasterStageName</c>) at width = <paramref name="masterStereoWidth"/>
+        /// so <see cref="BassEngine.SetMasterStereoWidth"/> can live-tune it without rebuild.
+        /// Off remains pure passthrough.
+        /// </summary>
+        public static SpatialPipeline Create(SpatialPreset preset, float masterStereoWidth = 1.0f)
         {
+            ISpatialStage masterWidth() => new StereoWidthStage(masterStereoWidth, StereoWidthStage.MasterStageName);
+
             return preset switch
             {
                 SpatialPreset.Off                  => new SpatialPipeline(new[] { (ISpatialStage)new PassthroughStage() }),
                 SpatialPreset.HeadphoneStereoPlus  => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new CrossfeedStage(amount: 0.14f),
                     new SoftLimiterStage()
                 }),
                 SpatialPreset.HeadphoneCinema      => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new StereoWidthStage(width: 1.28f),
                     new VirtualSurroundStage(delayMs: 18f, sideLevel: 0.34f, centerLevel: 0.08f),
                     new EarlyReflectionRoomStage(RoomImpulseResponse.SmallTheater, wetMix: 0.16f),
@@ -122,6 +133,7 @@ namespace KhurramAudioRoute.Core.Spatial
                 }),
                 SpatialPreset.HeadphoneStudio      => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new CrossfeedStage(amount: 0.10f),
                     new StereoWidthStage(width: 1.10f),
                     new EarlyReflectionRoomStage(RoomImpulseResponse.SmallStudio, wetMix: 0.08f),
@@ -129,6 +141,7 @@ namespace KhurramAudioRoute.Core.Spatial
                 }),
                 SpatialPreset.HeadphoneConcertHall => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new StereoWidthStage(width: 1.36f),
                     new VirtualSurroundStage(delayMs: 24f, sideLevel: 0.38f, centerLevel: 0.04f),
                     new EarlyReflectionRoomStage(RoomImpulseResponse.ConcertHall, wetMix: 0.22f),
@@ -136,12 +149,15 @@ namespace KhurramAudioRoute.Core.Spatial
                 }),
                 SpatialPreset.Speakers_5_1         => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new StereoWidthStage(width: 1.18f),
                     new VirtualSurroundStage(delayMs: 12f, sideLevel: 0.20f, centerLevel: 0.12f),
+                    new MatrixUpmixStage(ChannelLayout.Surround_5_1),
                     new SoftLimiterStage()
                 }),
                 SpatialPreset.GameMode             => new SpatialPipeline(new ISpatialStage[]
                 {
+                    masterWidth(),
                     new StereoWidthStage(width: 1.14f),
                     new SoftLimiterStage()
                 }),
@@ -213,13 +229,23 @@ namespace KhurramAudioRoute.Core.Spatial
     /// </summary>
     public sealed class StereoWidthStage : ISpatialStage
     {
-        public string Name => "Stereo Width";
-        public bool Enabled { get; set; } = true;
-        public float Width { get; }
+        public const string MasterStageName = "Master Stereo Width";
+        public const float MinWidth = 0.5f;
+        public const float MaxWidth = 1.6f;
 
-        public StereoWidthStage(float width = 1.15f)
+        private float _width;
+        public string Name { get; }
+        public bool Enabled { get; set; } = true;
+        public float Width
         {
-            Width = Math.Clamp(width, 0.5f, 1.6f);
+            get => _width;
+            set => _width = Math.Clamp(value, MinWidth, MaxWidth);
+        }
+
+        public StereoWidthStage(float width = 1.15f, string? name = null)
+        {
+            Width = width;
+            Name = string.IsNullOrEmpty(name) ? "Stereo Width" : name;
         }
 
         public SpatialBuffer Process(SpatialBuffer input)
@@ -437,6 +463,62 @@ namespace KhurramAudioRoute.Core.Spatial
             else if (value < -1.4f) value = -1.4f;
 
             return (float)Math.Tanh(value);
+        }
+    }
+
+    /// <summary>
+    /// Folds multichannel buffers from <see cref="MatrixUpmixStage"/> (same channel order)
+    /// to stereo when the audio callback is still stereo (master bridge, loopback EQ path).
+    /// </summary>
+    public static class SpatialFoldDown
+    {
+        private static readonly float Mid = (float)System.Math.Sqrt(0.5);
+
+        /// <summary>5.1 / 7.1 → stereo interleaved. Returns false if layout is unsupported.</summary>
+        public static bool TryFoldSurroundToStereo(float[] src, int srcChannels, int frames, float[] dstStereoInterleaved)
+        {
+            if (frames <= 0 || dstStereoInterleaved == null || dstStereoInterleaved.Length < frames * 2)
+                return false;
+
+            if (srcChannels == 6)
+            {
+                for (int f = 0; f < frames; f++)
+                {
+                    int si = f * 6;
+                    int di = f * 2;
+                    float fl = src[si];
+                    float fr = src[si + 1];
+                    float fc = src[si + 2];
+                    float bl = src[si + 4];
+                    float br = src[si + 5];
+                    dstStereoInterleaved[di]     = SpatialMath.Limit(fl + Mid * fc + 0.5f * bl);
+                    dstStereoInterleaved[di + 1] = SpatialMath.Limit(fr + Mid * fc + 0.5f * br);
+                }
+
+                return true;
+            }
+
+            if (srcChannels == 8)
+            {
+                for (int f = 0; f < frames; f++)
+                {
+                    int si = f * 8;
+                    int di = f * 2;
+                    float fl = src[si];
+                    float fr = src[si + 1];
+                    float fc = src[si + 2];
+                    float sl = src[si + 4];
+                    float sr = src[si + 5];
+                    float bl = src[si + 6];
+                    float br = src[si + 7];
+                    dstStereoInterleaved[di]     = SpatialMath.Limit(fl + Mid * fc + 0.35f * (sl + bl));
+                    dstStereoInterleaved[di + 1] = SpatialMath.Limit(fr + Mid * fc + 0.35f * (sr + br));
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 

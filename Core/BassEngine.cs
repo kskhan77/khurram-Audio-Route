@@ -669,6 +669,13 @@ namespace KhurramAudioRoute.Core
                 {
                     Marshal.Copy(output.Samples, 0, buffer, floatCount);
                 }
+                else if (channels == 2
+                         && (output.ChannelCount == 6 || output.ChannelCount == 8)
+                         && output.FrameCount == floatCount / 2
+                         && SpatialFoldDown.TryFoldSurroundToStereo(output.Samples, output.ChannelCount, output.FrameCount, scratch))
+                {
+                    Marshal.Copy(scratch, 0, buffer, floatCount);
+                }
                 // else: pipeline changed channel count or length; leave the
                 // original buffer untouched and let EQ run on dry capture.
             }
