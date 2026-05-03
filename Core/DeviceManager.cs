@@ -5,6 +5,7 @@ using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace KhurramAudioRoute.Core
@@ -151,6 +152,18 @@ namespace KhurramAudioRoute.Core
         {
             get => _canHostMirroring;
             set => SetProperty(ref _canHostMirroring, value);
+        }
+
+        /// <summary>
+        /// Windows shared-mode mix format channel count from <see cref="MMDevice.AudioClient"/>
+        /// at enumeration time (typically 2 / 6 / 8 for stereo / 5.1 / 7.1 layouts).
+        /// Used to auto-pick 5.1 vs 7.1 matrix spatial on the master bridge.
+        /// </summary>
+        private int _renderChannelCount = 2;
+        public int RenderChannelCount
+        {
+            get => _renderChannelCount;
+            set => SetProperty(ref _renderChannelCount, value);
         }
 
         /// <summary>
@@ -376,6 +389,24 @@ namespace KhurramAudioRoute.Core
             catch { }
         }
 
+        /// <summary>Reads <see cref="AudioClient.MixFormat"/>; returns 2 on failure.</summary>
+        public static int GetMixFormatChannelCount(MMDevice endpoint)
+        {
+            try
+            {
+                using var ac = endpoint.AudioClient;
+                var wf = ac.MixFormat;
+                if (wf != null && wf.Channels > 0)
+                    return Math.Clamp(wf.Channels, 1, 16);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetMixFormatChannelCount: {ex.Message}");
+            }
+
+            return 2;
+        }
+
         public static List<AudioDevice> GetRenderDevices()
         {
             var devices = new List<AudioDevice>();
@@ -416,7 +447,8 @@ namespace KhurramAudioRoute.Core
                             IsMuted = muted,
                             IsSonicFlowVirtual = isVirtual,
                             DeviceClass = deviceClass,
-                            TargetLatencyOffsetMs = seedOffset
+                            TargetLatencyOffsetMs = seedOffset,
+                            RenderChannelCount = GetMixFormatChannelCount(endpoint)
                         });
                         endpoint.Dispose();
                     }

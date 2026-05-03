@@ -357,10 +357,30 @@ namespace KhurramAudioRoute.ViewModels
             {
                 var bus = BassEngine.BridgeSourceId;
                 if (!string.IsNullOrWhiteSpace(bus))
-                    BassEngine.SetSpatialPreset(bus, MasterSpatialPreset);
+                    BassEngine.SetSpatialPreset(bus, EffectiveMasterSpatialPresetForBridge());
             }
 
             DuplicationManager.UpdateSpatialMirrorSessions(MasterSpatialPreset);
+        }
+
+        /// <summary>
+        /// <see cref="SpatialPreset.Speakers_5_1"/> vs <see cref="SpatialPreset.Speakers_7_1"/> matrix
+        /// follows the loudest multichannel layout among ACTIVE bridge targets (see <see cref="SpatialPresetSinkRouting"/>).
+        /// Other presets pass through unchanged.
+        /// </summary>
+        private SpatialPreset EffectiveMasterSpatialPresetForBridge()
+        {
+            var tapId = ResolveMasterBridgeCaptureId();
+            int maxCh = 2;
+            foreach (var d in Devices)
+            {
+                if (!d.IsActiveOutput || string.IsNullOrWhiteSpace(d.Id)) continue;
+                if (tapId != null && string.Equals(d.Id, tapId, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                maxCh = Math.Max(maxCh, Math.Clamp(d.RenderChannelCount, 1, 16));
+            }
+
+            return SpatialPresetSinkRouting.ResolvePhysicalSurround(MasterSpatialPreset, maxCh);
         }
 
         // ── Master engine orchestration ──────────────────────────────────────
@@ -466,7 +486,7 @@ namespace KhurramAudioRoute.ViewModels
                     bool started = BassEngine.StartBridge(bridgeSourceId!, activeTargets, gains);
                     if (started)
                     {
-                        BassEngine.SetSpatialPreset(bridgeSourceId!, MasterSpatialPreset);
+                        BassEngine.SetSpatialPreset(bridgeSourceId!, EffectiveMasterSpatialPresetForBridge());
 
                         // Push the per-device sync offsets so freshly added
                         // BT / HDMI targets get sensible defaults right away.

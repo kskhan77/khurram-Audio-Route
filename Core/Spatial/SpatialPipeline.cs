@@ -82,6 +82,31 @@ namespace KhurramAudioRoute.Core.Spatial
         Binaural   // stereo, but rendered with HRTF for headphones
     }
 
+    /// <summary>
+    /// Maps <see cref="SpatialPreset.Speakers_5_1"/> / <see cref="SpatialPreset.Speakers_7_1"/>
+    /// to the matrix layout that matches ACTIVE bridge sinks (HDMI 7.1 → 7.1 matrix).
+    /// Stereo-only setups keep the user's explicit pill choice (fold-down differs slightly).
+    /// </summary>
+    public static class SpatialPresetSinkRouting
+    {
+        /// <param name="maxActiveSinkChannels">
+        /// Maximum shared-mode mix-format channel count among ACTIVE render endpoints
+        /// participating in the master bridge fan-out (bus / tap excluded).
+        /// </param>
+        public static SpatialPreset ResolvePhysicalSurround(SpatialPreset selected, int maxActiveSinkChannels)
+        {
+            if (selected != SpatialPreset.Speakers_5_1 && selected != SpatialPreset.Speakers_7_1)
+                return selected;
+
+            if (maxActiveSinkChannels >= 8)
+                return SpatialPreset.Speakers_7_1;
+            if (maxActiveSinkChannels == 6)
+                return SpatialPreset.Speakers_5_1;
+
+            return selected;
+        }
+    }
+
     /// <summary>Top-level user-facing spatial mode.</summary>
     public enum SpatialPreset
     {
