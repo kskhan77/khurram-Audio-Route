@@ -172,6 +172,20 @@ namespace KhurramAudioRoute.Core
             EqBand9 = gains.Length > 9 ? gains[9] : 0f;
         }
 
+        private string? _profileLabel;
+        public string? ProfileLabel
+        {
+            get => _profileLabel;
+            set => SetProperty(ref _profileLabel, value);
+        }
+
+        private bool _isEqGraphVisible;
+        public bool IsEqGraphVisible
+        {
+            get => _isEqGraphVisible;
+            set => SetProperty(ref _isEqGraphVisible, value);
+        }
+
         public override string ToString() => Name ?? "Unknown Device";
     }
 

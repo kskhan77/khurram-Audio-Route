@@ -22,6 +22,9 @@ namespace KhurramAudioRoute.Core
             // Map of Windows device endpoint ID -> spatial preset name. Devices not
             // in the map default to SpatialPreset.Off when read.
             public Dictionary<string, string> SpatialPresets { get; set; } = new();
+
+            // Map of Windows device endpoint ID -> 10-band EQ gains.
+            public Dictionary<string, float[]> EqualizerGains { get; set; } = new();
         }
 
         private static readonly object _gate = new();
@@ -58,6 +61,24 @@ namespace KhurramAudioRoute.Core
             {
                 var s = LoadCachedLocked();
                 s.SpatialPresets[deviceId] = preset.ToString();
+                SaveLocked(s);
+            }
+        }
+
+        public static float[]? GetEqualizerGains(string deviceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId)) return null;
+            var s = LoadCached();
+            return s.EqualizerGains.TryGetValue(deviceId, out var gains) ? gains : null;
+        }
+
+        public static void SetEqualizerGains(string deviceId, float[] gains)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId) || gains == null) return;
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                s.EqualizerGains[deviceId] = gains;
                 SaveLocked(s);
             }
         }

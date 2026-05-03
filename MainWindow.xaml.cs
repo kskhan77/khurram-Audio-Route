@@ -234,6 +234,13 @@ public partial class MainWindow : FluentWindow
     private static readonly float[] PresetBass = { 7, 6, 4, 2, 0, -1, -2, -1, 0, 1 };
     private static readonly float[] PresetVoice = { -4, -3, -1, 2, 4, 5, 4, 2, 0, -1 };
     private static readonly float[] PresetBright = { -3, -2, -1, 0, 0, 1, 3, 5, 5, 4 };
+    private static readonly float[] PresetClub = { 4, 5, 3, 0, 0, 0, 2, 3, 4, 0 };
+    private static readonly float[] PresetLive = { -2, 0, 2, 3, 3, 3, 2, 1, 1, 1 };
+    private static readonly float[] PresetPop = { -1, 2, 3, 3, 2, -1, -2, -2, -1, -1 };
+    private static readonly float[] PresetRock = { 5, 4, 3, 1, -1, -1, 1, 3, 4, 5 };
+    private static readonly float[] PresetClassical = { 4, 4, 3, 2, -1, -1, 0, 2, 4, 4 };
+    private static readonly float[] PresetTechno = { 6, 5, 0, -2, -2, 0, 5, 6, 6, 5 };
+    private static readonly float[] PresetSoft = { 2, 1, 0, -1, -1, 0, 1, 2, 3, 4 };
 
     private static void ApplyEqualizerPreset(AudioDevice device, string preset)
     {
@@ -242,10 +249,24 @@ public partial class MainWindow : FluentWindow
             "Bass" => PresetBass,
             "Voice" => PresetVoice,
             "Bright" => PresetBright,
+            "Club" => PresetClub,
+            "Live" => PresetLive,
+            "Pop" => PresetPop,
+            "Rock" => PresetRock,
+            "Classical" => PresetClassical,
+            "Techno" => PresetTechno,
+            "Soft" => PresetSoft,
             _ => PresetFlat,
         };
 
         device.SetEqualizerGains(gains);
+        
+        // Update audio engines
+        if (!string.IsNullOrWhiteSpace(device.Id))
+        {
+            DuplicationManager.UpdateEqualizer(device.Id, gains);
+            BassEngine.UpdateEqualizer(device.Id, gains);
+        }
     }
 
     private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();

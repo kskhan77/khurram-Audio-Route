@@ -1,14 +1,16 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(tasklist *)",
+      "PowerShell(Get-Process *)"
+    ]
+  },
   "enabledMcpjsonServers": [
     "codebase-memory",
     "repomix",
     "postgres",
     "code-mode",
     "sequential-thinking"
-  ],
-  "permissions": {
-    "allow": [
-      "Bash(dotnet build *)"
-    ]
-  }
+  ]
 }

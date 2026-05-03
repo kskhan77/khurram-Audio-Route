@@ -108,31 +108,42 @@ namespace KhurramAudioRoute.Core.Spatial
             return preset switch
             {
                 SpatialPreset.Off                  => new SpatialPipeline(new[] { (ISpatialStage)new PassthroughStage() }),
-                SpatialPreset.HeadphoneStereoPlus  => new SpatialPipeline(new ISpatialStage[] { new CrossfeedStage() }),
+                SpatialPreset.HeadphoneStereoPlus  => new SpatialPipeline(new ISpatialStage[]
+                {
+                    new CrossfeedStage(amount: 0.14f),
+                    new SoftLimiterStage()
+                }),
                 SpatialPreset.HeadphoneCinema      => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_7_1),
-                    new ConvolutionRoomStage(RoomImpulseResponse.SmallTheater),
-                    new CavernBinauralStage()
+                    new StereoWidthStage(width: 1.28f),
+                    new VirtualSurroundStage(delayMs: 18f, sideLevel: 0.34f, centerLevel: 0.08f),
+                    new EarlyReflectionRoomStage(RoomImpulseResponse.SmallTheater, wetMix: 0.16f),
+                    new SoftLimiterStage()
                 }),
                 SpatialPreset.HeadphoneStudio      => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new ConvolutionRoomStage(RoomImpulseResponse.SmallStudio) { Enabled = true },
-                    new CavernBinauralStage()
+                    new CrossfeedStage(amount: 0.10f),
+                    new StereoWidthStage(width: 1.10f),
+                    new EarlyReflectionRoomStage(RoomImpulseResponse.SmallStudio, wetMix: 0.08f),
+                    new SoftLimiterStage()
                 }),
                 SpatialPreset.HeadphoneConcertHall => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_5_1),
-                    new ConvolutionRoomStage(RoomImpulseResponse.ConcertHall),
-                    new CavernBinauralStage()
+                    new StereoWidthStage(width: 1.36f),
+                    new VirtualSurroundStage(delayMs: 24f, sideLevel: 0.38f, centerLevel: 0.04f),
+                    new EarlyReflectionRoomStage(RoomImpulseResponse.ConcertHall, wetMix: 0.22f),
+                    new SoftLimiterStage()
                 }),
                 SpatialPreset.Speakers_5_1         => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new MatrixUpmixStage(targetLayout: ChannelLayout.Surround_5_1)
+                    new StereoWidthStage(width: 1.18f),
+                    new VirtualSurroundStage(delayMs: 12f, sideLevel: 0.20f, centerLevel: 0.12f),
+                    new SoftLimiterStage()
                 }),
                 SpatialPreset.GameMode             => new SpatialPipeline(new ISpatialStage[]
                 {
-                    new CavernBinauralStage { Quality = HrtfQuality.LowLatency }
+                    new StereoWidthStage(width: 1.14f),
+                    new SoftLimiterStage()
                 }),
                 _ => throw new ArgumentOutOfRangeException(nameof(preset), preset, null)
             };
@@ -156,12 +167,276 @@ namespace KhurramAudioRoute.Core.Spatial
     {
         public string Name => "Crossfeed";
         public bool Enabled { get; set; } = true;
+        public float Amount { get; }
+
+        private float _leftLow;
+        private float _rightLow;
+
+        public CrossfeedStage(float amount = 0.12f)
+        {
+            Amount = Math.Clamp(amount, 0f, 0.35f);
+        }
 
         public SpatialBuffer Process(SpatialBuffer input)
         {
-            // TODO: implement BS2B-style filter (low-shelf attenuated copy from
-            // L into R and vice versa). Around 100 LOC. Reference: bs2b.sf.net.
-            return input;
+            if (input.ChannelCount < 2 || input.FrameCount == 0 || Amount <= 0f)
+                return input;
+
+            var src = input.Samples;
+            var output = new float[src.Length];
+            Array.Copy(src, output, src.Length);
+
+            const float lowpass = 0.075f;
+            float dry = 1f - Amount * 0.35f;
+
+            for (int frame = 0; frame < input.FrameCount; frame++)
+            {
+                int i = frame * input.ChannelCount;
+                float left = src[i];
+                float right = src[i + 1];
+
+                _leftLow += (left - _leftLow) * lowpass;
+                _rightLow += (right - _rightLow) * lowpass;
+
+                output[i] = SpatialMath.Limit(left * dry + _rightLow * Amount);
+                output[i + 1] = SpatialMath.Limit(right * dry + _leftLow * Amount);
+            }
+
+            return new SpatialBuffer(output, input.ChannelCount, input.SampleRate, input.Layout);
+        }
+    }
+
+    /// <summary>
+    /// Mid/side stereo width that keeps the stream format unchanged. This is the
+    /// live-path alternative to true multichannel expansion until target-specific
+    /// channel conversion is implemented.
+    /// </summary>
+    public sealed class StereoWidthStage : ISpatialStage
+    {
+        public string Name => "Stereo Width";
+        public bool Enabled { get; set; } = true;
+        public float Width { get; }
+
+        public StereoWidthStage(float width = 1.15f)
+        {
+            Width = Math.Clamp(width, 0.5f, 1.6f);
+        }
+
+        public SpatialBuffer Process(SpatialBuffer input)
+        {
+            if (input.ChannelCount < 2 || input.FrameCount == 0 || Math.Abs(Width - 1f) < 0.001f)
+                return input;
+
+            var src = input.Samples;
+            var output = new float[src.Length];
+            Array.Copy(src, output, src.Length);
+
+            for (int frame = 0; frame < input.FrameCount; frame++)
+            {
+                int i = frame * input.ChannelCount;
+                float left = src[i];
+                float right = src[i + 1];
+                float mid = (left + right) * 0.5f;
+                float side = (left - right) * 0.5f * Width;
+
+                output[i] = SpatialMath.Limit(mid + side);
+                output[i + 1] = SpatialMath.Limit(mid - side);
+            }
+
+            return new SpatialBuffer(output, input.ChannelCount, input.SampleRate, input.Layout);
+        }
+    }
+
+    /// <summary>
+    /// Lightweight virtual-surround matrix. It derives a side signal from L-R,
+    /// delays it, and crossfeeds it out of phase to create rear energy while
+    /// preserving a normal stereo output format.
+    /// </summary>
+    public sealed class VirtualSurroundStage : ISpatialStage
+    {
+        public string Name => "Virtual Surround";
+        public bool Enabled { get; set; } = true;
+
+        private readonly float _delayMs;
+        private readonly float _sideLevel;
+        private readonly float _centerLevel;
+        private float[]? _delay;
+        private int _writePos;
+        private int _configuredSampleRate;
+
+        public VirtualSurroundStage(float delayMs, float sideLevel, float centerLevel)
+        {
+            _delayMs = Math.Clamp(delayMs, 4f, 40f);
+            _sideLevel = Math.Clamp(sideLevel, 0f, 0.6f);
+            _centerLevel = Math.Clamp(centerLevel, 0f, 0.25f);
+        }
+
+        public SpatialBuffer Process(SpatialBuffer input)
+        {
+            if (input.ChannelCount < 2 || input.FrameCount == 0)
+                return input;
+
+            EnsureDelay(input.SampleRate);
+
+            var src = input.Samples;
+            var output = new float[src.Length];
+            Array.Copy(src, output, src.Length);
+
+            float gain = 1f / (1f + _sideLevel + _centerLevel);
+            for (int frame = 0; frame < input.FrameCount; frame++)
+            {
+                int i = frame * input.ChannelCount;
+                float left = src[i];
+                float right = src[i + 1];
+                float center = (left + right) * 0.5f;
+                float side = (left - right) * 0.5f;
+                float delayedSide = _delay![_writePos];
+
+                _delay![_writePos] = side;
+                _writePos++;
+                if (_writePos >= _delay.Length)
+                    _writePos = 0;
+
+                output[i] = SpatialMath.Limit((left + center * _centerLevel + delayedSide * _sideLevel) * gain);
+                output[i + 1] = SpatialMath.Limit((right + center * _centerLevel - delayedSide * _sideLevel) * gain);
+            }
+
+            return new SpatialBuffer(output, input.ChannelCount, input.SampleRate, input.Layout);
+        }
+
+        private void EnsureDelay(int sampleRate)
+        {
+            int samples = Math.Max(1, (int)(sampleRate * _delayMs / 1000f));
+            if (_delay != null && _delay.Length == samples && _configuredSampleRate == sampleRate)
+                return;
+
+            _delay = new float[samples];
+            _writePos = 0;
+            _configuredSampleRate = sampleRate;
+        }
+    }
+
+    /// <summary>
+    /// Short early-reflection ambience with bounded latency/CPU. This replaces
+    /// long convolution on the live path; real IR convolution remains available
+    /// in the experimental Cavern/convolver stages below.
+    /// </summary>
+    public sealed class EarlyReflectionRoomStage : ISpatialStage
+    {
+        public string Name => "Early Reflections";
+        public bool Enabled { get; set; } = true;
+        public RoomImpulseResponse Room { get; }
+        public float WetMix { get; }
+
+        private float[][]? _delayLines;
+        private int[]? _positions;
+        private int[]? _tapSamples;
+        private float[]? _tapGains;
+        private int _configuredSampleRate;
+        private int _configuredChannels;
+
+        public EarlyReflectionRoomStage(RoomImpulseResponse room, float wetMix)
+        {
+            Room = room;
+            WetMix = Math.Clamp(wetMix, 0f, 0.35f);
+        }
+
+        public SpatialBuffer Process(SpatialBuffer input)
+        {
+            if (input.ChannelCount == 0 || input.FrameCount == 0 || WetMix <= 0f)
+                return input;
+
+            EnsureConfigured(input.SampleRate, input.ChannelCount);
+
+            var src = input.Samples;
+            var output = new float[src.Length];
+            float dry = 1f - WetMix;
+
+            for (int frame = 0; frame < input.FrameCount; frame++)
+            {
+                int baseIndex = frame * input.ChannelCount;
+                for (int channel = 0; channel < input.ChannelCount; channel++)
+                {
+                    float sample = src[baseIndex + channel];
+                    float wet = 0f;
+                    var line = _delayLines![channel];
+                    int pos = _positions![channel];
+
+                    for (int tap = 0; tap < _tapSamples!.Length; tap++)
+                    {
+                        int read = pos - _tapSamples[tap];
+                        if (read < 0) read += line.Length;
+                        wet += line[read] * _tapGains![tap];
+                    }
+
+                    line[pos] = sample + wet * 0.10f;
+                    pos++;
+                    if (pos >= line.Length) pos = 0;
+                    _positions[channel] = pos;
+
+                    output[baseIndex + channel] = SpatialMath.Limit(sample * dry + wet * WetMix);
+                }
+            }
+
+            return new SpatialBuffer(output, input.ChannelCount, input.SampleRate, input.Layout);
+        }
+
+        private void EnsureConfigured(int sampleRate, int channels)
+        {
+            if (_delayLines != null && _configuredSampleRate == sampleRate && _configuredChannels == channels)
+                return;
+
+            (float[] tapMs, float[] gains) = Room switch
+            {
+                RoomImpulseResponse.SmallStudio => (new[] { 7f, 13f, 23f }, new[] { 0.34f, 0.20f, 0.12f }),
+                RoomImpulseResponse.SmallTheater => (new[] { 12f, 21f, 34f, 55f }, new[] { 0.38f, 0.27f, 0.18f, 0.10f }),
+                RoomImpulseResponse.ConcertHall => (new[] { 18f, 31f, 48f, 73f, 109f }, new[] { 0.42f, 0.31f, 0.22f, 0.14f, 0.08f }),
+                _ => (Array.Empty<float>(), Array.Empty<float>())
+            };
+
+            _tapSamples = tapMs
+                .Select(ms => Math.Max(1, (int)(sampleRate * ms / 1000f)))
+                .ToArray();
+            _tapGains = gains;
+
+            int maxTap = _tapSamples.Length == 0 ? 1 : _tapSamples.Max() + 1;
+            _delayLines = new float[channels][];
+            _positions = new int[channels];
+            for (int channel = 0; channel < channels; channel++)
+                _delayLines[channel] = new float[maxTap];
+
+            _configuredSampleRate = sampleRate;
+            _configuredChannels = channels;
+        }
+    }
+
+    public sealed class SoftLimiterStage : ISpatialStage
+    {
+        public string Name => "Soft Limiter";
+        public bool Enabled { get; set; } = true;
+
+        public SpatialBuffer Process(SpatialBuffer input)
+        {
+            var src = input.Samples;
+            var output = new float[src.Length];
+            for (int i = 0; i < src.Length; i++)
+                output[i] = SpatialMath.Limit(src[i]);
+
+            return new SpatialBuffer(output, input.ChannelCount, input.SampleRate, input.Layout);
+        }
+    }
+
+    internal static class SpatialMath
+    {
+        public static float Limit(float value)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value))
+                return 0f;
+
+            if (value > 1.4f) value = 1.4f;
+            else if (value < -1.4f) value = -1.4f;
+
+            return (float)Math.Tanh(value);
         }
     }
 

@@ -20,6 +20,17 @@ namespace KhurramAudioRoute.Core
     {
         private static readonly List<int> _activeDevices = new();
 
+        static BassEngine()
+        {
+            // Initialize BASS with "no sound" device (0) to ensure the engine is 
+            // available globally. BASSWASAPI requires BASS to be initialized.
+            try
+            {
+                Bass.Init(0);
+            }
+            catch { }
+        }
+
         /// <summary>
         /// Checks if the required BASS native DLLs are present in the application directory.
         /// </summary>
@@ -83,6 +94,8 @@ namespace KhurramAudioRoute.Core
         /// </summary>
         public static void Free()
         {
+            StopBridge();
+            
             foreach (var pipeline in _spatialPipelines.Values)
                 DisposePipeline(pipeline);
             _spatialPipelines.Clear();
@@ -102,6 +115,34 @@ namespace KhurramAudioRoute.Core
         private static readonly Dictionary<string, int> _loopbackHandles = new();
         private static int _testToneStream;
 
+        // Bridge state. Topology:
+        //   WASAPI loopback (source) ──► push stream (source format)
+        //                                     │
+        //                                     ▼
+        //                                master mixer (48k/2 + EQ)
+        //                                     │
+        //              ┌──────────────────────┼──────────────────────┐
+        //              ▼                      ▼                      ▼
+        //         split #1              split #2               split #N
+        //              │                      │                      │
+        //              ▼                      ▼                      ▼
+        //         WASAPI play           WASAPI play            WASAPI play
+        // Splits give each target an independent read position so they don't
+        // compete for the same bytes the way MixerAddChannel(target, master) does.
+        private static string? _bridgeSourceId;
+        private static readonly HashSet<string> _bridgeTargetIds = new();
+        private static int _bridgePushStream;     // Push stream in source's native format
+        private static int _bridgeMasterMixer;    // 48k/2 mixer; EQ FX live here
+        private static readonly Dictionary<string, int> _bridgeTargetSplits = new();
+        // Optional per-target conversion mixer used when the device WASAPI session
+        // negotiates a format different from 48k/2. The split feeds this mixer,
+        // which auto-resamples/channel-converts to the target's format, and the
+        // WASAPI playback callback pulls from the mixer instead of the split.
+        private static readonly Dictionary<string, int> _bridgeTargetConvert = new();
+        private static readonly Dictionary<string, int> _bridgeDelayHandles = new();
+        private static readonly Dictionary<string, WasapiProcedure> _bridgeTargetProcs = new();
+        private static WasapiProcedure? _bridgeSourceProc;
+
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
         // init floods the debug console with the same error every tick.
@@ -120,6 +161,352 @@ namespace KhurramAudioRoute.Core
         // shared-mode picks the device's mix format (often 48 kHz stereo, but 44.1 kHz
         // and 5.1/7.1 are valid). Read on the audio thread; written once after init.
         private static readonly ConcurrentDictionary<string, (int Frequency, int Channels)> _captureFormats = new();
+
+        public static bool StartBridge(string sourceId, IEnumerable<string> targetIds, float[] gains)
+        {
+            try
+            {
+                StopBridge();
+
+                int sourceIndex = GetDeviceIndex(sourceId);
+                int sourceWasapiIndex = GetWasapiDeviceIndex(sourceId, true); // Loopback
+                if (sourceIndex == -1 || sourceWasapiIndex == -1)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: source device not found ({sourceId})");
+                    return false;
+                }
+
+                if (!InitializeDevice(sourceIndex)) return false;
+                _bridgeSourceId = sourceId;
+
+                // 1. Init source loopback first so we can read the negotiated capture format,
+                // then create matching streams. Keep the delegate rooted in a static field
+                // so the GC doesn't collect it while WASAPI holds the native function pointer.
+                _bridgeSourceProc = BridgeSourceCallback;
+                // Don't pre-set CurrentDevice here — BassWasapi.Init takes the index
+                // directly, and setting CurrentDevice on an uninitialized session
+                // throws BassException.
+                bool sourceOk = BassWasapi.Init(
+                    sourceWasapiIndex, 0, 0,
+                    WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer,
+                    0.1f, 0.05f,
+                    _bridgeSourceProc);
+                if (!sourceOk)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: source WASAPI init failed: {Bass.LastError}");
+                    StopBridge();
+                    return false;
+                }
+
+                var info = BassWasapi.Info;
+                int captureFreq = info.Frequency;
+                int captureChans = info.Channels;
+                _captureFormats[sourceId] = (captureFreq, captureChans);
+
+                // 2. Push stream in the source's native float format. Decode + Float so the
+                // mixer can pull. WASAPI capture in AutoFormat is 32-bit float.
+                _bridgePushStream = Bass.CreateStream(captureFreq, captureChans,
+                    BassFlags.Decode | BassFlags.Float, StreamProcedureType.Push);
+                if (_bridgePushStream == 0)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: push stream create failed: {Bass.LastError}");
+                    StopBridge();
+                    return false;
+                }
+
+                // 3. Master mixer @ 48k/2 float. The mixer auto-resamples and downmixes the
+                // push stream. EQ FX run once here for every target.
+                _bridgeMasterMixer = BassMix.CreateMixerStream(48000, 2,
+                    BassFlags.Decode | BassFlags.Float | BassFlags.MixerNonStop);
+                if (_bridgeMasterMixer == 0)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: master mixer create failed: {Bass.LastError}");
+                    StopBridge();
+                    return false;
+                }
+                BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgePushStream,
+                    BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
+
+                float[] centerFreqs = { 31f, 62f, 125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f };
+                int[] handles = new int[centerFreqs.Length];
+                for (int i = 0; i < centerFreqs.Length; i++)
+                {
+                    handles[i] = Bass.ChannelSetFX(_bridgeMasterMixer, EffectType.PeakEQ, 1);
+                    Bass.FXSetParameters(handles[i], new PeakEQParameters
+                    {
+                        lBand = i,
+                        fCenter = centerFreqs[i],
+                        fBandwidth = 2.5f,
+                        fGain = i < gains.Length ? gains[i] : 0f
+                    });
+                }
+                _deviceEqHandles["BRIDGE_MASTER"] = handles;
+
+                // 4. Per-target splits + WASAPI playback. Each split has its own read
+                // position into the master mixer so all targets get the same audio.
+                // NOTE: we deliberately do NOT call Bass.Init(targetIndex) here. That
+                // opens a DirectSound/Wave output on the device which we don't need
+                // (the bridge drives targets exclusively through BASSWASAPI), and on
+                // some drivers it leaves the device in a state where the subsequent
+                // BASSWASAPI shared-mode session never delivers data.
+                foreach (var targetId in targetIds)
+                {
+                    if (targetId == sourceId) continue;
+                    int targetWasapiIndex = GetWasapiDeviceIndex(targetId, false);
+                    if (targetWasapiIndex == -1)
+                    {
+                        Debug.WriteLine($"BASS BRIDGE: target {targetId} not found in WASAPI device list");
+                        continue;
+                    }
+
+                    int split = BassMix.CreateSplitStream(_bridgeMasterMixer, BassFlags.Decode | BassFlags.Float, null);
+                    if (split == 0)
+                    {
+                        Debug.WriteLine($"BASS BRIDGE: split create failed for {targetId}: {Bass.LastError}");
+                        continue;
+                    }
+                    _bridgeTargetSplits[targetId] = split;
+
+                    // Try the master mixer's format (48k/2) first — Windows shared-mode
+                    // SRC handles the conversion to the device. If the driver rejects
+                    // that, fall back to AutoFormat and insert a per-target conversion
+                    // mixer between the split and the WASAPI callback so the data we
+                    // hand WASAPI matches the negotiated format exactly.
+                    int sourceForCallback = split;
+                    int convertMixer = 0;
+
+                    WasapiProcedure proc = (buf, len, user) =>
+                    {
+                        int got = Bass.ChannelGetData(sourceForCallback, buf, len);
+                        // Clamp negative (error) returns — WASAPI interprets a negative as
+                        // a huge unsigned write count and that's the AV-trigger we hit.
+                        return got < 0 ? 0 : got;
+                    };
+                    _bridgeTargetProcs[targetId] = proc;
+
+                    bool targetOk = BassWasapi.Init(
+                        targetWasapiIndex, 48000, 2,
+                        WasapiInitFlags.Buffer,
+                        0.1f, 0.05f,
+                        proc);
+
+                    if (!targetOk)
+                    {
+                        var firstErr = Bass.LastError;
+                        Debug.WriteLine($"BASS BRIDGE: target {targetId} 48k/2 init failed ({firstErr}), retrying with AutoFormat");
+                        targetOk = BassWasapi.Init(
+                            targetWasapiIndex, 0, 0,
+                            WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer,
+                            0.1f, 0.05f,
+                            proc);
+                    }
+
+                    if (targetOk)
+                    {
+                        try { BassWasapi.CurrentDevice = targetWasapiIndex; } catch { }
+                        var tInfo = BassWasapi.Info;
+                        Debug.WriteLine($"BASS BRIDGE: target {targetId} initialised at {tInfo.Frequency}Hz/{tInfo.Channels}ch");
+
+                        // If the device negotiated a different format than the master
+                        // mixer's 48k/2, the split's bytes won't match what WASAPI
+                        // expects. Insert a conversion mixer that auto-SRCs/upmixes
+                        // from the split into the device's format.
+                        if (tInfo.Frequency != 48000 || tInfo.Channels != 2)
+                        {
+                            convertMixer = BassMix.CreateMixerStream(tInfo.Frequency, tInfo.Channels,
+                                BassFlags.Decode | BassFlags.Float | BassFlags.MixerNonStop);
+                            if (convertMixer == 0)
+                            {
+                                Debug.WriteLine($"BASS BRIDGE: target {targetId} convert mixer create failed: {Bass.LastError}");
+                                try { BassWasapi.Free(); } catch { }
+                                Bass.StreamFree(split);
+                                _bridgeTargetSplits.Remove(targetId);
+                                _bridgeTargetProcs.Remove(targetId);
+                                continue;
+                            }
+                            BassMix.MixerAddChannel(convertMixer, split,
+                                BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
+                            _bridgeTargetConvert[targetId] = convertMixer;
+                            sourceForCallback = convertMixer;
+                            Debug.WriteLine($"BASS BRIDGE: target {targetId} using conversion mixer (master 48k/2 → device {tInfo.Frequency}/{tInfo.Channels})");
+                        }
+
+                        try { BassWasapi.Start(); }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"BASS BRIDGE: target {targetId} Start() threw: {ex.Message}");
+                            try { BassWasapi.Free(); } catch { }
+                            if (convertMixer != 0) Bass.StreamFree(convertMixer);
+                            Bass.StreamFree(split);
+                            _bridgeTargetSplits.Remove(targetId);
+                            _bridgeTargetConvert.Remove(targetId);
+                            _bridgeTargetProcs.Remove(targetId);
+                            continue;
+                        }
+                        _bridgeTargetIds.Add(targetId);
+                        Debug.WriteLine($"BASS BRIDGE: target {targetId} started");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"BASS BRIDGE: target {targetId} init failed (both formats): {Bass.LastError}");
+                        Bass.StreamFree(split);
+                        _bridgeTargetSplits.Remove(targetId);
+                        _bridgeTargetProcs.Remove(targetId);
+                    }
+                }
+
+                if (_bridgeTargetIds.Count == 0)
+                {
+                    Debug.WriteLine("BASS BRIDGE: no target devices started");
+                    StopBridge();
+                    return false;
+                }
+
+                // 5. Start source last so the loopback callback always has somewhere to push.
+                try { BassWasapi.CurrentDevice = sourceWasapiIndex; } catch { }
+                try { BassWasapi.Start(); }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: source Start() threw: {ex.Message}");
+                    StopBridge();
+                    return false;
+                }
+
+                Debug.WriteLine($"BASS BRIDGE: started {sourceId} ({captureFreq} Hz / {captureChans}ch) → {_bridgeTargetIds.Count} target(s)");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"BASS BRIDGE: exception in StartBridge: {ex}");
+                StopBridge();
+                return false;
+            }
+        }
+
+        // Audio thread. Must never throw — an unhandled exception here tears down
+        // the WASAPI capture thread and can take the host process with it.
+        private static int BridgeSourceCallback(IntPtr buffer, int length, IntPtr user)
+        {
+            try
+            {
+                int push = _bridgePushStream;
+                if (push == 0) return length;
+
+                var sourceId = _bridgeSourceId;
+                if (sourceId != null)
+                    ApplySpatialIfActive(sourceId, buffer, length);
+
+                Bass.StreamPutData(push, buffer, length);
+            }
+            catch
+            {
+                // swallow — see comment above
+            }
+            return length;
+        }
+
+        public static void StopBridge()
+        {
+            // Stop the source first so no more data flows in.
+            // Wrap every native call: if the bridge never fully started (or this is
+            // a defensive cleanup before a fresh start) the WASAPI session for the
+            // computed index may not exist, and the CurrentDevice setter throws
+            // BassException in that case.
+            if (_bridgeSourceId != null)
+            {
+                int sourceWasapiIndex = GetWasapiDeviceIndex(_bridgeSourceId, true);
+                if (sourceWasapiIndex != -1)
+                {
+                    try { BassWasapi.CurrentDevice = sourceWasapiIndex; } catch { }
+                    try { BassWasapi.Stop(true); } catch { }
+                    try { BassWasapi.Free(); } catch { }
+                }
+                _bridgeSourceId = null;
+            }
+            _bridgeSourceProc = null;
+
+            foreach (var targetId in _bridgeTargetIds)
+            {
+                int targetWasapiIndex = GetWasapiDeviceIndex(targetId, false);
+                if (targetWasapiIndex != -1)
+                {
+                    try { BassWasapi.CurrentDevice = targetWasapiIndex; } catch { }
+                    try { BassWasapi.Stop(true); } catch { }
+                    try { BassWasapi.Free(); } catch { }
+                }
+            }
+            _bridgeTargetIds.Clear();
+            _bridgeTargetProcs.Clear();
+
+            // Free per-target conversion mixers, then splits, then master mixer
+            // (which auto-frees its FX), then push stream.
+            foreach (var convert in _bridgeTargetConvert.Values)
+            {
+                try { Bass.StreamFree(convert); } catch { }
+            }
+            _bridgeTargetConvert.Clear();
+
+            foreach (var split in _bridgeTargetSplits.Values)
+            {
+                try { Bass.StreamFree(split); } catch { }
+            }
+            _bridgeTargetSplits.Clear();
+            _bridgeDelayHandles.Clear();
+
+            if (_bridgeMasterMixer != 0)
+            {
+                try { Bass.StreamFree(_bridgeMasterMixer); } catch { }
+                _bridgeMasterMixer = 0;
+            }
+
+            if (_bridgePushStream != 0)
+            {
+                try { Bass.StreamFree(_bridgePushStream); } catch { }
+                _bridgePushStream = 0;
+            }
+
+            _deviceEqHandles.Remove("BRIDGE_MASTER");
+        }
+
+        public static void UpdateBridgeEqualizer(float[] gains)
+        {
+            if (_bridgeMasterMixer != 0 && _deviceEqHandles.TryGetValue("BRIDGE_MASTER", out var handles))
+            {
+                for (int i = 0; i < Math.Min(handles.Length, gains.Length); i++)
+                {
+                    var eq = new PeakEQParameters();
+                    Bass.FXGetParameters(handles[i], eq);
+                    eq.fGain = gains[i];
+                    Bass.FXSetParameters(handles[i], eq);
+                }
+            }
+        }
+
+        public static void UpdateBridgeTargetLatency(string targetId, int offsetMs)
+        {
+            if (!_bridgeTargetSplits.TryGetValue(targetId, out int split)) return;
+
+            if (_bridgeDelayHandles.TryGetValue(targetId, out int oldFx))
+            {
+                Bass.ChannelRemoveFX(split, oldFx);
+                _bridgeDelayHandles.Remove(targetId);
+            }
+
+            if (offsetMs > 0)
+            {
+                int fx = Bass.ChannelSetFX(split, EffectType.Echo, 1);
+                var echo = new EchoParameters
+                {
+                    fDryMix = 0,
+                    fWetMix = 1,
+                    fFeedback = 0,
+                    fDelay = offsetMs / 1000f,
+                    bStereo = 1
+                };
+                Bass.FXSetParameters(fx, echo);
+                _bridgeDelayHandles[targetId] = fx;
+            }
+        }
 
         /// <summary>
         /// Selects a spatial preset for the given device. <see cref="SpatialPreset.Off"/>
@@ -218,10 +605,15 @@ namespace KhurramAudioRoute.Core
             try
             {
                 int deviceIndex = GetDeviceIndex(deviceId);
-                if (deviceIndex == -1) return;
+                int wasapiIndex = GetWasapiDeviceIndex(deviceId, true); // Loopback capture for EQ
+                if (deviceIndex == -1 || wasapiIndex == -1) return;
 
                 if (!InitializeDevice(deviceIndex)) return;
                 Bass.CurrentDevice = deviceIndex;
+
+                // If this device is the source of a bridge, we don't do "Self-EQ" here.
+                // The bridge logic handles EQ on its master mixer.
+                if (deviceId == _bridgeSourceId) return;
 
                 // Ensure we have a Mixer stream for this device
                 if (!_deviceStreams.TryGetValue(deviceId, out int mixerStream))
@@ -255,12 +647,12 @@ namespace KhurramAudioRoute.Core
 
                     // IMPORTANT: To affect "single device" Windows sound, we must capture it.
                     // This creates a loopback stream (like a mirror to itself) so we can process it.
-                    // 8 = Loopback, 1 = Shared
                     if (_bassWasapiAvailable && !_wasapiInitFailedDevices.Contains(deviceId))
                     {
                         try
                         {
-                            bool wasapiOk = BassWasapi.Init(deviceIndex, 0, 0, (WasapiInitFlags)9, 0.1f, 0.05f,
+                            BassWasapi.CurrentDevice = wasapiIndex;
+                            bool wasapiOk = BassWasapi.Init(wasapiIndex, 0, 0, WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer, 0.1f, 0.05f,
                                 (buffer, length, user) =>
                                 {
                                     ApplySpatialIfActive(deviceId, buffer, length);
@@ -270,8 +662,9 @@ namespace KhurramAudioRoute.Core
 
                             if (wasapiOk)
                             {
+                                BassWasapi.CurrentDevice = wasapiIndex;
                                 BassWasapi.Start();
-                                _loopbackHandles[deviceId] = deviceIndex;
+                                _loopbackHandles[deviceId] = wasapiIndex;
                                 var info = BassWasapi.Info;
                                 _captureFormats[deviceId] = (info.Frequency, info.Channels);
                             }
@@ -279,7 +672,7 @@ namespace KhurramAudioRoute.Core
                             {
                                 // Cache the failure so we don't keep poking this device every meter tick.
                                 _wasapiInitFailedDevices.Add(deviceId);
-                                Debug.WriteLine($"BASS WASAPI: Loopback init failed for {deviceId} (will not retry).");
+                                Debug.WriteLine($"BASS WASAPI: Loopback init failed for {deviceId} (WASAPI index {wasapiIndex}). Error: {Bass.LastError}");
                             }
                         }
                         catch (DllNotFoundException)
@@ -390,7 +783,20 @@ namespace KhurramAudioRoute.Core
                     return i;
                 }
             }
-            return -1; // Default device is usually 1 in BASS, -1 means not found
+            return -1;
+        }
+
+        public static int GetWasapiDeviceIndex(string deviceId, bool loopback)
+        {
+            for (int i = 0; BassWasapi.GetDeviceInfo(i, out var info); i++)
+            {
+                // ManagedBass WasapiDeviceInfo.ID is the MMDevice ID
+                if (info.ID == deviceId && info.IsLoopback == loopback)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

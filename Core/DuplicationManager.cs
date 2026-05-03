@@ -2,6 +2,7 @@ using NAudio.CoreAudioApi;
 using NAudio.Dsp;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using KhurramAudioRoute.Core.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +18,7 @@ namespace KhurramAudioRoute.Core
         public MMDevice Device { get; }
         public IWavePlayer Player { get; }
         public BufferedWaveProvider Buffer { get; }
+        public SpatialSampleProvider Spatial { get; }
         public EqualizerSampleProvider Equalizer { get; }
         public DelaySampleProvider Delay { get; }
 
@@ -25,6 +27,7 @@ namespace KhurramAudioRoute.Core
             MMDevice device,
             IWavePlayer player,
             BufferedWaveProvider buffer,
+            SpatialSampleProvider spatial,
             EqualizerSampleProvider equalizer,
             DelaySampleProvider delay)
         {
@@ -32,6 +35,7 @@ namespace KhurramAudioRoute.Core
             Device = device;
             Player = player;
             Buffer = buffer;
+            Spatial = spatial;
             Equalizer = equalizer;
             Delay = delay;
         }
@@ -40,6 +44,7 @@ namespace KhurramAudioRoute.Core
         {
             try { Player.Stop(); } catch { }
             try { Player.Dispose(); } catch { }
+            try { Spatial.Dispose(); } catch { }
             try { Device.Dispose(); } catch { }
         }
     }
@@ -197,6 +202,139 @@ namespace KhurramAudioRoute.Core
         }
     }
 
+    public sealed class SpatialSampleProvider : ISampleProvider, IDisposable
+    {
+        private readonly object _sync = new();
+        private readonly ISampleProvider _source;
+        private SpatialPreset _preset = SpatialPreset.Off;
+        private SpatialPipeline? _pipeline;
+        private float[]? _scratch;
+
+        public SpatialSampleProvider(ISampleProvider source, SpatialPreset preset)
+        {
+            _source = source;
+            WaveFormat = source.WaveFormat;
+            UpdatePreset(preset);
+        }
+
+        public WaveFormat WaveFormat { get; }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            int samplesRead = _source.Read(buffer, offset, count);
+            if (samplesRead <= 0)
+                return samplesRead;
+
+            lock (_sync)
+            {
+                if (_pipeline == null || _preset == SpatialPreset.Off)
+                    return samplesRead;
+
+                int channels = Math.Max(1, WaveFormat.Channels);
+                int processSamples = samplesRead - (samplesRead % channels);
+                if (processSamples <= 0)
+                    return samplesRead;
+
+                if (_scratch == null || _scratch.Length != processSamples)
+                    _scratch = new float[processSamples];
+
+                Array.Copy(buffer, offset, _scratch, 0, processSamples);
+                bool inputActive = HasAudibleSignal(_scratch, processSamples);
+
+                try
+                {
+                    var input = new SpatialBuffer(_scratch, channels, WaveFormat.SampleRate, LayoutFor(channels));
+                    var output = _pipeline.Process(input);
+
+                    if (output.ChannelCount == channels
+                        && output.Samples.Length == processSamples
+                        && IsUsableOutput(inputActive, output.Samples, processSamples))
+                    {
+                        Array.Copy(output.Samples, 0, buffer, offset, processSamples);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Duplication spatial pipeline error: {ex.Message}");
+                }
+            }
+
+            return samplesRead;
+        }
+
+        public void UpdatePreset(SpatialPreset preset)
+        {
+            lock (_sync)
+            {
+                if (_preset == preset)
+                    return;
+
+                var old = _pipeline;
+                _preset = preset;
+                _pipeline = preset == SpatialPreset.Off
+                    ? null
+                    : SpatialPipelineFactory.Create(preset);
+                _scratch = null;
+                DisposePipeline(old);
+            }
+        }
+
+        public void Dispose()
+        {
+            lock (_sync)
+            {
+                DisposePipeline(_pipeline);
+                _pipeline = null;
+                _scratch = null;
+                _preset = SpatialPreset.Off;
+            }
+        }
+
+        private static bool HasAudibleSignal(float[] samples, int count)
+        {
+            for (int i = 0; i < count; i++)
+                if (Math.Abs(samples[i]) > 1e-5f)
+                    return true;
+
+            return false;
+        }
+
+        private static bool IsUsableOutput(bool inputActive, float[] output, int count)
+        {
+            bool outputActive = false;
+
+            for (int i = 0; i < count; i++)
+            {
+                float value = output[i];
+                if (float.IsNaN(value) || float.IsInfinity(value))
+                    return false;
+
+                if (Math.Abs(value) > 1e-6f)
+                    outputActive = true;
+            }
+
+            return !inputActive || outputActive;
+        }
+
+        private static ChannelLayout LayoutFor(int channels) => channels switch
+        {
+            1 => ChannelLayout.Mono,
+            2 => ChannelLayout.Stereo,
+            4 => ChannelLayout.Quad,
+            6 => ChannelLayout.Surround_5_1,
+            8 => ChannelLayout.Surround_7_1,
+            _ => ChannelLayout.Stereo,
+        };
+
+        private static void DisposePipeline(SpatialPipeline? pipeline)
+        {
+            if (pipeline == null) return;
+            foreach (var stage in pipeline.Stages)
+                if (stage is IDisposable disposable)
+                    disposable.Dispose();
+        }
+    }
+
     public class DuplicationSession : IDisposable
     {
         private const int DeviceSettleDelayMs = 350;
@@ -305,7 +443,7 @@ namespace KhurramAudioRoute.Core
                 target.Buffer.AddSamples(e.Buffer, 0, e.BytesRecorded);
         }
 
-        private DuplicationTarget? CreateTarget(string deviceId, float[] gains)
+        private DuplicationTarget? CreateTarget(string deviceId, float[] gains, SpatialPreset spatialPreset)
         {
             if (_capture == null)
                 return null;
@@ -341,7 +479,8 @@ namespace KhurramAudioRoute.Core
                     if (_capture.WaveFormat.SampleRate != player.OutputWaveFormat.SampleRate)
                         provider = new WdlResamplingSampleProvider(provider, player.OutputWaveFormat.SampleRate);
 
-                    var equalizer = new EqualizerSampleProvider(provider, gains);
+                    var spatial = new SpatialSampleProvider(provider, spatialPreset);
+                    var equalizer = new EqualizerSampleProvider(spatial, gains);
                     var delay = new DelaySampleProvider(equalizer, MaxDelayMs);
                     int targetMs = _targetLatencies.TryGetValue(deviceId, out var ms) ? ms : 0;
                     delay.SetDelayMs(EffectiveDelayMs(targetMs));
@@ -352,7 +491,7 @@ namespace KhurramAudioRoute.Core
 
                     Debug.WriteLine($"Duplication: player ready for device {deviceId} (attempt {attempt}, delay={delay.CurrentDelayMs}ms)");
                     success = true;
-                    return new DuplicationTarget(deviceId, device, player, buffer, equalizer, delay);
+                    return new DuplicationTarget(deviceId, device, player, buffer, spatial, equalizer, delay);
                 }
                 catch (COMException ex) when (IsTransientWasapi(ex))
                 {
@@ -451,7 +590,7 @@ namespace KhurramAudioRoute.Core
             _sourceDevice = null;
         }
 
-        public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains)
+        public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains, SpatialPreset spatialPreset)
         {
             LastError = null;
 
@@ -473,6 +612,12 @@ namespace KhurramAudioRoute.Core
             {
                 foreach (var removedId in _targets.Keys.Except(desiredTargets).ToList())
                     RemoveTargetInternal(removedId);
+
+                foreach (var target in _targets.Values)
+                {
+                    target.Spatial.UpdatePreset(spatialPreset);
+                    target.Equalizer.UpdateGains(equalizerGains);
+                }
             }
 
             foreach (var targetId in desiredTargets)
@@ -483,7 +628,7 @@ namespace KhurramAudioRoute.Core
                         continue;
                 }
 
-                var target = CreateTarget(targetId, equalizerGains);
+                var target = CreateTarget(targetId, equalizerGains, spatialPreset);
                 if (target == null)
                     continue;
 
@@ -510,6 +655,15 @@ namespace KhurramAudioRoute.Core
             {
                 foreach (var target in _targets.Values)
                     target.Equalizer.UpdateGains(equalizerGains);
+            }
+        }
+
+        public void UpdateSpatial(SpatialPreset spatialPreset)
+        {
+            lock (_sync)
+            {
+                foreach (var target in _targets.Values)
+                    target.Spatial.UpdatePreset(spatialPreset);
             }
         }
 
@@ -577,23 +731,41 @@ namespace KhurramAudioRoute.Core
         // Survives session disposal so the UI can still show why StartDuplication failed.
         private static readonly Dictionary<string, string?> _lastErrors = new();
 
-        public static bool StartDuplication(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[]? equalizerGains = null)
+        public static bool StartDuplication(
+            string sourceDeviceId,
+            IEnumerable<string> targetDeviceIds,
+            float[]? equalizerGains = null,
+            SpatialPreset spatialPreset = SpatialPreset.Off)
         {
-            if (!_sessions.TryGetValue(sourceDeviceId, out var session))
+            var targets = targetDeviceIds is List<string> l ? l : targetDeviceIds.ToList();
+            CrashLogger.Log($"DUPLICATION: StartDuplication source={sourceDeviceId} targets={targets.Count}");
+            try
             {
-                session = new DuplicationSession(sourceDeviceId);
-                _sessions[sourceDeviceId] = session;
-            }
+                if (!_sessions.TryGetValue(sourceDeviceId, out var session))
+                {
+                    session = new DuplicationSession(sourceDeviceId);
+                    _sessions[sourceDeviceId] = session;
+                }
 
-            bool ok = session.StartOrUpdate(sourceDeviceId, targetDeviceIds, equalizerGains ?? new float[10]);
-            _lastErrors[sourceDeviceId] = session.LastError;
-            if (!ok)
+                bool ok = session.StartOrUpdate(sourceDeviceId, targets, equalizerGains ?? new float[10], spatialPreset);
+                _lastErrors[sourceDeviceId] = session.LastError;
+                if (!ok)
+                {
+                    CrashLogger.Log($"DUPLICATION: StartOrUpdate returned false. LastError={session.LastError}");
+                    session.Stop();
+                    _sessions.Remove(sourceDeviceId);
+                }
+                else
+                {
+                    CrashLogger.Log("DUPLICATION: started");
+                }
+                return ok;
+            }
+            catch (Exception ex)
             {
-                session.Stop();
-                _sessions.Remove(sourceDeviceId);
+                CrashLogger.LogException("DUPLICATION: StartDuplication threw", ex);
+                throw;
             }
-
-            return ok;
         }
 
         public static string? GetLastError(string? sourceDeviceId)
@@ -629,6 +801,15 @@ namespace KhurramAudioRoute.Core
 
             if (_sessions.TryGetValue(sourceDeviceId, out var session))
                 session.UpdateEqualizer(equalizerGains);
+        }
+
+        public static void UpdateSpatial(string? sourceDeviceId, SpatialPreset spatialPreset)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDeviceId))
+                return;
+
+            if (_sessions.TryGetValue(sourceDeviceId, out var session))
+                session.UpdateSpatial(spatialPreset);
         }
 
         public static void SetTargetLatency(string? sourceDeviceId, string? targetDeviceId, int latencyMs)

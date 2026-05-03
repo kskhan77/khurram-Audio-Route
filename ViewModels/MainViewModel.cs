@@ -31,6 +31,12 @@ namespace KhurramAudioRoute.ViewModels
         private ObservableCollection<AudioDevice> devices = new();
 
         [ObservableProperty]
+        private ObservableCollection<AudioDevice> virtualDevices = new();
+
+        [ObservableProperty]
+        private ObservableCollection<AudioDevice> physicalDevices = new();
+
+        [ObservableProperty]
         private ObservableCollection<AudioDevice> microphones = new();
 
         [ObservableProperty]
@@ -118,12 +124,16 @@ namespace KhurramAudioRoute.ViewModels
             DeviceManager.UpdateDeviceLevels(Devices);
             DeviceManager.UpdateDeviceLevels(Microphones);
 
-            // Apply BASS Equalizer to all output devices in real-time
+            // Keep live mirror pipelines in sync with the UI. Non-mirrored devices
+            // still use the existing BASS path for the standalone EQ controls.
             foreach (var device in Devices)
             {
                 if (!string.IsNullOrWhiteSpace(device.Id))
                 {
-                    BassEngine.UpdateEqualizer(device.Id, device.GetEqualizerGains());
+                    if (device.IsDuplicating)
+                        DuplicationManager.UpdateEqualizer(device.Id, device.GetEqualizerGains());
+                    else
+                        BassEngine.UpdateEqualizer(device.Id, device.GetEqualizerGains());
                 }
             }
         }
@@ -195,11 +205,22 @@ namespace KhurramAudioRoute.ViewModels
                 var availableDevices = SonicFlowVirtualAudio.SortVirtualFirst(DeviceManager.GetRenderDevices()).ToList();
                 var availableMicrophones = DeviceManager.GetCaptureDevices();
                 ConfigureDeviceDuplicateTargets(availableDevices, previousDuplicateSelections, previousEqualizerSettings, previousAdvancedExpanded, previousLatencyOffsets, previousSourceLatencies);
+                
                 Devices = new ObservableCollection<AudioDevice>(availableDevices);
+                
+                var vDevices = availableDevices.Where(d => d.IsSonicFlowVirtual).ToList();
+                for (int i = 0; i < vDevices.Count; i++)
+                {
+                    vDevices[i].ProfileLabel = $"PROFILE {i + 1}";
+                }
+                
+                VirtualDevices = new ObservableCollection<AudioDevice>(vDevices);
+                PhysicalDevices = new ObservableCollection<AudioDevice>(availableDevices.Where(d => !d.IsSonicFlowVirtual));
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
+                
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
                 SonicFlowVirtualDevice = SonicFlowVirtualAudio.FindVirtualRenderDevice(availableDevices);
-                IsSonicFlowVirtualDeviceInstalled = SonicFlowVirtualDevice != null;
+                IsSonicFlowVirtualDeviceInstalled = VirtualDevices.Any();
                 SonicFlowVirtualDeviceName = SonicFlowVirtualDevice?.Name ?? SonicFlowVirtualAudio.ProductRenderName;
                 SonicFlowVirtualStatus = SonicFlowVirtualAudio.BuildStatus(SonicFlowVirtualDevice);
 
@@ -275,7 +296,13 @@ namespace KhurramAudioRoute.ViewModels
                 // handler is wired so the engine + save path runs naturally; the
                 // re-save is value-equal so it's a no-op write at worst.
                 if (!string.IsNullOrWhiteSpace(source.Id))
+                {
                     source.SpatialPreset = UserSettings.GetSpatialPreset(source.Id);
+                    
+                    var savedGains = UserSettings.GetEqualizerGains(source.Id);
+                    if (savedGains != null && savedGains.Length == 10)
+                        source.SetEqualizerGains(savedGains);
+                }
 
                 source.IsDuplicating = DuplicationManager.IsDuplicating(source.Id);
                 source.IsAdvancedExpanded = wasExpanded;
@@ -312,12 +339,18 @@ namespace KhurramAudioRoute.ViewModels
             {
                 var gains = sourceDevice.GetEqualizerGains();
 
-                // Update both paths immediately so the slider reacts instantly instead
-                // of waiting for the 220 ms RefreshMeters tick to push gains into BASS.
+                // Update the active processing path immediately so the slider reacts
+                // without waiting for the 220 ms RefreshMeters tick.
                 if (!string.IsNullOrWhiteSpace(sourceDevice.Id))
-                    BassEngine.UpdateEqualizer(sourceDevice.Id, gains);
+                {
+                    if (sourceDevice.IsDuplicating)
+                        DuplicationManager.UpdateEqualizer(sourceDevice.Id, gains);
+                    else
+                        BassEngine.UpdateEqualizer(sourceDevice.Id, gains);
+                        
+                    UserSettings.SetEqualizerGains(sourceDevice.Id, gains);
+                }
 
-                DuplicationManager.UpdateEqualizer(sourceDevice.Id, gains);
                 return;
             }
 
@@ -331,7 +364,11 @@ namespace KhurramAudioRoute.ViewModels
             {
                 if (!string.IsNullOrWhiteSpace(sourceDevice.Id))
                 {
-                    BassEngine.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
+                    if (sourceDevice.IsDuplicating)
+                        DuplicationManager.UpdateSpatial(sourceDevice.Id, sourceDevice.SpatialPreset);
+                    else
+                        BassEngine.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
+
                     UserSettings.SetSpatialPreset(sourceDevice.Id, sourceDevice.SpatialPreset);
                 }
             }
@@ -353,7 +390,8 @@ namespace KhurramAudioRoute.ViewModels
                 // Push live - no need to restart the stream. Only meaningful while
                 // duplication is running, but storing the value either way keeps the
                 // session in sync if the user later flips the target on.
-                DuplicationManager.SetTargetLatency(sourceDevice.Id, target.Device.Id, target.LatencyOffsetMs);
+                if (sourceDevice.IsDuplicating)
+                    DuplicationManager.SetTargetLatency(sourceDevice.Id, target.Device.Id, target.LatencyOffsetMs);
             }
         }
 
@@ -398,6 +436,14 @@ namespace KhurramAudioRoute.ViewModels
         [RelayCommand]
         public void ShowTools() => CurrentSection = DashboardSection.Tools;
 
+        public void UpdateTargetLatency(AudioDevice sourceDevice, string targetId, int offsetMs)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDevice.Id) || string.IsNullOrWhiteSpace(targetId)) return;
+
+            if (sourceDevice.IsDuplicating)
+                DuplicationManager.SetTargetLatency(sourceDevice.Id, targetId, offsetMs);
+        }
+
         [RelayCommand]
         public async Task ToggleDeviceDuplicate(AudioDevice? sourceDevice)
         {
@@ -412,7 +458,10 @@ namespace KhurramAudioRoute.ViewModels
 
             if (sourceDevice.IsDuplicating)
             {
-                await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                await Task.Run(() => {
+                    DuplicationManager.StopDuplication(sourceDevice.Id);
+                    BassEngine.StopBridge();
+                });
                 sourceDevice.IsDuplicating = false;
                 UpdateDuplicateStatus(sourceDevice);
                 return;
@@ -447,7 +496,10 @@ namespace KhurramAudioRoute.ViewModels
                 {
                     if (sourceDevice.IsDuplicating)
                     {
-                        await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                        await Task.Run(() => {
+                            DuplicationManager.StopDuplication(sourceDevice.Id);
+                            BassEngine.StopBridge();
+                        });
                         sourceDevice.IsDuplicating = false;
                     }
 
@@ -467,9 +519,18 @@ namespace KhurramAudioRoute.ViewModels
                     .ToDictionary(d => d.Device.Id!, d => d.LatencyOffsetMs);
 
                 int sourceLatency = sourceDevice.SourceLatencyMs;
+                var gains = sourceDevice.GetEqualizerGains();
+
                 bool started = await Task.Run(() =>
                 {
-                    bool ok = DuplicationManager.StartDuplication(sourceDevice.Id, targetIds, sourceDevice.GetEqualizerGains());
+                    BassEngine.StopBridge();
+
+                    bool ok = DuplicationManager.StartDuplication(
+                        sourceDevice.Id!,
+                        targetIds,
+                        gains,
+                        sourceDevice.SpatialPreset);
+
                     if (ok)
                     {
                         // Source latency must be applied first so per-target SetTargetLatency
@@ -478,6 +539,7 @@ namespace KhurramAudioRoute.ViewModels
                         foreach (var (targetId, ms) in latencyOffsets)
                             DuplicationManager.SetTargetLatency(sourceDevice.Id, targetId, ms);
                     }
+
                     return ok;
                 });
 
