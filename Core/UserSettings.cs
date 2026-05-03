@@ -74,6 +74,12 @@ namespace KhurramAudioRoute.Core
             /// When true, suppress the modal shown on startup when VB-CABLE is missing.
             /// </summary>
             public bool SuppressVbCableStartupReminder { get; set; }
+
+            /// <summary>
+            /// When true, multichannel outputs at 48 kHz (6/8 ch) use matrix stereo→surround
+            /// expansion instead of BASS generic mixer upmix. Experimental — see PLAN / BassEngine.
+            /// </summary>
+            public bool MatrixSurroundBridgeUpmix { get; set; }
         }
 
         private static readonly object _gate = new();
@@ -358,6 +364,19 @@ namespace KhurramAudioRoute.Core
                 var s = LoadCachedLocked();
                 if (s.SuppressVbCableStartupReminder == value) return;
                 s.SuppressVbCableStartupReminder = value;
+                SaveLocked(s);
+            }
+        }
+
+        public static bool GetMatrixSurroundBridgeUpmix() => LoadCached().MatrixSurroundBridgeUpmix;
+
+        public static void SetMatrixSurroundBridgeUpmix(bool value)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (s.MatrixSurroundBridgeUpmix == value) return;
+                s.MatrixSurroundBridgeUpmix = value;
                 SaveLocked(s);
             }
         }

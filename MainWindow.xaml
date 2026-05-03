@@ -2402,6 +2402,18 @@
                                            Command="{Binding ResetLatencyClassDefaultsToBuiltInCommand}"/>
                             </StackPanel>
                         </Border>
+
+                        <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="Multichannel bridge (experimental)" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                <CheckBox Margin="0,10,0,0"
+                                          Content="Matrix surround upmix on 5.1 / 7.1 outputs @ 48 kHz"
+                                          IsChecked="{Binding MatrixSurroundBridgeUpmix, Mode=TwoWay}"
+                                          Foreground="#DDE3EA" FontSize="12"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,8,0,0"
+                                           Text="When an ACTIVE sink negotiates six or eight channels at 48 kHz, feed Hafler-style stereo expansion instead of the generic BASS mixer path. Turn off if speaker mapping sounds wrong on your AVR or soundbar. Restart the bus (power cycle) after toggling if audio already playing."/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

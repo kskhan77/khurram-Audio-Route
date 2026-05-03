@@ -45,6 +45,7 @@ namespace KhurramAudioRoute.ViewModels
                 MasterSpatialPreset = UserSettings.GetMasterSpatialPreset();
                 MasterStereoWidth = UserSettings.GetMasterStereoWidth();
                 BassEngine.SetMasterStereoWidth(MasterStereoWidth);
+                MatrixSurroundBridgeUpmix = UserSettings.GetMatrixSurroundBridgeUpmix();
             }
             catch (Exception ex)
             {
@@ -203,6 +204,19 @@ namespace KhurramAudioRoute.ViewModels
         {
             UserSettings.SetMasterStereoWidth(value);
             BassEngine.SetMasterStereoWidth(value);
+        }
+
+        /// <summary>
+        /// Experimental: matrix stereo→5.1/7.1 on bridge targets that negotiate 48 kHz / 6 or 8 ch.
+        /// See <see cref="BassEngine"/> matrix path and <c>SurroundUpmixer</c>.
+        /// </summary>
+        [ObservableProperty]
+        private bool matrixSurroundBridgeUpmix;
+
+        partial void OnMatrixSurroundBridgeUpmixChanged(bool value)
+        {
+            UserSettings.SetMatrixSurroundBridgeUpmix(value);
+            RebuildMasterBridge();
         }
 
         /// <summary>Convenience for two-way binding to the Spatial card master switch.</summary>

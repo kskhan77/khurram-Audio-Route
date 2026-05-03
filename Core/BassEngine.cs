@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Buffers;
 using System.Runtime.InteropServices;
 using KhurramAudioRoute.Core.Spatial;
 using ManagedBass;
@@ -299,11 +300,72 @@ namespace KhurramAudioRoute.Core
                         var tInfo = BassWasapi.Info;
                         Debug.WriteLine($"BASS BRIDGE: target {targetId} initialised at {tInfo.Frequency}Hz/{tInfo.Channels}ch");
 
+                        bool matrixHandled = false;
+                        if (UserSettings.GetMatrixSurroundBridgeUpmix()
+                            && tInfo.Frequency == 48000
+                            && (tInfo.Channels == 6 || tInfo.Channels == 8))
+                        {
+                            try { BassWasapi.Stop(true); BassWasapi.Free(); } catch { }
+
+                            int outCh = tInfo.Channels;
+                            WasapiProcedure matrixProc = CreateMatrixBridgePullProc(split, outCh);
+                            _bridgeTargetProcs[targetId] = matrixProc;
+
+                            bool mOk = BassWasapi.Init(
+                                targetWasapiIndex, 48000, outCh,
+                                WasapiInitFlags.Buffer,
+                                0.1f, 0.05f,
+                                matrixProc);
+
+                            if (mOk)
+                            {
+                                try { BassWasapi.CurrentDevice = targetWasapiIndex; } catch { }
+                                Debug.WriteLine($"BASS BRIDGE: target {targetId} matrix Hafler upmix → {outCh}ch @48kHz");
+                                matrixHandled = true;
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"BASS BRIDGE: target {targetId} matrix init failed ({Bass.LastError}), reverting to stereo path");
+                                WasapiProcedure stereoProc = (buf, len, user) =>
+                                {
+                                    int got = Bass.ChannelGetData(sourceForCallback, buf, len);
+                                    return got < 0 ? 0 : got;
+                                };
+                                _bridgeTargetProcs[targetId] = stereoProc;
+                                targetOk = BassWasapi.Init(
+                                    targetWasapiIndex, 48000, 2,
+                                    WasapiInitFlags.Buffer,
+                                    0.1f, 0.05f,
+                                    stereoProc);
+                                if (!targetOk)
+                                {
+                                    targetOk = BassWasapi.Init(
+                                        targetWasapiIndex, 0, 0,
+                                        WasapiInitFlags.AutoFormat | WasapiInitFlags.Buffer,
+                                        0.1f, 0.05f,
+                                        stereoProc);
+                                }
+
+                                if (!targetOk)
+                                {
+                                    Debug.WriteLine($"BASS BRIDGE: target {targetId} matrix fallback init failed");
+                                    try { Bass.StreamFree(split); } catch { }
+                                    _bridgeTargetSplits.Remove(targetId);
+                                    _bridgeTargetProcs.Remove(targetId);
+                                    continue;
+                                }
+
+                                try { BassWasapi.CurrentDevice = targetWasapiIndex; } catch { }
+                                tInfo = BassWasapi.Info;
+                                Debug.WriteLine($"BASS BRIDGE: target {targetId} post-matrix fallback at {tInfo.Frequency}Hz/{tInfo.Channels}ch");
+                            }
+                        }
+
                         // If the device negotiated a different format than the master
                         // mixer's 48k/2, the split's bytes won't match what WASAPI
                         // expects. Insert a conversion mixer that auto-SRCs/upmixes
                         // from the split into the device's format.
-                        if (tInfo.Frequency != 48000 || tInfo.Channels != 2)
+                        if (!matrixHandled && (tInfo.Frequency != 48000 || tInfo.Channels != 2))
                         {
                             convertMixer = BassMix.CreateMixerStream(tInfo.Frequency, tInfo.Channels,
                                 BassFlags.Decode | BassFlags.Float | BassFlags.MixerNonStop);
@@ -516,6 +578,9 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        /// <summary>Last-applied master stereo-width — applied to fresh pipelines on creation.</summary>
+        private static float _masterStereoWidth = 1.0f;
+
         /// <summary>
         /// Selects a spatial preset for the given device. <see cref="SpatialPreset.Off"/>
         /// removes any active pipeline. Takes effect on the next WASAPI callback.
@@ -529,7 +594,7 @@ namespace KhurramAudioRoute.Core
             }
             else
             {
-                var fresh = SpatialPipelineFactory.Create(preset);
+                var fresh = SpatialPipelineFactory.Create(preset, _masterStereoWidth);
                 if (_spatialPipelines.TryGetValue(deviceId, out var old))
                 {
                     _spatialPipelines[deviceId] = fresh;
@@ -541,6 +606,25 @@ namespace KhurramAudioRoute.Core
                 }
             }
             _spatialScratch.TryRemove(deviceId, out _);
+        }
+
+        /// <summary>
+        /// Live-tune the Master Stereo Width stage on every active spatial
+        /// pipeline. New pipelines created after this call inherit the value.
+        /// No effect when a pipeline's preset is <see cref="SpatialPreset.Off"/>
+        /// (no pipeline exists for that device).
+        /// </summary>
+        public static void SetMasterStereoWidth(float width)
+        {
+            _masterStereoWidth = Math.Clamp(width, StereoWidthStage.MinWidth, StereoWidthStage.MaxWidth);
+            foreach (var pipeline in _spatialPipelines.Values)
+            {
+                foreach (var stage in pipeline.Stages)
+                {
+                    if (stage is StereoWidthStage sw && sw.Name == StereoWidthStage.MasterStageName)
+                        sw.Width = _masterStereoWidth;
+                }
+            }
         }
 
         private static void DisposePipeline(SpatialPipeline pipeline)
@@ -860,6 +944,52 @@ namespace KhurramAudioRoute.Core
                 }
             }
             return -1;
+        }
+
+        /// <summary>Stereo bridge split → multichannel WASAPI pull at 48 kHz (6 or 8 channels).</summary>
+        private static WasapiProcedure CreateMatrixBridgePullProc(int splitHandle, int outChannels)
+        {
+            return (IntPtr buf, int len, IntPtr user) =>
+            {
+                try
+                {
+                    int bytesPerFrame = outChannels * sizeof(float);
+                    if (bytesPerFrame <= 0) return 0;
+                    int framesRequested = len / bytesPerFrame;
+                    if (framesRequested <= 0) return 0;
+
+                    int stereoBytes = framesRequested * 2 * sizeof(float);
+                    var pool = ArrayPool<float>.Shared;
+                    float[] st = pool.Rent(framesRequested * 2);
+                    float[] mc = pool.Rent(framesRequested * outChannels);
+                    try
+                    {
+                        Array.Clear(mc, 0, framesRequested * outChannels);
+                        int got = Bass.ChannelGetData(splitHandle, st, stereoBytes);
+                        if (got < 0) return 0;
+                        int gotFrames = got / (2 * sizeof(float));
+                        if (gotFrames <= 0) return 0;
+
+                        SurroundUpmixer.ExpandFrames(
+                            st.AsSpan(0, gotFrames * 2),
+                            mc.AsSpan(0, gotFrames * outChannels),
+                            gotFrames,
+                            outChannels);
+
+                        Marshal.Copy(mc, 0, buf, framesRequested * outChannels);
+                        return len;
+                    }
+                    finally
+                    {
+                        pool.Return(st);
+                        pool.Return(mc);
+                    }
+                }
+                catch
+                {
+                    return 0;
+                }
+            };
         }
     }
 }

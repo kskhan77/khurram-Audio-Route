@@ -105,7 +105,7 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 
 - **L3 latency** — mic-based auto-sync (chirp + cross-correlate). **Code-complete** on `feature/spatial-audio` (`Core/SyncCalibration/L3/*`, `AutoSyncWindow`, **Auto-sync** button on Outputs); pending hardware QA on real mic + speakers.
 - **L4 latency (predictive defaults)** — **partially shipped:** `Core/Latency/*` name-based Sync seeds + `UserSettings.LatencyClassDefaults` (editable under **Tools** default Sync by class) for new device ids; see [`docs/LATENCY_PLAN.md`](docs/LATENCY_PLAN.md) L4.
-- **Sound upscaling** — **partially shipped:** master stereo-width (`MainViewModel.MasterStereoWidth`, `BassEngine.SetMasterStereoWidth`, `StereoWidthStage` on master path). **Still TODO:** `MatrixUpmixStage` to real multichannel hardware and any remaining width UX.
+- **Sound upscaling** — **partially shipped:** master stereo-width (`StereoWidthStage` on master path). **Experimental:** Tools toggle **Matrix surround upmix** — bridge targets at **48 kHz / 6 or 8 ch** use `SurroundUpmixer` Hafler expansion instead of generic BASS mixer upmix (`BassEngine`). **Still TODO:** optional `MatrixUpmixStage` inside spatial presets + channel-order profiles per vendor.
 - **Applications page** — per-app routing onto the bus + optional EQ overrides (`PLAN.md` scope creep).
 - **Microphones page** — [`docs/MIC_CHAIN_PLAN.md`](docs/MIC_CHAIN_PLAN.md).
 - **Soundboard / utility tools** if still wanted.
