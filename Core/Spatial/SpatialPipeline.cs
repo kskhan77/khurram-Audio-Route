@@ -97,6 +97,8 @@ namespace KhurramAudioRoute.Core.Spatial
         HeadphoneConcertHall,
         /// <summary>Stereo -> 5.1 upmix, no HRTF — for actual 5.1 speaker setups.</summary>
         Speakers_5_1,
+        /// <summary>Stereo -> 7.1 upmix, no HRTF — for actual 7.1 speaker setups.</summary>
+        Speakers_7_1,
         /// <summary>Minimal spatial, lowest latency. For games.</summary>
         GameMode
     }
@@ -153,6 +155,14 @@ namespace KhurramAudioRoute.Core.Spatial
                     new StereoWidthStage(width: 1.18f),
                     new VirtualSurroundStage(delayMs: 12f, sideLevel: 0.20f, centerLevel: 0.12f),
                     new MatrixUpmixStage(ChannelLayout.Surround_5_1),
+                    new SoftLimiterStage()
+                }),
+                SpatialPreset.Speakers_7_1         => new SpatialPipeline(new ISpatialStage[]
+                {
+                    masterWidth(),
+                    new StereoWidthStage(width: 1.18f),
+                    new VirtualSurroundStage(delayMs: 12f, sideLevel: 0.22f, centerLevel: 0.10f),
+                    new MatrixUpmixStage(ChannelLayout.Surround_7_1),
                     new SoftLimiterStage()
                 }),
                 SpatialPreset.GameMode             => new SpatialPipeline(new ISpatialStage[]

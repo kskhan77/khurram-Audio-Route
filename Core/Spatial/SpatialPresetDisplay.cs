@@ -19,6 +19,7 @@ namespace KhurramAudioRoute.Core.Spatial
             SpatialPreset.HeadphoneCinema      => "Headphone Cinema (7.1 + theater)",
             SpatialPreset.HeadphoneConcertHall => "Headphone Concert Hall (5.1 + hall)",
             SpatialPreset.Speakers_5_1         => "5.1 Speakers (upmix)",
+            SpatialPreset.Speakers_7_1         => "7.1 Speakers (upmix)",
             SpatialPreset.GameMode             => "Game Mode (low latency)",
             _ => p.ToString()
         };
@@ -32,6 +33,7 @@ namespace KhurramAudioRoute.Core.Spatial
             SpatialPreset.HeadphoneCinema      => "Cinema 7.1",
             SpatialPreset.HeadphoneConcertHall => "Concert hall",
             SpatialPreset.Speakers_5_1         => "5.1 speakers",
+            SpatialPreset.Speakers_7_1         => "7.1 speakers",
             SpatialPreset.GameMode             => "Game",
             _ => p.ToString()
         };

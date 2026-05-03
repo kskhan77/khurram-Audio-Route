@@ -1283,7 +1283,7 @@
 
                                 <Border Grid.Row="4" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <UniformGrid Columns="3" Rows="2" Margin="-2,-2,-2,-2">
+                                    <UniformGrid Columns="4" Rows="2" Margin="-2,-2,-2,-2">
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="HeadphoneStereoPlus" Content="Stereo +"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
@@ -1304,6 +1304,10 @@
                                                      Tag="Speakers_5_1" Content="5.1 speakers"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="Speakers_7_1" Content="7.1 speakers"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="GameMode" Content="Game"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
@@ -1753,7 +1757,7 @@
                                                                                 </Border.Style>
                                                                                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                                                                               HorizontalContentAlignment="Stretch">
-                                                                                    <UniformGrid Columns="2" Rows="3" Margin="-2,-2,-2,0">
+                                                                                    <UniformGrid Columns="3" Rows="3" Margin="-2,-2,-2,0">
                                                                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                                                                      Tag="HeadphoneStereoPlus" Content="Stereo +" Click="OnSpatialPresetRadioClick"
                                                                                                      GroupName="{Binding SpatialPresetSegmentGroupToken}"
@@ -1779,6 +1783,11 @@
                                                                                                      GroupName="{Binding SpatialPresetSegmentGroupToken}"
                                                                                                      ToolTip="Physical 5.1 loudspeaker layouts with sane upmixing."
                                                                                                      IsChecked="{Binding SpatialPreset, Mode=OneWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
+                                                                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                                                                     Tag="Speakers_7_1" Content="7.1 speakers" Click="OnSpatialPresetRadioClick"
+                                                                                                     GroupName="{Binding SpatialPresetSegmentGroupToken}"
+                                                                                                     ToolTip="Physical 7.1 loudspeaker layouts with matrix upmix (see MatrixUpmixStage ordering)."
+                                                                                                     IsChecked="{Binding SpatialPreset, Mode=OneWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
                                                                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                                                                      Tag="GameMode" Content="Game" Click="OnSpatialPresetRadioClick"
                                                                                                      GroupName="{Binding SpatialPresetSegmentGroupToken}"
