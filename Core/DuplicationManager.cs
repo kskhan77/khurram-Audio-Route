@@ -854,6 +854,25 @@ namespace KhurramAudioRoute.Core
                 session.UpdateSpatial(spatialPreset);
         }
 
+        /// <summary>
+        /// Push EQ to every open duplication session at once (Outputs-page mirrors
+        /// and Applications-page duplication where <c>AudioDevice.IsDuplicating</c>
+        /// may still be false on the VM model row).
+        /// </summary>
+        public static void UpdateEqualizerMirrorSessions(float[] equalizerGains)
+        {
+            if (equalizerGains == null || equalizerGains.Length == 0) return;
+            foreach (var sourceId in _sessions.Keys.ToArray())
+                UpdateEqualizer(sourceId, equalizerGains);
+        }
+
+        /// <summary>Push spatial preset to every open duplication session.</summary>
+        public static void UpdateSpatialMirrorSessions(SpatialPreset spatialPreset)
+        {
+            foreach (var sourceId in _sessions.Keys.ToArray())
+                UpdateSpatial(sourceId, spatialPreset);
+        }
+
         public static void SetTargetLatency(string? sourceDeviceId, string? targetDeviceId, int latencyMs)
         {
             if (string.IsNullOrWhiteSpace(sourceDeviceId) || string.IsNullOrWhiteSpace(targetDeviceId))

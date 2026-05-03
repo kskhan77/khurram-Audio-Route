@@ -119,7 +119,7 @@ namespace KhurramAudioRoute.Core
         //   WASAPI loopback (source) ──► push stream (source format)
         //                                     │
         //                                     ▼
-        //                                master mixer (48k/2 + EQ)
+        //                                master mixer (48k/2 + EQ + soft limiter)
         //                                     │
         //              ┌──────────────────────┼──────────────────────┐
         //              ▼                      ▼                      ▼
@@ -132,7 +132,7 @@ namespace KhurramAudioRoute.Core
         private static string? _bridgeSourceId;
         private static readonly HashSet<string> _bridgeTargetIds = new();
         private static int _bridgePushStream;     // Push stream in source's native format
-        private static int _bridgeMasterMixer;    // 48k/2 mixer; EQ FX live here
+        private static int _bridgeMasterMixer;    // 48k/2 mixer; EQ FX + soft limit live here
         private static readonly Dictionary<string, int> _bridgeTargetSplits = new();
         // Optional per-target conversion mixer used when the device WASAPI session
         // negotiates a format different from 48k/2. The split feeds this mixer,
@@ -141,6 +141,7 @@ namespace KhurramAudioRoute.Core
         private static readonly Dictionary<string, int> _bridgeTargetConvert = new();
         private static readonly Dictionary<string, int> _bridgeDelayHandles = new();
         private static readonly Dictionary<string, WasapiProcedure> _bridgeTargetProcs = new();
+        private static int _bridgeLimiterFx;
         private static WasapiProcedure? _bridgeSourceProc;
 
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
@@ -227,20 +228,11 @@ namespace KhurramAudioRoute.Core
                 BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgePushStream,
                     BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
 
-                float[] centerFreqs = { 31f, 62f, 125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f };
-                int[] handles = new int[centerFreqs.Length];
-                for (int i = 0; i < centerFreqs.Length; i++)
-                {
-                    handles[i] = Bass.ChannelSetFX(_bridgeMasterMixer, EffectType.PeakEQ, 1);
-                    Bass.FXSetParameters(handles[i], new PeakEQParameters
-                    {
-                        lBand = i,
-                        fCenter = centerFreqs[i],
-                        fBandwidth = 2.5f,
-                        fGain = i < gains.Length ? gains[i] : 0f
-                    });
-                }
+                float[] eqGains = gains ?? Array.Empty<float>();
+                int[] handles = MasterEngine.AttachIsoPeakEq(_bridgeMasterMixer, eqGains);
                 _deviceEqHandles["BRIDGE_MASTER"] = handles;
+
+                _bridgeLimiterFx = MasterEngine.AttachBusSoftLimiterFx(_bridgeMasterMixer);
 
                 // 4. Per-target splits + WASAPI playback. Each split has its own read
                 // position into the master mixer so all targets get the same audio.
@@ -455,6 +447,7 @@ namespace KhurramAudioRoute.Core
 
             if (_bridgeMasterMixer != 0)
             {
+                MasterEngine.RemoveFx(_bridgeMasterMixer, ref _bridgeLimiterFx);
                 try { Bass.StreamFree(_bridgeMasterMixer); } catch { }
                 _bridgeMasterMixer = 0;
             }
@@ -481,6 +474,21 @@ namespace KhurramAudioRoute.Core
                 }
             }
         }
+
+        /// <summary>
+        /// True while the BASS bridge is alive (a source is being captured and
+        /// fanned out to one or more targets). Used by the master engine
+        /// orchestrator in <c>MainViewModel</c> to decide between starting the
+        /// bridge fresh and live-updating it.
+        /// </summary>
+        public static bool IsBridgeRunning => _bridgeMasterMixer != 0 && _bridgeSourceId != null;
+
+        /// <summary>
+        /// The endpoint id currently driving the bridge as the capture source,
+        /// or <c>null</c> when no bridge is running. Used so the orchestrator
+        /// can target the same id when changing master spatial.
+        /// </summary>
+        public static string? BridgeSourceId => _bridgeSourceId;
 
         public static void UpdateBridgeTargetLatency(string targetId, int offsetMs)
         {

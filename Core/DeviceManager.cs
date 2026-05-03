@@ -152,6 +152,64 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _canHostMirroring, value);
         }
 
+        /// <summary>
+        /// Whether this real output participates in the master bus fan-out.
+        /// Defaults to <c>true</c> so devices light up automatically when the
+        /// user flips master power on. Toggling this to <c>false</c> removes
+        /// the device from the bridge without disturbing other outputs. Only
+        /// meaningful for physical (non-virtual) playback endpoints; the bus
+        /// device itself ignores it.
+        /// </summary>
+        private bool _isActiveOutput = true;
+        public bool IsActiveOutput
+        {
+            get => _isActiveOutput;
+            set => SetProperty(ref _isActiveOutput, value);
+        }
+
+        /// <summary>
+        /// Coarse class assigned by <see cref="DeviceClassResolver"/> at
+        /// enumeration time. Drives the small chip on each device card and
+        /// the L1 default <see cref="TargetLatencyOffsetMs"/>.
+        /// </summary>
+        private DeviceClass _deviceClass = DeviceClass.Unknown;
+        public DeviceClass DeviceClass
+        {
+            get => _deviceClass;
+            set
+            {
+                if (SetProperty(ref _deviceClass, value))
+                    OnPropertyChanged(nameof(DeviceClassLabel));
+            }
+        }
+
+        public string DeviceClassLabel => DeviceClassInfo.ShortLabel(DeviceClass);
+
+        /// <summary>
+        /// Per-physical-device sync offset used by the master engine bridge.
+        /// Independent of <see cref="DuplicateTargets"/>'s legacy mirror
+        /// offsets — the master bus fans out via
+        /// <c>BassEngine.UpdateBridgeTargetLatency</c> using this value.
+        /// Defaults to <see cref="DeviceClassInfo.DefaultOffsetMs"/> for the
+        /// detected class and is persisted in <c>UserSettings</c>.
+        /// </summary>
+        private int _targetLatencyOffsetMs;
+        public int TargetLatencyOffsetMs
+        {
+            get => _targetLatencyOffsetMs;
+            set => SetProperty(ref _targetLatencyOffsetMs, value);
+        }
+
+        /// <summary>
+        /// L2 wizard fingerprint no longer matches live WASAPI mix (refreshed each <c>RefreshData</c>).
+        /// </summary>
+        private bool _syncCalibrationStale;
+        public bool SyncCalibrationStale
+        {
+            get => _syncCalibrationStale;
+            set => SetProperty(ref _syncCalibrationStale, value);
+        }
+
         private ObservableCollection<DeviceSelection> _duplicateTargets = new();
         public ObservableCollection<DeviceSelection> DuplicateTargets
         {
@@ -310,6 +368,17 @@ namespace KhurramAudioRoute.Core
                             muted = endpoint.AudioEndpointVolume.Mute;
                         } catch { }
 
+                        bool isVirtual = SonicFlowVirtualAudio.IsVirtualRenderEndpoint(endpoint.ID, endpoint.FriendlyName);
+                        var deviceClass = isVirtual ? DeviceClass.Unknown : DeviceClassResolver.Detect(endpoint);
+
+                        // L1 latency: persisted offset wins; otherwise the
+                        // class default is the seed. Virtual bus endpoints
+                        // stay at zero — they're the capture point, not a
+                        // physical sink.
+                        int seedOffset = isVirtual
+                            ? 0
+                            : (UserSettings.GetTargetLatencyOffset(endpoint.ID) ?? DeviceClassInfo.DefaultOffsetMs(deviceClass));
+
                         devices.Add(new AudioDevice
                         {
                             Id = endpoint.ID,
@@ -318,7 +387,9 @@ namespace KhurramAudioRoute.Core
                             PeakValue = peak,
                             Volume = vol,
                             IsMuted = muted,
-                            IsSonicFlowVirtual = SonicFlowVirtualAudio.IsVirtualRenderEndpoint(endpoint.ID, endpoint.FriendlyName)
+                            IsSonicFlowVirtual = isVirtual,
+                            DeviceClass = deviceClass,
+                            TargetLatencyOffsetMs = seedOffset
                         });
                         endpoint.Dispose();
                     }
