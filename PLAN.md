@@ -103,11 +103,11 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 
 ### v2 (after v1 ships)
 
-- **L3 latency** — mic-based auto-sync (chirp + cross-correlate).
-- **Sound upscaling** — `MatrixUpmixStage` + stereo-width master toggle.
+- **L3 latency** — mic-based auto-sync (chirp + cross-correlate). **Code-complete** on `feature/spatial-audio` (`Core/SyncCalibration/L3/*`, `AutoSyncWindow`, **Auto-sync** button on Outputs); pending hardware QA on real mic + speakers.
+- **L4 latency (predictive defaults)** — **partially shipped:** `Core/Latency/*` name-based Sync seeds + `UserSettings.LatencyClassDefaults` now applied for new device ids; see [`docs/LATENCY_PLAN.md`](docs/LATENCY_PLAN.md) L4.
+- **Sound upscaling** — **partially shipped:** master stereo-width (`MainViewModel.MasterStereoWidth`, `BassEngine.SetMasterStereoWidth`, `StereoWidthStage` on master path). **Still TODO:** `MatrixUpmixStage` to real multichannel hardware and any remaining width UX.
 - **Applications page** — per-app routing onto the bus + optional EQ overrides (`PLAN.md` scope creep).
 - **Microphones page** — [`docs/MIC_CHAIN_PLAN.md`](docs/MIC_CHAIN_PLAN.md).
-- **Continuous drift watchdog** after format changes.
 - **Soundboard / utility tools** if still wanted.
 
 ### Deferred (future)

@@ -74,9 +74,40 @@ UI sketch:
 
 - Badge / tooltip when the live fingerprint differs from the last saved calibration (auto re-prompt spec in original outline).
 
-### L3 — Target (the headline feature)
+### L3 — Mic-based auto-sync — **code-complete (pending hardware QA)**
 
-#### Mic-based auto-sync (chirp + cross-correlation)
+**Code:** `Core/SyncCalibration/L3/*`, `AutoSyncWindow.xaml`, `MainViewModel.OpenAutoSyncWizard`.
+
+| Item | Implementation |
+|---|---|
+| Probe | 250 ms log-sweep 200 Hz → 12 kHz, IEEE float, Hann fade in/out (`LogSweepGenerator`). |
+| Capture | `WasapiCapture` from default mic; mono down-mix at native rate (`MicCapture`). |
+| Math | Radix-2 FFT cross-correlation, peak lag + SNR (`CrossCorrelator`). Smoke-tested in `AudioCoreTester` against a synthetic delayed sweep at lag = 137 samples. |
+| Per-target playback | One-shot `WasapiOut` to the DUT (`SweepPlayer`), mirrors `SyncClickPlayer` pattern. |
+| Orchestration | `AutoSyncRunner.RunAsync` walks ACTIVE physical targets; sanity gates on lag ∈ [0, 500] ms and SNR ≥ 9 dB; normalises so earliest = 0. |
+| UI | **Auto-sync** button on Outputs (next to **Sync wizard**), `AutoSyncWindow` modal with Start / Apply / Cancel and per-target Accepted / Rejected rows. |
+| Persist | `UserSettings.SetL3AutoSync(deviceId, offsetMs, snrDb)`; "Auto-synced N days ago" chip on each card via `AudioDevice.AutoSyncCaption` + `L3AutoSyncCaption.Refresh`. |
+
+UI sketch:
+
+```text
+┌──────────────────────────────────────────────┐
+│  Auto-sync (L3)                              │
+│                                              │
+│  [Sony WH-1000XM5]   Accepted  raw 32 ms…    │
+│  [Living-room TV]    Accepted  raw 18 ms…    │
+│  [USB DAC]           Rejected  SNR too low   │
+│                                              │
+│  [ Start ] [ Apply ] [ Cancel ]              │
+└──────────────────────────────────────────────┘
+```
+
+**Next polish (not blocking):**
+
+- ~~L3.b drift watchdog~~ — **shipped:** `AudioDevice.AutoSyncDrift` + `DRIFT?` chip; `L3AutoSyncCaption.Refresh` reuses `SyncClickPlayer.TryCaptureFingerprint` to compare saved vs live mix format.
+- ~~Auto-mute non-DUT outputs during measurement~~ — **shipped:** `OutputMuteScope` snapshots and restores `AudioEndpointVolume.Mute` on every non-DUT target around each `MeasureOneAsync` window.
+
+#### Mic-based auto-sync (chirp + cross-correlation) — original spec
 
 Goal: zero manual sliders. Press a button, the app figures it out.
 
@@ -118,12 +149,13 @@ Implementation notes:
   change or a device is hot-plugged.
 - Optional periodic re-check (every N hours, off by default).
 
-### L4 — Predictive defaults
+### L4 — Predictive defaults — **partially shipped**
 
-- Once we have a population of calibrated devices, ship the median
-  offset for popular endpoints (Sony WH-1000XM5, AirPods Max,
-  generic HDMI TV) so first-launch sync is correct without running
-  the wizard.
+**Code:** `Core/Latency/PredictiveLatencyDefaults.cs`, `LatencySeedResolver.cs`, wired from `DeviceManager.GetRenderDevices`.
+
+- **Name-based table** (substring match, first hit wins): common headphones, TVs, and cast-like devices get a better first Sync seed than the coarse L1 class alone. Values are conservative and clamped `0 … 120` ms.
+- **User `LatencyClassDefaults` map** (from `UserSettings`) is now actually applied when seeding a new endpoint id, after L4 name match and before the hard-coded `DeviceClassInfo` baseline — so a power user can tune "BT" once and have it affect *new* BT devices.
+- **Future:** median offsets from anonymised calibration telemetry, or a downloadable JSON table.
 
 ## Risk register
 

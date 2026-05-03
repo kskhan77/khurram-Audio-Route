@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using KhurramAudioRoute.Core.Latency;
 using KhurramAudioRoute.Core.Spatial;
 using NAudio.CoreAudioApi;
 using System;
@@ -210,6 +211,36 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _syncCalibrationStale, value);
         }
 
+        /// <summary>
+        /// Caption like "Auto-synced 3 days ago" when an L3 row exists for this
+        /// device, otherwise empty. Refreshed by <c>MainViewModel.RefreshData</c>
+        /// and after the AutoSyncWindow closes.
+        /// </summary>
+        private string _autoSyncCaption = string.Empty;
+        public string AutoSyncCaption
+        {
+            get => _autoSyncCaption;
+            set
+            {
+                if (SetProperty(ref _autoSyncCaption, value ?? string.Empty))
+                    OnPropertyChanged(nameof(HasAutoSyncCaption));
+            }
+        }
+
+        public bool HasAutoSyncCaption => !string.IsNullOrEmpty(_autoSyncCaption);
+
+        /// <summary>
+        /// Saved L3 fingerprint disagrees with the current WASAPI mix format
+        /// (refreshed each <c>RefreshData</c> + after Auto-sync apply). Drives
+        /// the DRIFT? chip on the device card.
+        /// </summary>
+        private bool _autoSyncDrift;
+        public bool AutoSyncDrift
+        {
+            get => _autoSyncDrift;
+            set => SetProperty(ref _autoSyncDrift, value);
+        }
+
         private ObservableCollection<DeviceSelection> _duplicateTargets = new();
         public ObservableCollection<DeviceSelection> DuplicateTargets
         {
@@ -371,13 +402,9 @@ namespace KhurramAudioRoute.Core
                         bool isVirtual = SonicFlowVirtualAudio.IsVirtualRenderEndpoint(endpoint.ID, endpoint.FriendlyName);
                         var deviceClass = isVirtual ? DeviceClass.Unknown : DeviceClassResolver.Detect(endpoint);
 
-                        // L1 latency: persisted offset wins; otherwise the
-                        // class default is the seed. Virtual bus endpoints
-                        // stay at zero — they're the capture point, not a
-                        // physical sink.
-                        int seedOffset = isVirtual
-                            ? 0
-                            : (UserSettings.GetTargetLatencyOffset(endpoint.ID) ?? DeviceClassInfo.DefaultOffsetMs(deviceClass));
+                        // L1/L4 latency: persisted id wins; else L4 name presets,
+                        // else LatencyClassDefaults, else class baseline.
+                        int seedOffset = LatencySeedResolver.Resolve(endpoint, deviceClass, isVirtual);
 
                         devices.Add(new AudioDevice
                         {
