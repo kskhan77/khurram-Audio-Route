@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using Wpf.Ui.Controls;
 using KhurramAudioRoute.Core;
@@ -19,6 +21,7 @@ namespace KhurramAudioRoute;
 public partial class MainWindow : FluentWindow
 {
     private bool _isExplicitExit;
+    private bool _vbCableReminderShown;
     private readonly DispatcherTimer _meterTimer = new()
     {
         Interval = TimeSpan.FromMilliseconds(220)
@@ -36,6 +39,60 @@ public partial class MainWindow : FluentWindow
         Closing += OnClosing;
         Closed += OnClosed;
         _meterTimer.Tick += OnMeterTimerTick;
+
+        // Restore the user's Windows default device when the OS is signing
+        // them out / shutting down, even if the app was minimised to tray.
+        // PowerService.DisengageOnShutdown is best-effort and capped to the
+        // SessionEnding budget so we don't block Windows.
+        Microsoft.Win32.SystemEvents.SessionEnding += OnSessionEnding;
+
+        // Keep the tray menu header in sync with the bus state. Context
+        // menus aren't in the main visual tree so a normal binding doesn't
+        // trigger; we update the header text imperatively here.
+        viewModel.Power.PropertyChanged += OnPowerStateChanged;
+        UpdateTrayPowerHeader(viewModel.Power.IsActive);
+    }
+
+    private void OnPowerStateChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(KhurramAudioRoute.Core.PowerService.IsActive)
+            && e.PropertyName != nameof(KhurramAudioRoute.Core.PowerService.State))
+            return;
+
+        if (DataContext is MainViewModel vm)
+            Dispatcher.BeginInvoke(() => UpdateTrayPowerHeader(vm.Power.IsActive));
+    }
+
+    private void UpdateTrayPowerHeader(bool isActive)
+    {
+        // ContextMenu lives in Window.Resources, so its child MenuItems aren't
+        // generated as named fields. Walk the menu at runtime to find ours.
+        if (TryResolveResource("TrayMenu") is not System.Windows.Controls.ContextMenu menu)
+            return;
+
+        foreach (var item in menu.Items)
+        {
+            if (item is System.Windows.Controls.MenuItem mi
+                && mi.Name == nameof(TrayPowerMenuItem))
+            {
+                mi.Header = isActive ? "Turn audio bus OFF" : "Turn audio bus ON";
+                return;
+            }
+        }
+    }
+
+    private object? TryResolveResource(string key)
+    {
+        try { return TryFindResource(key); }
+        catch { return null; }
+    }
+
+    private const string TrayPowerMenuItem = "TrayPowerMenuItem";
+
+    private void OnSessionEnding(object? sender, Microsoft.Win32.SessionEndingEventArgs e)
+    {
+        if (DataContext is MainViewModel vm)
+            vm.Power.DisengageOnShutdown();
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -50,6 +107,27 @@ public partial class MainWindow : FluentWindow
         Width = Math.Min(Width, workArea.Width - 48);
         Height = Math.Min(Height, workArea.Height - 48);
         _meterTimer.Start();
+
+        if (DataContext is MainViewModel vm)
+        {
+            Dispatcher.BeginInvoke(() => OfferVbCableStartupReminder(vm), DispatcherPriority.ApplicationIdle);
+        }
+    }
+
+    /// <summary>
+    /// One modal per session when VB-CABLE is missing unless the user opts out permanently.
+    /// </summary>
+    private void OfferVbCableStartupReminder(MainViewModel vm)
+    {
+        if (_vbCableReminderShown) return;
+        if (UserSettings.GetSuppressVbCableStartupReminder()) return;
+        if (vm.Power.IsBusInstalled) return;
+
+        _vbCableReminderShown = true;
+        var dlg = new VbCableReminderDialog { Owner = this };
+        dlg.ShowDialog();
+        if (dlg.SuppressReminder)
+            UserSettings.SetSuppressVbCableStartupReminder(true);
     }
 
     private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -80,6 +158,16 @@ public partial class MainWindow : FluentWindow
         _meterTimer.Stop();
         _meterTimer.Tick -= OnMeterTimerTick;
         TrayIcon?.Dispose();
+
+        // Last-chance hook: if the user closed the app while the bus was on,
+        // restore their Windows default before the process exits.
+        if (DataContext is MainViewModel vm)
+        {
+            vm.Power.DisengageOnShutdown();
+            vm.Power.PropertyChanged -= OnPowerStateChanged;
+        }
+
+        Microsoft.Win32.SystemEvents.SessionEnding -= OnSessionEnding;
         Loaded -= OnLoaded;
         Closing -= OnClosing;
         Closed -= OnClosed;
@@ -172,6 +260,19 @@ public partial class MainWindow : FluentWindow
         selection.LatencyOffsetMs = Math.Clamp(updated, DeviceSelection.MinLatencyOffsetMs, DeviceSelection.MaxLatencyOffsetMs);
     }
 
+    private void OnHyperlinkRequestNavigate(object sender, RequestNavigateEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            e.Handled = true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"OnHyperlinkRequestNavigate: {ex.Message}");
+        }
+    }
+
     // The Outputs-page strip uses the same global handlers as the Applications strip;
     // these wrappers exist only because the XAML Click/ValueChanged attributes name them.
     private void OnOutputsMasterMuteClicked(object sender, RoutedEventArgs e) => OnMasterMuteClicked(sender, e);
@@ -205,23 +306,15 @@ public partial class MainWindow : FluentWindow
 
     private void OnApplyEqPreset(object sender, RoutedEventArgs e)
     {
-        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
+        if (sender is not FrameworkElement element)
             return;
-
         var preset = element.Tag?.ToString();
         if (string.IsNullOrWhiteSpace(preset))
             return;
-
-        ApplyEqualizerPreset(device, preset);
+        ApplyMasterEqPresetUi(preset);
     }
 
-    private void OnResetEq(object sender, RoutedEventArgs e)
-    {
-        if (sender is not FrameworkElement element || element.DataContext is not AudioDevice device)
-            return;
-
-        ApplyEqualizerPreset(device, "Flat");
-    }
+    private void OnResetEq(object sender, RoutedEventArgs e) => ApplyMasterEqPresetUi("Flat");
 
     private void OnRunDiagnostics(object sender, RoutedEventArgs e)
     {
@@ -236,103 +329,54 @@ public partial class MainWindow : FluentWindow
         }
     }
 
-    // 10 ISO-octave bands: 31, 62, 125, 250, 500, 1k, 2k, 4k, 8k, 16k Hz.
-    private static readonly float[] PresetFlat = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    private static readonly float[] PresetBass = { 7, 6, 4, 2, 0, -1, -2, -1, 0, 1 };
-    private static readonly float[] PresetVoice = { -4, -3, -1, 2, 4, 5, 4, 2, 0, -1 };
-    private static readonly float[] PresetBright = { -3, -2, -1, 0, 0, 1, 3, 5, 5, 4 };
-    private static readonly float[] PresetClub = { 4, 5, 3, 0, 0, 0, 2, 3, 4, 0 };
-    private static readonly float[] PresetLive = { -2, 0, 2, 3, 3, 3, 2, 1, 1, 1 };
-    private static readonly float[] PresetPop = { -1, 2, 3, 3, 2, -1, -2, -2, -1, -1 };
-    private static readonly float[] PresetRock = { 5, 4, 3, 1, -1, -1, 1, 3, 4, 5 };
-    private static readonly float[] PresetClassical = { 4, 4, 3, 2, -1, -1, 0, 2, 4, 4 };
-    private static readonly float[] PresetTechno = { 6, 5, 0, -2, -2, 0, 5, 6, 6, 5 };
-    private static readonly float[] PresetSoft = { 2, 1, 0, -1, -1, 0, 1, 2, 3, 4 };
-
-    private static void ApplyEqualizerPreset(AudioDevice device, string preset)
+    private void ApplyMasterEqPresetUi(string? preset)
     {
-        string keyLabel;
-        float[] gains;
-        switch ((preset ?? "").Trim())
-        {
-            case "Bass":
-                gains = PresetBass;
-                keyLabel = "Bass";
-                break;
-            case "Voice":
-                gains = PresetVoice;
-                keyLabel = "Voice";
-                break;
-            case "Bright":
-                gains = PresetBright;
-                keyLabel = "Bright";
-                break;
-            case "Club":
-                gains = PresetClub;
-                keyLabel = "Club";
-                break;
-            case "Live":
-                gains = PresetLive;
-                keyLabel = "Live";
-                break;
-            case "Pop":
-                gains = PresetPop;
-                keyLabel = "Pop";
-                break;
-            case "Rock":
-                gains = PresetRock;
-                keyLabel = "Rock";
-                break;
-            case "Classical":
-                gains = PresetClassical;
-                keyLabel = "Classical";
-                break;
-            case "Techno":
-                gains = PresetTechno;
-                keyLabel = "Techno";
-                break;
-            case "Soft":
-                gains = PresetSoft;
-                keyLabel = "Soft";
-                break;
-            default:
-                gains = PresetFlat;
-                keyLabel = "Flat";
-                break;
-        }
-
-        device.SetEqualizerGains(gains);
-        device.SelectedEqPresetKey = keyLabel;
-
-        // Update audio engines
-        if (!string.IsNullOrWhiteSpace(device.Id))
-        {
-            DuplicationManager.UpdateEqualizer(device.Id, gains);
-            BassEngine.UpdateEqualizer(device.Id, gains);
-        }
+        if (DataContext is not MainViewModel vm || string.IsNullOrWhiteSpace(preset))
+            return;
+        vm.ApplyMasterEqPreset(preset);
     }
 
     private void OnEqPresetRadioClick(object sender, RoutedEventArgs e)
     {
-        if (sender is not RadioButton rb || rb.DataContext is not AudioDevice device)
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string key || string.IsNullOrWhiteSpace(key))
             return;
-        if (!IsLoaded || rb.Tag is not string key || string.IsNullOrWhiteSpace(key))
-            return;
-        ApplyEqualizerPreset(device, key);
+        ApplyMasterEqPresetUi(key);
     }
 
     private void OnSpatialPresetRadioClick(object sender, RoutedEventArgs e)
     {
-        if (sender is not RadioButton rb || rb.DataContext is not AudioDevice device)
-            return;
-        if (!IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
             return;
         if (!Enum.TryParse<SpatialPreset>(tag, ignoreCase: false, out var preset))
             return;
-        device.SpatialPreset = preset;
+        if (DataContext is not MainViewModel vm)
+            return;
+        vm.MasterSpatialPreset = preset;
     }
 
     private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();
+
+    /// <summary>
+    /// Tray-menu version of the header power chip. Mirrors
+    /// <see cref="MainViewModel.TogglePower"/> so both surfaces drive the
+    /// same <see cref="PowerService"/> instance and stay in sync.
+    /// </summary>
+    private async void OnTrayPowerClicked(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainViewModel vm) return;
+
+        try
+        {
+            if (vm.Power.IsActive)
+                await vm.Power.DisengageAsync();
+            else
+                await vm.Power.EngageAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"OnTrayPowerClicked failed: {ex.Message}");
+        }
+    }
     private void OnShowAppClicked(object sender, RoutedEventArgs e) => ShowWindow();
     private void OnExitAppClicked(object sender, RoutedEventArgs e) => ExitApplication();
 }

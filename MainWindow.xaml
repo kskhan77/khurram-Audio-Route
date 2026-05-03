@@ -25,6 +25,13 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
+            <!-- Master power toggle. Header tracks state via the tray Click handler. -->
+            <MenuItem x:Name="TrayPowerMenuItem" Header="Turn audio bus ON" Click="OnTrayPowerClicked">
+                <MenuItem.Icon>
+                    <ui:SymbolIcon Symbol="Pulse24"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
             <MenuItem Header="Exit" Click="OnExitAppClicked">
                 <MenuItem.Icon>
                     <ui:SymbolIcon Symbol="SignOut24"/>
@@ -707,6 +714,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -773,6 +781,100 @@
                         </Button.Style>
                     </Button>
                 </StackPanel>
+
+                <!-- Master power chip — engages / disengages the SonicFlow audio bus.
+                     Active: VB-CABLE is the Windows default + bridge runs across active outputs.
+                     Disabled: previous Windows default is restored, bridge stops. -->
+                <Border Grid.Column="2" VerticalAlignment="Center" Margin="12,0,0,0"
+                        ToolTipService.InitialShowDelay="200" ToolTipService.ShowDuration="20000">
+                    <Border.ToolTip>
+                        <ToolTip MaxWidth="320">
+                            <StackPanel>
+                                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">SonicFlow audio bus</TextBlock>
+                                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SonicOutlineBrush}"
+                                           Text="{Binding Power.StatusMessage}"/>
+                                <TextBlock Margin="0,6,0,0" FontSize="10" FontWeight="SemiBold"
+                                           Foreground="{StaticResource SonicPrimaryBrush}"
+                                           Text="{Binding TotalLatencyBanner}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Border.ToolTip>
+                    <Button Command="{Binding TogglePowerCommand}"
+                            Padding="10,5" Cursor="Hand" BorderThickness="1"
+                            FontSize="11" FontWeight="SemiBold" MinHeight="30">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#15FFFFFF"/>
+                                <Setter Property="BorderBrush" Value="#2EFFFFFF"/>
+                                <Setter Property="Foreground" Value="#9BA9B7"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="ChipBg" CornerRadius="14"
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter VerticalAlignment="Center"
+                                                                  HorizontalAlignment="Center"
+                                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="ChipBg" Property="Background" Value="#22FFFFFF"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
+                                        <Setter Property="Background" Value="#1A86DC52"/>
+                                        <Setter Property="BorderBrush" Value="#5A86DC52"/>
+                                        <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
+                                        <Setter Property="Background" Value="#1AE3B341"/>
+                                        <Setter Property="BorderBrush" Value="#55E3B341"/>
+                                        <Setter Property="Foreground" Value="#E3B341"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#586470"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource SonicSecondaryBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
+                                                <Setter Property="Fill" Value="#E3B341"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Bus: off"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
+                                                <Setter Property="Text" Value="Bus: on"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
+                                                <Setter Property="Text" Value="Bus: …"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Border>
             </Grid>
         </Border>
 
@@ -908,12 +1010,44 @@
                         <Grid Margin="0,0,0,20">
                             <StackPanel>
                                 <TextBlock Text="Playback &amp; profiles" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="24" FontWeight="SemiBold"/>
-                                <TextBlock Text="Virtual SonicFlow playback profiles (similar idea to VB-CABLE) and hardware outputs. Pick defaults, mirror, and EQ per profile." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Text="Turn the bus ON (top-right), route apps through VB-CABLE when installed, tune master EQ/spatial once, then mark hardware outputs ACTIVE to mirror the processed signal (see docs/AUDIO_BUS_PLAN.md)." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
-                            <ui:Button Content="Refresh list" Icon="ArrowSync24" HorizontalAlignment="Right" VerticalAlignment="Top" Appearance="Secondary"
-                                       Command="{Binding RefreshDataCommand}"
-                                       Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <ui:Button Content="Sync wizard" Icon="SoundSource24" Appearance="Secondary" Margin="0,0,8,0"
+                                           Command="{Binding OpenSyncCalibrationWizardCommand}"
+                                           ToolTip="3-tap perceptual sync vs a timing reference — see docs/LATENCY_PLAN.md (L2)."
+                                           Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
+                                <ui:Button Content="Refresh list" Icon="ArrowSync24" Appearance="Secondary"
+                                           Command="{Binding RefreshDataCommand}"
+                                           Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
+                            </StackPanel>
                         </Grid>
+
+                        <!-- v1-first-run cue: VB-CABLE is the production bus (docs/PLAN.md). -->
+                        <Border Margin="0,0,0,16" Padding="14,12" CornerRadius="10"
+                                Background="#1AF5A623" BorderBrush="#66E3B341" BorderThickness="1">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Power.IsBusInstalled}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel>
+                                <TextBlock Text="VB-Audio VB-CABLE is not installed." FontWeight="SemiBold" FontSize="13"
+                                           Foreground="{StaticResource SonicOnSurfaceBrush}"/>
+                                <TextBlock Margin="0,6,0,0" FontSize="11.5" TextWrapping="Wrap"
+                                           Foreground="{StaticResource SonicOutlineBrush}">
+                                    Install VB-CABLE for SonicFlow&apos;s routed master bus—Windows apps play into the cable, this app EQs/spatialises once, and ACTIVE outputs get the mirror. Without VB-CABLE, backup mode taps your current default playback device (that endpoint stays dry; other ACTIVE outputs carry the FX).
+                                    <Hyperlink NavigateUri="https://vb-audio.com/Cable/" RequestNavigate="OnHyperlinkRequestNavigate" Foreground="#74D1FF">
+                                        Download VB-Audio VB-CABLE
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
 
                         <!-- Master output strip on the Outputs page: master mute + volume for the system
                              default device. Mirrors the strip on the Applications page so users get the
@@ -978,8 +1112,207 @@
                             </Grid>
                         </Border>
 
-                        <!-- Virtual playback profiles — named like numbered cables / endpoints -->
-                        <StackPanel Visibility="{Binding IsSonicFlowVirtualDeviceInstalled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <!-- Master engine: a single bus-level EQ + spatial that applies to every active output.
+                             Works only when the bus power chip is on (top-right of the page).
+                             See docs/AUDIO_BUS_PLAN.md for the architecture. -->
+                        <Border CornerRadius="14" Padding="16,14" Margin="0,0,0,18"
+                                Background="{StaticResource SonicSurfaceContainerBrush}"
+                                BorderBrush="#1AFFFFFF" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/> <!-- header -->
+                                    <RowDefinition Height="Auto"/> <!-- EQ sliders -->
+                                    <RowDefinition Height="Auto"/> <!-- EQ preset chips -->
+                                    <RowDefinition Height="Auto"/> <!-- spatial header row -->
+                                    <RowDefinition Height="Auto"/> <!-- spatial pill grid -->
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="True">
+                                    <Border DockPanel.Dock="Left" Width="34" Height="34" CornerRadius="9"
+                                            VerticalAlignment="Center"
+                                            Background="#1A74D1FF" BorderBrush="#5474D1FF" BorderThickness="1"
+                                            Margin="0,0,12,0">
+                                        <ui:SymbolIcon Symbol="MusicNote224" FontSize="18" HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" Foreground="{StaticResource SonicPrimaryBrush}"/>
+                                    </Border>
+                                    <ui:Button DockPanel.Dock="Right" Content="Reset" Command="{Binding ResetMasterEqualizerCommand}"
+                                               Appearance="Secondary"
+                                               Padding="8,4" MinHeight="28" MaxHeight="28"
+                                               Background="#2B1618" BorderBrush="#6E3036" FontSize="11"
+                                               Icon="ArrowSync24" ToolTip="Reset every master EQ band to 0 dB"/>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Master engine" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                                   ToolTipService.ShowDuration="20000">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip MaxWidth="320">
+                                                    <TextBlock TextWrapping="Wrap" MaxWidth="320">
+                                                    One EQ + Spatial pipeline applied to every active output. Engages when the bus chip in the header is on.</TextBlock>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                        <TextBlock FontSize="11" Foreground="{StaticResource SonicOutlineBrush}" Margin="0,2,0,0">
+                                            <Run Text="10-band EQ + spatial preset shared across every"/>
+                                            <Run Text="● Active" Foreground="{StaticResource SonicSecondaryBrush}" FontWeight="SemiBold"/>
+                                            <Run Text="output."/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <!-- 10-band EQ sliders (compact). Each binds to MasterEqBandN on the view model. -->
+                                <UniformGrid Grid.Row="1" Columns="10">
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand0, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="31" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand1, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="62" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand2, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="125" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand3, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="250" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand4, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="500" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand5, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="1k" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand6, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="2k" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand7, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="4k" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand8, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="8k" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand9, Mode=TwoWay}"
+                                                Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="16k" Margin="0,3,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="8" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </UniformGrid>
+
+                                <!-- EQ preset chip strip — same set as the per-device EQ in older builds.
+                                     Click highlights the chip and snaps every band; dragging a band
+                                     after that drops the chip back to "Custom" via ApplyMasterEqLive. -->
+                                <Border Grid.Row="2" Margin="0,8,0,0" Padding="6,5" CornerRadius="8"
+                                        Background="#121820" BorderBrush="#223040" BorderThickness="1">
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Flat" Tag="Flat"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Flat"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Flat}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Bass" Tag="Bass" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Bass"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Bass}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Club" Tag="Club" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Club"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Club}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Rock" Tag="Rock" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Rock"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Rock}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Pop" Tag="Pop" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Pop"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Pop}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Live" Tag="Live" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Live"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Live}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Voice" Tag="Voice" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Voice"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Voice}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Bright" Tag="Bright" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Bright"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Bright}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Classical" Tag="Classical" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Classical"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Classical}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Soft" Tag="Soft" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Soft"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Soft}"/>
+                                            <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Techno" Tag="Techno" Margin="4,0,0,0"
+                                                         GroupName="{Binding MasterEqPresetGroupToken}"
+                                                         Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Techno"
+                                                         IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Techno}"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Border>
+
+                                <!-- Spatial pills row. Sits inside the master card so the user picks scene + EQ together. -->
+                                <DockPanel Grid.Row="3" Margin="0,12,0,0" LastChildFill="True">
+                                    <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,0,0"
+                                                     IsChecked="{Binding MasterSpatialActive, Mode=TwoWay}"
+                                                     ToolTip="Master switch — spatial DSP off restores passthrough."/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}" Text="Spatial scene"/>
+                                </DockPanel>
+
+                                <Border Grid.Row="4" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
+                                        Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                    <UniformGrid Columns="3" Rows="2" Margin="-2,-2,-2,-2">
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneStereoPlus" Content="Stereo +"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneStudio" Content="Studio"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneCinema" Content="Cinema · 7.1"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneConcertHall" Content="Concert hall"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="Speakers_5_1" Content="5.1 speakers"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="GameMode" Content="Game"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
+                                    </UniformGrid>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Virtual playback profiles — kept in the codebase but hidden in v1.
+                             docs/AUDIO_BUS_PLAN.md: virtual endpoints are invisible plumbing; the
+                             master engine + bus chip handle the user's mental model. -->
+                        <StackPanel Visibility="Collapsed">
                             <TextBlock Text="VIRTUAL PLAYBACK PROFILES" Style="{StaticResource SonicSectionHeader}" Margin="0,0,0,12"/>
                             <ItemsControl ItemsSource="{Binding VirtualDevices}" Margin="0,0,0,24">
                                 <ItemsControl.ItemTemplate>
@@ -1336,6 +1669,7 @@
                                                                         <Grid>
                                                                             <Grid.RowDefinitions>
                                                                                 <RowDefinition Height="Auto"/>
+                                                                                <RowDefinition Height="Auto"/>
                                                                                 <RowDefinition Height="*" MinHeight="0"/>
                                                                             </Grid.RowDefinitions>
 
@@ -1363,8 +1697,31 @@
                                                                                 </StackPanel>
                                                                             </DockPanel>
 
-                                                                            <Border Grid.Row="1" Padding="8,10" CornerRadius="10" Margin="0,0,0,0"
+                                                                            <Border Grid.Row="1" Padding="8,5" CornerRadius="6" Margin="0,0,0,8"
+                                                                                    Background="#1A2434" BorderBrush="#2C3E55" BorderThickness="1"
+                                                                                    Visibility="{Binding IsDuplicating, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                    <Ellipse Width="6" Height="6" Fill="#74D1FF"
+                                                                                             VerticalAlignment="Center" Margin="2,0,8,0"/>
+                                                                                    <TextBlock VerticalAlignment="Center" FontSize="10.5"
+                                                                                               Foreground="#9DB1C5" TextWrapping="Wrap">
+                                                                                        Engages when <Run FontWeight="SemiBold" Foreground="{StaticResource SonicPrimaryBrush}">Mirror outputs</Run> is on.
+                                                                                    </TextBlock>
+                                                                                </StackPanel>
+                                                                            </Border>
+
+                                                                            <Border Grid.Row="2" Padding="8,10" CornerRadius="10" Margin="0,0,0,0"
                                                                                     Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                                                                <Border.Style>
+                                                                                    <Style TargetType="Border">
+                                                                                        <Setter Property="Opacity" Value="1.0"/>
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsDuplicating}" Value="False">
+                                                                                                <Setter Property="Opacity" Value="0.55"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Border.Style>
                                                                                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                                                                               HorizontalContentAlignment="Stretch">
                                                                                     <UniformGrid Columns="2" Rows="3" Margin="-2,-2,-2,0">
@@ -1441,7 +1798,6 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
                                                 <Border Grid.Column="0" Width="46" Height="46" CornerRadius="23" BorderThickness="1" Margin="0,0,14,0">
@@ -1478,22 +1834,95 @@
                                                                 Visibility="{Binding IsDefault, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="DEFAULT" Foreground="#092100" FontSize="9" FontWeight="Bold"/>
                                                         </Border>
+
+                                                        <Border Margin="8,0,0,0" Background="#1A2434" BorderBrush="#2C3E55"
+                                                                BorderThickness="1" CornerRadius="9" Padding="7,2"
+                                                                ToolTip="{Binding TargetLatencyOffsetMs, StringFormat='Default sync offset for this class: {0} ms'}">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding DeviceClassLabel}" Value="">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <TextBlock Text="{Binding DeviceClassLabel}" Foreground="#9DB1C5" FontSize="9" FontWeight="Bold"/>
+                                                        </Border>
+
+                                                        <ToggleButton Margin="10,0,0,0" Padding="9,3"
+                                                                      IsChecked="{Binding IsActiveOutput, Mode=TwoWay}" Cursor="Hand"
+                                                                      ToolTip="When the bus is on, ACTIVE outputs receive the master-processed mirror."
+                                                                      VerticalAlignment="Center">
+                                                            <ToggleButton.Style>
+                                                                <Style TargetType="ToggleButton">
+                                                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                                <Border x:Name="ChipBg" CornerRadius="9"
+                                                                                        Background="#262A2F" BorderBrush="#3B4148" BorderThickness="1"
+                                                                                        Padding="{TemplateBinding Padding}">
+                                                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                        <Ellipse Width="6" Height="6" VerticalAlignment="Center" Margin="0,0,6,0">
+                                                                                            <Ellipse.Style>
+                                                                                                <Style TargetType="Ellipse">
+                                                                                                    <Setter Property="Fill" Value="#586470"/>
+                                                                                                    <Style.Triggers>
+                                                                                                        <DataTrigger Binding="{Binding IsActiveOutput}" Value="True">
+                                                                                                            <Setter Property="Fill" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                                                        </DataTrigger>
+                                                                                                    </Style.Triggers>
+                                                                                                </Style>
+                                                                                            </Ellipse.Style>
+                                                                                        </Ellipse>
+                                                                                        <TextBlock VerticalAlignment="Center" FontSize="9" FontWeight="Bold">
+                                                                                            <TextBlock.Style>
+                                                                                                <Style TargetType="TextBlock">
+                                                                                                    <Setter Property="Text" Value="OFF"/>
+                                                                                                    <Setter Property="Foreground" Value="#7F8893"/>
+                                                                                                    <Style.Triggers>
+                                                                                                        <DataTrigger Binding="{Binding IsActiveOutput}" Value="True">
+                                                                                                            <Setter Property="Text" Value="ACTIVE"/>
+                                                                                                            <Setter Property="Foreground" Value="#092100"/>
+                                                                                                        </DataTrigger>
+                                                                                                    </Style.Triggers>
+                                                                                                </Style>
+                                                                                            </TextBlock.Style>
+                                                                                        </TextBlock>
+                                                                                    </StackPanel>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsChecked" Value="True">
+                                                                                        <Setter TargetName="ChipBg" Property="Background" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                                        <Setter TargetName="ChipBg" Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                                    </Trigger>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter TargetName="ChipBg" Property="BorderBrush" Value="#5C6671"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </ToggleButton.Style>
+                                                        </ToggleButton>
                                                     </StackPanel>
                                                 </StackPanel>
 
-                                                <ctrl:SpectrumMeter Grid.Column="2" Width="200" Height="44" Margin="14,0,14,0" Level="{Binding PeakValue}" IsActive="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}" BarCount="20"/>
+                                                <ctrl:SpectrumMeter Grid.Column="2" Width="200" Height="44" Margin="14,0,14,0"
+                                                                    Level="{Binding PeakValue}"
+                                                                    IsActive="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}"
+                                                                    BarCount="20"/>
 
-                                                <Button Grid.Column="3" Style="{StaticResource SonicIconFrameButton}" Margin="0,0,6,0" ToolTip="Set as default playback"
-                                                        Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"
+                                                <Button Grid.Column="3" Style="{StaticResource SonicIconFrameButton}" Margin="0,0,0,0"
+                                                        ToolTip="Set as default playback"
+                                                        Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"
                                                         Visibility="{Binding IsDefault, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                                     <ui:SymbolIcon Symbol="Star24" FontSize="16"/>
                                                 </Button>
-                                                
-                                                <ToggleButton Grid.Column="4" Style="{StaticResource SonicIconFrameToggle}" 
-                                                              IsChecked="{Binding IsAdvancedExpanded, Mode=TwoWay}" ToolTip="Advanced Settings"
-                                                              Visibility="{Binding CanHostMirroring, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                    <ui:SymbolIcon Symbol="Settings24" FontSize="16"/>
-                                                </ToggleButton>
                                             </Grid>
 
                                             <Grid Margin="18,0,18,16">
@@ -1522,53 +1951,41 @@
                                                 <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="12" FontWeight="SemiBold" Width="42" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
                                             </Grid>
 
-                                            <!-- Physical mirroring if enabled -->
-                                            <Border BorderBrush="#1AFFFFFF" BorderThickness="0,1,0,0" Background="#101112" Visibility="{Binding IsAdvancedExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                <StackPanel Margin="18,16,18,18">
-                                                    <TextBlock Style="{StaticResource SonicSectionHeader}" Text="MIRROR AUDIO"/>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Text="Mirror this device to other outputs." Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" VerticalAlignment="Center"/>
-                                                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding IsDuplicating, Mode=OneWay}" IsEnabled="{Binding IsDuplicateBusy, Converter={StaticResource InverseBooleanConverter}}" Click="OnDuplicateToggleClicked"/>
-                                                    </Grid>
-                                                    <Border Background="#0A0F14" BorderBrush="#213040" BorderThickness="1" CornerRadius="12" Padding="10,12" Margin="0,12,0,0">
-                                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Padding="0,0,0,2" MaxHeight="300">
-                                                            <Grid Grid.IsSharedSizeScope="True" Margin="2,2,6,4" MinWidth="360">
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="*"/>
-                                                                </Grid.RowDefinitions>
-                                                                <Border Grid.Row="0" CornerRadius="8" Margin="0,0,0,8" Padding="10,10,10,8"
-                                                                        Background="#0B1018" BorderBrush="#1E2936" BorderThickness="1">
-                                                                    <Grid>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShChk"/>
-                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShIco"/>
-                                                                            <ColumnDefinition Width="*"/>
-                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShDly" MinWidth="168"/>
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="4,0,8,0">
-                                                                            <TextBlock Text="OUTPUT" Style="{StaticResource SonicSectionHeader}" Margin="0,0,0,2"/>
-                                                                            <TextBlock Text="Mirroring targets for this playback device" FontSize="9" Foreground="#5C6978" FontWeight="SemiBold"/>
-                                                                        </StackPanel>
-                                                                        <StackPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                            <TextBlock Text="SYNC DELAY" Style="{StaticResource SonicSectionHeader}" Margin="0" HorizontalAlignment="Center"/>
-                                                                            <TextBlock Text="Per device • ms" Margin="0,4,0,0" FontSize="9"
-                                                                                       FontWeight="SemiBold" Foreground="#5C6978"
-                                                                                       HorizontalAlignment="Center"/>
-                                                                        </StackPanel>
-                                                                    </Grid>
-                                                                </Border>
-                                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding DuplicateTargets}"
-                                                                              ItemTemplate="{StaticResource MirrorPlaybackTargetRow}"/>
-                                                            </Grid>
-                                                        </ScrollViewer>
-                                                    </Border>
+                                            <!-- Sync offset: tunes how far behind the master bus this device plays.
+                                                 Range is intentionally small (0..120 ms) for the L1 baseline; mic
+                                                 auto-sync (L3) will replace this with one-tap calibration. -->
+                                            <Grid Margin="18,0,18,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                                    <TextBlock Text="Sync" Foreground="{StaticResource SonicOutlineBrush}"
+                                                               FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"
+                                                               ToolTip="Adds latency before this output. Use to keep multiple speakers in sync."/>
+                                                    <ui:Button Margin="8,0,0,0" Padding="8,4" FontSize="9" Appearance="Transparent"
+                                                               Content="RE-CAL?"
+                                                               Visibility="{Binding SyncCalibrationStale, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                               ToolTip="Your last Sync wizard run used a different mix format than Windows is using now. Open Sync wizard (Outputs tab) to re-calibrate."
+                                                               VerticalAlignment="Center"
+                                                               Command="{Binding DataContext.OpenSyncCalibrationWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                                 </StackPanel>
-                                            </Border>
+                                                <Slider Grid.Column="1"
+                                                        Minimum="0" Maximum="120"
+                                                        TickFrequency="10" IsSnapToTickEnabled="False"
+                                                        SmallChange="1" LargeChange="5"
+                                                        Value="{Binding TargetLatencyOffsetMs, Mode=TwoWay}"
+                                                        IsEnabled="{Binding IsActiveOutput}"
+                                                        VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding TargetLatencyOffsetMs, StringFormat={}{0} ms}"
+                                                           Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                                           FontSize="10.5" FontWeight="SemiBold"
+                                                           Width="56" TextAlignment="Right"
+                                                           VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            </Grid>
+
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>

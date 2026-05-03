@@ -1,0 +1,38 @@
+<ui:FluentWindow x:Class="KhurramAudioRoute.VbCableReminderDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Install VB-CABLE"
+        Width="440" MinWidth="380" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ExtendsContentIntoTitleBar="True">
+    <Grid Margin="20,16,20,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="13" TextWrapping="Wrap" Foreground="#B8C4D0"
+                   Text="SonicFlow expects VB-CABLE as the routed master bus. Without it, Windows apps still play through your usual default device—only limited routing and mirroring behaviour is available until you install the cable driver."/>
+
+        <TextBlock Grid.Row="1" Margin="0,14,0,0" FontSize="12" TextWrapping="Wrap">
+            <Run Text="Install from "/>
+            <Hyperlink Click="OnVbCableLinkClicked" Cursor="Hand">vb-audio.com/Cable/</Hyperlink>
+            <Run Text=" (restart this app afterward if the bus still shows missing)."/>
+        </TextBlock>
+
+        <CheckBox x:Name="SuppressCheckBox"
+                  Grid.Row="2"
+                  Margin="0,16,0,0"
+                  Foreground="#DDE3EA"
+                  FontSize="12"
+                  Content="Don't show this reminder on startup"/>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <ui:Button Appearance="Primary" Content="Continue" MinWidth="100" Click="OnContinueClick"/>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>
