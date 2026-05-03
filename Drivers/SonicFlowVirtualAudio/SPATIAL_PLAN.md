@@ -1,5 +1,16 @@
 # SonicFlow Spatial Audio Plan (Phase 3)
 
+> **Driver-side roll-out: DEFERRED (May 2026).**
+>
+> The custom driver (Phase 2 / 3 / 4 / 5 of `PLAN.md`) is shelved; see
+> the deferred banner in [`PLAN.md`](PLAN.md). The spatial **DSP
+> pipeline** in `Core/Spatial/SpatialPipeline.cs` is still shipping —
+> it now runs on the VB-CABLE always-on bridge as part of the master
+> engine described in [`/docs/AUDIO_BUS_PLAN.md`](../../docs/AUDIO_BUS_PLAN.md).
+> The phase notes below describe how each stage was implemented
+> independently of the driver path and remain useful as a reference
+> map of the DSP code.
+
 ## Goal
 
 Make SonicFlow upscale ordinary stereo content into immersive surround / 3D

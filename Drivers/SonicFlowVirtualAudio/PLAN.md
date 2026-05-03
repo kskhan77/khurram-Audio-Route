@@ -1,6 +1,18 @@
 # SonicFlow Virtual Audio Plan
 
-## Decision
+> **Status: DEFERRED (May 2026).**
+>
+> Microsoft no longer signs hobbyist driver packages without a paid EV
+> certificate plus WHQL submission, and the only end-user workaround
+> (Secure Boot + test signing off) is unacceptable for a shipped app.
+>
+> The product now ships against **VB-CABLE** as the production audio
+> bus — see [`/PLAN.md`](../../PLAN.md) and
+> [`/docs/AUDIO_BUS_PLAN.md`](../../docs/AUDIO_BUS_PLAN.md). The
+> document below remains in the repo as a reference path for if /
+> when the signing situation changes or we secure paid certification.
+
+## Original decision (preserved for reference)
 
 Build a SonicFlow-owned virtual audio driver for the product.
 
