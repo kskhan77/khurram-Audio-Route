@@ -82,7 +82,17 @@ pages stay in the shell for later milestones; feature plans live under
 - [x] **First-run VB-CABLE reminder** — modal on first idle after load when the bus device
   is missing; VB-Audio link; optional **Don't show again** persists in `UserSettings`
   (`SuppressVbCableStartupReminder`). In-app banner unchanged.
-- [ ] **Regression pass** — run the testing checklist below on a clean machine profile.
+- [ ] **Regression pass** — run the *Testing checklist* section below on a VM or disposable Windows profile; sign off items or file issues.
+
+---
+
+### Running the regression pass (v1 closure)
+
+Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **or** back up/delete that folder first so VB modal + defaults behave like first run.
+
+1. **VB-CABLE present** — work through checklist rows that assume bus installed (power toggle, persist, ACTIVE outputs, wizard, sliders).
+2. **VB-CABLE absent** — confirm Outputs banner + first-run modal (until suppressed), backup loopback behaviour, **`RefreshBus` after simulated install**: exit app tray, reinstall cable, reopen app.
+3. **L2 UX** — after a wizard run with saved fingerprint, change Windows sample rate exclusive vs shared scenario if you can provoke drift; **`RE-CAL?`** chip should appear and open **Sync wizard**; after re-run chip clears once fingerprint matches again.
 
 ---
 
@@ -112,5 +122,7 @@ pages stay in the shell for later milestones; feature plans live under
 - [ ] Untick **ACTIVE** on one device — others keep playing processed audio.
 - [ ] Sync sliders + total-latency banner update live.
 - [ ] **Sync wizard** (L2) — need ≥2 ACTIVE hardware sinks; perceptual tweaks move Sync sliders and persist JSON.
+- [ ] **L2 RE-CAL?** chip — visible when persisted fingerprint mismatches live probe; opens wizard; clears after refresh or matching re-calibration.
+- [ ] First-run **VB-CABLE** modal shows when cable missing and reminder not suppressed; **Don't show again** persists; **`SuppressVbCableStartupReminder`** survives restart.
 - [ ] Uninstall VB-CABLE — backup banner + loopback behaviour; reinstall hot-plugs via `RefreshBus`.
 - [ ] Expanded **Advanced** on a card survives app restart *(after `AdvancedExpandedByDeviceId` ship)*.
