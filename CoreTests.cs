@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using KhurramAudioRoute.Core;
 using NAudio.Wave;
@@ -7,29 +8,40 @@ using NAudio.Wave.SampleProviders;
 namespace KhurramAudioRoute.Tests
 {
     /// <summary>
-    /// A simple test harness to verify the Equalizer and Core logic without a full unit test runner.
-    /// Run this from a console or a debug session to verify integrity.
+    /// A simple test harness to verify equalizer enumeration without a separate test runner.
+    /// Routed from UI (Other Options diagnostics). Mirrors lines to Debug so Output window captures them during regression.
     /// </summary>
     public static class AudioCoreTester
     {
         public static void RunTests()
         {
-            Console.WriteLine("--- Starting Audio Core Integrity Tests ---");
-            
+            LogLine("--- Starting Audio Core Integrity Tests ---");
+
             TestEqualizerTransparency();
             TestEqualizerGainChange();
             TestDeviceEnumeration();
 
-            Console.WriteLine("--- All Tests Completed ---");
+            LogLine("--- All Tests Completed ---");
+        }
+
+        private static void LogLine(string msg)
+        {
+            Debug.WriteLine(msg);
+            Console.WriteLine(msg);
+            Trace.WriteLine(msg);
+        }
+
+        private static void LogLine(string prefix, bool passed, string? detail = null)
+        {
+            var tail = detail == null ? string.Empty : $" {detail}";
+            LogLine(passed ? $"{prefix}: PASSED{tail}" : $"{prefix}: FAILED{tail}");
         }
 
         /// <summary>
-        /// Verifies that with 0dB gain, the Equalizer doesn't significantly alter the signal (transparency).
+        /// Verifies that with 0dB gain, the Equalizer doesn't significantly alter silence (transparency baseline).
         /// </summary>
         private static void TestEqualizerTransparency()
         {
-            Console.Write("Testing Equalizer Transparency (0dB)... ");
-            
             var format = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
             var source = new SilenceProvider(format).ToSampleProvider();
             var eq = new EqualizerSampleProvider(source, new float[10]);
@@ -37,13 +49,10 @@ namespace KhurramAudioRoute.Tests
             float[] buffer = new float[1024];
             int read = eq.Read(buffer, 0, buffer.Length);
 
-            // For silence, it should remain silence
             bool isSilent = buffer.Take(read).All(f => Math.Abs(f) < 0.000001f);
-            
-            if (isSilent)
-                Console.WriteLine("PASSED");
-            else
-                Console.WriteLine("FAILED (Signal altered)");
+            LogLine("Equalizer transparency (0 dB gains on silence)",
+                isSilent,
+                isSilent ? null : "(signal unexpectedly non-zero)");
         }
 
         /// <summary>
@@ -51,27 +60,18 @@ namespace KhurramAudioRoute.Tests
         /// </summary>
         private static void TestEqualizerGainChange()
         {
-            Console.Write("Testing Equalizer Gain Response... ");
-            
             var format = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
-            // Sine at the first band's center (31Hz). 10-band layout puts 31Hz at index 0.
-            var sine = new SignalGenerator(44100, 1) { Frequency = 31, Gain = 0.5, Type = SignalGeneratorType.Sin };
-            var source = sine;
-
             var gains = new float[10];
-            gains[0] = 10f; // +10dB at 31Hz
-            var eq = new EqualizerSampleProvider(source, gains);
+            gains[0] = 10f;
+            var eq = new EqualizerSampleProvider(new SineSampleProvider(format, 31, 0.5f), gains);
 
             float[] buffer = new float[1024];
             eq.Read(buffer, 0, buffer.Length);
 
-            // Peak should be higher than the input 0.5 due to +10dB boost
             float max = buffer.Max(Math.Abs);
-            
-            if (max > 0.51f)
-                Console.WriteLine($"PASSED (Gain applied: {max:F2} > 0.5)");
-            else
-                Console.WriteLine($"FAILED (No boost detected: {max:F2})");
+            bool passed = max > 0.51f;
+            LogLine("Equalizer gain response (+10 dB at band 0)", passed,
+                passed ? $"peak {max:F2}" : $"peak {max:F2}, expected boost over 0.5");
         }
 
         /// <summary>
@@ -79,19 +79,48 @@ namespace KhurramAudioRoute.Tests
         /// </summary>
         private static void TestDeviceEnumeration()
         {
-            Console.Write("Testing Device Enumeration... ");
             try
             {
                 var devices = DeviceManager.GetRenderDevices();
                 if (devices.Count > 0)
-                    Console.WriteLine($"PASSED ({devices.Count} devices found)");
+                    LogLine("Device enumeration (render)", true, $"{devices.Count} endpoint(s)");
                 else
-                    Console.WriteLine("SKIPPED (No audio devices active on this system)");
+                    LogLine("Device enumeration (render)", true, "(0 devices — SKIPPED, no endpoints)");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FAILED ({ex.Message})");
+                LogLine("Device enumeration (render)", false, ex.Message);
             }
+        }
+    }
+
+    /// <summary>Mono sine for gain-path smoke tests (no dependency on SignalGenerator wave graph).</summary>
+    internal sealed class SineSampleProvider : ISampleProvider
+    {
+        private readonly double _inc;
+        private double _phase;
+
+        public SineSampleProvider(WaveFormat format, double frequencyHz, float peakAmplitude)
+        {
+            if (format.Encoding != WaveFormatEncoding.IeeeFloat || format.Channels != 1)
+                throw new ArgumentException("Expected IEEE float mono.", nameof(format));
+            WaveFormat = format;
+            _inc = 2 * Math.PI * frequencyHz / format.SampleRate;
+            Peak = peakAmplitude;
+        }
+
+        public WaveFormat WaveFormat { get; }
+        public float Peak { get; }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                buffer[offset + i] = Peak * (float)Math.Sin(_phase);
+                _phase += _inc;
+                if (_phase > Math.PI * 1024) _phase -= Math.PI * 1024;
+            }
+            return count;
         }
     }
 

@@ -90,6 +90,11 @@ pages stay in the shell for later milestones; feature plans live under
 
 Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **or** back up/delete that folder first so VB modal + defaults behave like first run.
 
+**0. Automated preflight** (optional — clean build under `%TEMP%`, avoids IDE file locks):
+
+`powershell -ExecutionPolicy Bypass -File .\Scripts\RegressionPass.ps1`  
+(or `-Configuration Debug`; use `pwsh` if PowerShell 7 is installed.)
+
 1. **VB-CABLE present** — work through checklist rows that assume bus installed (power toggle, persist, ACTIVE outputs, wizard, sliders).
 2. **VB-CABLE absent** — confirm Outputs banner + first-run modal (until suppressed), backup loopback behaviour, **`RefreshBus` after simulated install**: exit app tray, reinstall cable, reopen app.
 3. **L2 UX** — after a wizard run with saved fingerprint, change Windows sample rate exclusive vs shared scenario if you can provoke drift; **`RE-CAL?`** chip should appear and open **Sync wizard**; after re-run chip clears once fingerprint matches again.
@@ -125,4 +130,4 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 - [ ] **L2 RE-CAL?** chip — visible when persisted fingerprint mismatches live probe; opens wizard; clears after refresh or matching re-calibration.
 - [ ] First-run **VB-CABLE** modal shows when cable missing and reminder not suppressed; **Don't show again** persists; **`SuppressVbCableStartupReminder`** survives restart.
 - [ ] Uninstall VB-CABLE — backup banner + loopback behaviour; reinstall hot-plugs via `RefreshBus`.
-- [ ] Expanded **Advanced** on a card survives app restart *(after `AdvancedExpandedByDeviceId` ship)*.
+- [ ] **Other Options -> Diagnostics**: three Audio Core Integrity checks log to Debug Output (equalizer silence, gain bump, enumeration); confirm no FAILED lines.
