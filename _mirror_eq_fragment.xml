@@ -1,0 +1,195 @@
+                                                        <!-- Mirror strip (golden minor ~38%), EQ band (golden major ~62%); fixed Height distributes star rows. -->
+                                                        <Border Margin="0,8,0,0" VerticalAlignment="Top" Height="452" MinHeight="400" MaxHeight="560">
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="382*"/>
+                                                                    <RowDefinition Height="618*"/>
+                                                                </Grid.RowDefinitions>
+
+                                                                <Border Grid.Row="0" CornerRadius="14" Padding="12,10" Margin="0,0,0,8"
+                                                                        Background="#0A0F14" BorderBrush="#213040" BorderThickness="1">
+                                                                    <DockPanel LastChildFill="True">
+                                                                        <Grid DockPanel.Dock="Top" Margin="0,0,0,6">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="Auto"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <StackPanel>
+                                                                                <TextBlock Text="Mirror outputs" FontSize="13" FontWeight="SemiBold"
+                                                                                           Foreground="{StaticResource SonicOnSurfaceBrush}"/>
+                                                                                <TextBlock Text="Route this profile to hardware outputs (VB-CABLE staging)."
+                                                                                           Foreground="{StaticResource SonicOutlineBrush}" FontSize="10"
+                                                                                           TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                                                            </StackPanel>
+                                                                            <ui:ToggleSwitch Grid.Column="1"
+                                                                                             IsChecked="{Binding IsDuplicating, Mode=OneWay}"
+                                                                                             IsEnabled="{Binding IsDuplicateBusy, Converter={StaticResource InverseBooleanConverter}}"
+                                                                                             Click="OnDuplicateToggleClicked"
+                                                                                             VerticalAlignment="Center"
+                                                                                             Margin="10,0,0,0"/>
+                                                                        </Grid>
+                                                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                                                                      Padding="0,0,0,2">
+                                                                            <Grid Grid.IsSharedSizeScope="True" Margin="0,2,4,0" MinWidth="360">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto"/>
+                                                                                    <RowDefinition Height="*"/>
+                                                                                </Grid.RowDefinitions>
+                                                                                <Border Grid.Row="0" CornerRadius="6" Margin="0,0,0,6" Padding="8,7,8,6"
+                                                                                        Background="#0B1018" BorderBrush="#1E2936" BorderThickness="1">
+                                                                                    <Grid>
+                                                                                        <Grid.ColumnDefinitions>
+                                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShChk"/>
+                                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShIco"/>
+                                                                                            <ColumnDefinition Width="*"/>
+                                                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="M_ShDly" MinWidth="148"/>
+                                                                                        </Grid.ColumnDefinitions>
+                                                                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="4,0,8,0">
+                                                                                            <TextBlock Text="OUTPUT" Style="{StaticResource SonicSectionHeader}" Margin="0"/>
+                                                                                            <TextBlock Text="Endpoints to mirror into" Margin="0,2,0,0" FontSize="9" Foreground="#5C6978"/>
+                                                                                        </StackPanel>
+                                                                                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                                                            <TextBlock Text="SYNC DELAY" Style="{StaticResource SonicSectionHeader}" Margin="0" HorizontalAlignment="Center"/>
+                                                                                            <TextBlock Text="ms offset" Margin="0,2,0,0" FontSize="9" Foreground="#5C6978" HorizontalAlignment="Center"/>
+                                                                                        </StackPanel>
+                                                                                    </Grid>
+                                                                                </Border>
+                                                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding DuplicateTargets}"
+                                                                                              ItemTemplate="{StaticResource MirrorPlaybackTargetRow}"/>
+                                                                            </Grid>
+                                                                        </ScrollViewer>
+                                                                    </DockPanel>
+                                                                </Border>
+
+                                                                <Border Grid.Row="1" CornerRadius="14" Padding="12,10"
+                                                                        Background="#0A0F14" BorderBrush="#213040" BorderThickness="1">
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="*" MinHeight="76"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                        </Grid.RowDefinitions>
+
+                                                                        <Grid Grid.Row="0" Margin="0,0,0,6">
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="Auto"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <StackPanel VerticalAlignment="Center">
+                                                                                <TextBlock Text="Profile EQ (mirror path)" FontSize="13" FontWeight="SemiBold"
+                                                                                           Foreground="{StaticResource SonicOnSurfaceBrush}"/>
+                                                                                <TextBlock Text="Mirrored path only — enable mirror above to hear this curve."
+                                                                                           Foreground="{StaticResource SonicOutlineBrush}" FontSize="10" Margin="0,3,0,0"/>
+                                                                            </StackPanel>
+                                                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                <ui:Button Content="Reset" Click="OnResetEq" Appearance="Secondary" Padding="10,6"
+                                                                                           MinHeight="34" Background="#2B1618" BorderBrush="#6E3036"
+                                                                                           FontSize="11" Margin="0,0,8,0" Icon="ArrowSync24" ToolTip="Reset bands to 0 dB"/>
+                                                                                <ToggleButton Style="{StaticResource SonicIconFrameToggle}" Height="34" Width="34"
+                                                                                              Padding="0" IsChecked="{Binding IsEqGraphVisible, Mode=TwoWay}"
+                                                                                              ToolTip="Response sketch" VerticalAlignment="Center">
+                                                                                    <ui:SymbolIcon Symbol="Pulse24" FontSize="14"/>
+                                                                                </ToggleButton>
+                                                                            </StackPanel>
+                                                                        </Grid>
+
+                                                                        <Grid Grid.Row="1" MinHeight="76">
+                                                                            <UniformGrid Columns="10" Visibility="{Binding IsEqGraphVisible, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand0, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="31" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand1, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="62" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand2, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="125" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand3, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="250" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand4, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="500" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand5, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="1k" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand6, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="2k" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand7, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="4k" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand8, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="8k" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                                <StackPanel Margin="0,0,1,0" VerticalAlignment="Bottom">
+                                                                                    <Slider Orientation="Vertical" Height="72" Minimum="-12" Maximum="12" Value="{Binding EqBand9, Mode=TwoWay}"
+                                                                                            Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
+                                                                                    <TextBlock Text="16k" Margin="0,4,0,0" Foreground="{StaticResource SonicOutlineBrush}" FontSize="7.5" HorizontalAlignment="Center"/>
+                                                                                </StackPanel>
+                                                                            </UniformGrid>
+
+                                                                            <Border MinHeight="88" Margin="0,4,0,0" Background="#080A0F" CornerRadius="8" BorderBrush="#1A2838" BorderThickness="1"
+                                                                                    VerticalAlignment="Stretch"
+                                                                                    Visibility="{Binding IsEqGraphVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                                                <Grid>
+                                                                                    <Polyline Points="0,72 26,62 52,52 72,54 104,74 138,92 154,74 174,62 206,74 246,92 260,74 290,74 320,60 360,70 400,80"
+                                                                                              Stroke="{StaticResource SonicPrimaryBrush}" StrokeThickness="2" Opacity="0.75" Stretch="Fill" Margin="20,16,20,36"/>
+                                                                                    <TextBlock Text="Response sketch" Foreground="{StaticResource SonicOutlineBrush}" FontSize="9"
+                                                                                               HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" Opacity="0.5"/>
+                                                                                </Grid>
+                                                                            </Border>
+                                                                        </Grid>
+
+                                                                        <Border Grid.Row="2" Margin="0,8,0,0" Background="#121820" CornerRadius="9" Padding="4" BorderBrush="#223040" BorderThickness="1">
+                                                                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                                                                <UniformGrid Rows="1" Columns="8" MinHeight="36">
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Flat" Tag="Flat"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Flat}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Bass" Tag="Bass"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Bass}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Club" Tag="Club"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Club}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Rock" Tag="Rock"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Rock}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Pop" Tag="Pop"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Pop}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Live" Tag="Live"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Live}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Voice" Tag="Voice"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Voice}"/>
+                                                                                    <RadioButton Style="{StaticResource SonicEqPresetRadio}" Content="Techno" Tag="Techno"
+                                                                                                 GroupName="{Binding EqPresetSegmentGroupToken}" Click="OnEqPresetRadioClick"
+                                                                                                 IsChecked="{Binding SelectedEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Techno}"/>
+                                                                                </UniformGrid>
+                                                                            </ScrollViewer>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>

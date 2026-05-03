@@ -21,14 +21,22 @@ namespace KhurramAudioRoute.Core
         public string? Name
         {
             get => _name;
-            set => SetProperty(ref _name, value);
+            set
+            {
+                if (SetProperty(ref _name, value))
+                    OnPropertyChanged(nameof(UiListLabel));
+            }
         }
 
         private bool _isDefault;
         public bool IsDefault
         {
             get => _isDefault;
-            set => SetProperty(ref _isDefault, value);
+            set
+            {
+                if (SetProperty(ref _isDefault, value))
+                    OnPropertyChanged(nameof(UiListLabel));
+            }
         }
 
         private float _peakValue;
@@ -66,6 +74,14 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _isAdvancedExpanded, value);
         }
 
+        /// <summary>Virtual profile mirror list: collapsed saves vertical space (no scrollbar).</summary>
+        private bool _mirrorOutputsListExpanded = true;
+        public bool MirrorOutputsListExpanded
+        {
+            get => _mirrorOutputsListExpanded;
+            set => SetProperty(ref _mirrorOutputsListExpanded, value);
+        }
+
         // Pre-fan-out delay added before every mirror target's per-target offset.
         // Used to align this device's mirrored copies with its OS-level playback.
         private int _sourceLatencyMs;
@@ -100,7 +116,29 @@ namespace KhurramAudioRoute.Core
         public SpatialPreset SpatialPreset
         {
             get => _spatialPreset;
-            set => SetProperty(ref _spatialPreset, value);
+            set
+            {
+                if (!SetProperty(ref _spatialPreset, value))
+                    return;
+                OnPropertyChanged(nameof(IsSpatialPresetActive));
+            }
+        }
+
+        /// <summary>Whether spatial processing runs (toggle binds here; presets still choose the scene).</summary>
+        public bool IsSpatialPresetActive
+        {
+            get => SpatialPreset != SpatialPreset.Off;
+            set
+            {
+                if (value)
+                {
+                    if (SpatialPreset == SpatialPreset.Off)
+                        SpatialPreset = SpatialPreset.HeadphoneStereoPlus;
+                    return;
+                }
+                if (SpatialPreset != SpatialPreset.Off)
+                    SpatialPreset = SpatialPreset.Off;
+            }
         }
 
         // Static enum source for the per-card ComboBox binding (XAML can't easily
@@ -176,7 +214,26 @@ namespace KhurramAudioRoute.Core
         public string? ProfileLabel
         {
             get => _profileLabel;
-            set => SetProperty(ref _profileLabel, value);
+            set
+            {
+                if (SetProperty(ref _profileLabel, value))
+                    OnPropertyChanged(nameof(UiListLabel));
+            }
+        }
+
+        /// <summary>
+        /// Single-line label for combo boxes and mirror lists (profile + device name when applicable).
+        /// </summary>
+        public string UiListLabel
+        {
+            get
+            {
+                var n = string.IsNullOrWhiteSpace(Name) ? "Unknown device" : Name.Trim();
+                var def = IsDefault ? " · Default" : "";
+                return !string.IsNullOrWhiteSpace(ProfileLabel)
+                    ? $"{ProfileLabel} — {n}{def}"
+                    : n + def;
+            }
         }
 
         private bool _isEqGraphVisible;
@@ -186,7 +243,21 @@ namespace KhurramAudioRoute.Core
             set => SetProperty(ref _isEqGraphVisible, value);
         }
 
+        /// <summary>Name of last applied EQ preset button (Flat, Bass, …) for segmented control UI.</summary>
+        private string _selectedEqPresetKey = "Flat";
+        public string SelectedEqPresetKey
+        {
+            get => _selectedEqPresetKey;
+            set => SetProperty(ref _selectedEqPresetKey, value);
+        }
+
         public override string ToString() => Name ?? "Unknown Device";
+
+        /// <summary>Unique RadioButton group scope for segmented EQ presets on this profile card.</summary>
+        public string EqPresetSegmentGroupToken => $"vf-eq-{Id ?? ProfileLabel ?? "anon"}";
+
+        /// <summary>Radio scope for spatial mode pills per virtual profile.</summary>
+        public string SpatialPresetSegmentGroupToken => $"vf-sp-{Id ?? ProfileLabel ?? "anon"}";
     }
 
     public static class DeviceManager

@@ -597,6 +597,61 @@ namespace KhurramAudioRoute.Core
         };
 
         /// <summary>
+        /// Frees BASS WASAPI loopback + mixer EQ for one Windows endpoint. Call before NAudio
+        /// <see cref="DuplicationManager"/> captures the same source; otherwise EQ updates hit
+        /// idle pipelines or fight for exclusive loopback access.
+        /// </summary>
+        public static void StopStandaloneDeviceProcessing(string deviceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId)) return;
+
+            try
+            {
+                SetSpatialPreset(deviceId, SpatialPreset.Off);
+
+                if (_loopbackHandles.TryGetValue(deviceId, out int wasapiIndex))
+                {
+                    _loopbackHandles.Remove(deviceId);
+                    try
+                    {
+                        BassWasapi.CurrentDevice = wasapiIndex;
+                        BassWasapi.Stop(true);
+                        BassWasapi.Free();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"BASS WASAPI teardown for {deviceId}: {ex.Message}");
+                    }
+                }
+
+                _captureFormats.TryRemove(deviceId, out _);
+
+                int devIndex = GetDeviceIndex(deviceId);
+                if (devIndex != -1)
+                {
+                    try { Bass.CurrentDevice = devIndex; }
+                    catch (Exception ex) { Debug.WriteLine($"BASS CurrentDevice ({deviceId}): {ex.Message}"); }
+                }
+
+                if (_deviceStreams.TryGetValue(deviceId, out int mixerStream))
+                {
+                    _deviceStreams.Remove(deviceId);
+                    try { Bass.ChannelStop(mixerStream); }
+                    catch (Exception ex) { Debug.WriteLine($"BASS mixer stop ({deviceId}): {ex.Message}"); }
+
+                    try { Bass.StreamFree(mixerStream); }
+                    catch (Exception ex) { Debug.WriteLine($"BASS mixer free ({deviceId}): {ex.Message}"); }
+                }
+
+                _deviceEqHandles.Remove(deviceId);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"StopStandaloneDeviceProcessing error for {deviceId}: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Applies high-precision EQ to a device. 
         /// For single-device mode, we create a loopback capture to intercept Windows audio.
         /// </summary>

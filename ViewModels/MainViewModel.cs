@@ -60,6 +60,18 @@ namespace KhurramAudioRoute.ViewModels
         [ObservableProperty]
         private bool isTestTonePlaying;
 
+        /// <summary>Bound for empty-state UI when no apps expose an audio session.</summary>
+        public bool HasActiveSessions => Sessions.Count > 0;
+
+        /// <summary>Bound for empty-state UI on the Recording page.</summary>
+        public bool HasAnyMicrophones => Microphones.Count > 0;
+
+        partial void OnSessionsChanged(ObservableCollection<AppAudioSession>? oldValue, ObservableCollection<AppAudioSession> newValue)
+            => OnPropertyChanged(nameof(HasActiveSessions));
+
+        partial void OnMicrophonesChanged(ObservableCollection<AudioDevice>? oldValue, ObservableCollection<AudioDevice> newValue)
+            => OnPropertyChanged(nameof(HasAnyMicrophones));
+
         private readonly Dictionary<string, SemaphoreSlim> _duplicateLocks = new();
 
         [RelayCommand]
@@ -211,7 +223,7 @@ namespace KhurramAudioRoute.ViewModels
                 var vDevices = availableDevices.Where(d => d.IsSonicFlowVirtual).ToList();
                 for (int i = 0; i < vDevices.Count; i++)
                 {
-                    vDevices[i].ProfileLabel = $"PROFILE {i + 1}";
+                    vDevices[i].ProfileLabel = $"Profile {i + 1}";
                 }
                 
                 VirtualDevices = new ObservableCollection<AudioDevice>(vDevices);
@@ -444,6 +456,38 @@ namespace KhurramAudioRoute.ViewModels
                 DuplicationManager.SetTargetLatency(sourceDevice.Id, targetId, offsetMs);
         }
 
+        private void NormalizeMirrorSelectionsAfterExclusiveTakeover(string reservingSourceId, IReadOnlyList<string> stolenTargetIds)
+        {
+            if (stolenTargetIds.Count == 0) return;
+
+            foreach (var d in Devices.Where(x => x.CanHostMirroring && x.Id != reservingSourceId && !string.IsNullOrWhiteSpace(x.Id)))
+            {
+                foreach (var sel in d.DuplicateTargets)
+                {
+                    string? tid = sel.Device.Id;
+                    if (string.IsNullOrWhiteSpace(tid) || !stolenTargetIds.Contains(tid)) continue;
+
+                    sel.IsSelected = false;
+                }
+            }
+
+            AlignVirtualMirroringStatesWithEngine();
+        }
+
+        /// <summary>Syncs Profile 1 / Profile 2 (and similar) duplicate toggles after the native layer steals playback targets.</summary>
+        private void AlignVirtualMirroringStatesWithEngine()
+        {
+            foreach (var d in Devices.Where(x => x.IsSonicFlowVirtual && !string.IsNullOrWhiteSpace(x.Id)))
+            {
+                bool engineSays = DuplicationManager.IsDuplicating(d.Id);
+                if (d.IsDuplicating != engineSays)
+                {
+                    d.IsDuplicating = engineSays;
+                    UpdateDuplicateStatus(d);
+                }
+            }
+        }
+
         [RelayCommand]
         public async Task ToggleDeviceDuplicate(AudioDevice? sourceDevice)
         {
@@ -458,12 +502,16 @@ namespace KhurramAudioRoute.ViewModels
 
             if (sourceDevice.IsDuplicating)
             {
+                var gainsStopped = sourceDevice.GetEqualizerGains();
                 await Task.Run(() => {
                     DuplicationManager.StopDuplication(sourceDevice.Id);
                     BassEngine.StopBridge();
                 });
                 sourceDevice.IsDuplicating = false;
                 UpdateDuplicateStatus(sourceDevice);
+
+                BassEngine.UpdateEqualizer(sourceDevice.Id, gainsStopped);
+                AlignVirtualMirroringStatesWithEngine();
                 return;
             }
 
@@ -496,14 +544,17 @@ namespace KhurramAudioRoute.ViewModels
                 {
                     if (sourceDevice.IsDuplicating)
                     {
+                        var gainsRestore = sourceDevice.GetEqualizerGains();
                         await Task.Run(() => {
                             DuplicationManager.StopDuplication(sourceDevice.Id);
                             BassEngine.StopBridge();
                         });
                         sourceDevice.IsDuplicating = false;
+                        BassEngine.UpdateEqualizer(sourceDevice.Id!, gainsRestore);
                     }
 
                     UpdateDuplicateStatus(sourceDevice);
+                    AlignVirtualMirroringStatesWithEngine();
                     if (showValidationMessage)
                     {
                         MessageBox.Show(
@@ -524,6 +575,7 @@ namespace KhurramAudioRoute.ViewModels
                 bool started = await Task.Run(() =>
                 {
                     BassEngine.StopBridge();
+                    BassEngine.StopStandaloneDeviceProcessing(sourceDevice.Id!);
 
                     bool ok = DuplicationManager.StartDuplication(
                         sourceDevice.Id!,
@@ -551,9 +603,11 @@ namespace KhurramAudioRoute.ViewModels
                     MessageBox.Show(
                         reason ?? "Could not start device duplication.\nMake sure audio is currently playing on the source device, then try again.",
                         "Device Duplication", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AlignVirtualMirroringStatesWithEngine();
                     return;
                 }
 
+                NormalizeMirrorSelectionsAfterExclusiveTakeover(sourceDevice.Id!, targetIds);
                 UpdateDuplicateStatus(sourceDevice);
                 sourceDevice.IsAdvancedExpanded = true;
             }
@@ -614,8 +668,14 @@ namespace KhurramAudioRoute.ViewModels
 
             if (session.IsDuplicating)
             {
-                await Task.Run(() => DuplicationManager.StopDuplication(sourceDevice.Id));
+                var gainsRestore = sourceDevice.GetEqualizerGains();
+                await Task.Run(() => {
+                    DuplicationManager.StopDuplication(sourceDevice.Id);
+                    BassEngine.StopBridge();
+                });
                 session.IsDuplicating = false;
+                BassEngine.UpdateEqualizer(sourceDevice.Id, gainsRestore);
+                AlignVirtualMirroringStatesWithEngine();
                 return;
             }
 
@@ -646,6 +706,9 @@ namespace KhurramAudioRoute.ViewModels
                 System.Threading.Thread.Sleep(250);
                 SessionManager.SetMute(session.ProcessId, false);
 
+                BassEngine.StopBridge();
+                BassEngine.StopStandaloneDeviceProcessing(sourceDevice.Id);
+
                 // 3. Start loopback capture from source device + fan out to targets
                 //    (DuplicationSession.Start has its own settling delay + retry logic)
                 return DuplicationManager.StartDuplication(sourceDevice.Id, targetIds);
@@ -658,6 +721,12 @@ namespace KhurramAudioRoute.ViewModels
                     "Could not open the audio devices for duplication.\n" +
                     "Make sure audio is playing in the app, then try again.",
                     "Duplication Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AlignVirtualMirroringStatesWithEngine();
+            }
+            else
+            {
+                NormalizeMirrorSelectionsAfterExclusiveTakeover(sourceDevice.Id!, targetIds);
+                AlignVirtualMirroringStatesWithEngine();
             }
         }
 

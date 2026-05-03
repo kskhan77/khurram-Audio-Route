@@ -590,6 +590,29 @@ namespace KhurramAudioRoute.Core
             _sourceDevice = null;
         }
 
+        /// <summary>
+        /// Drops one physical mirror output from this profile. Returns true when the session
+        /// has no outputs left (capture released), so VB-CABLE–style isolation can remove the key.
+        /// </summary>
+        internal bool ReleaseMirrorTo(string playbackDeviceId)
+        {
+            lock (_sync)
+            {
+                if (!_targets.Remove(playbackDeviceId, out var target))
+                    return false;
+
+                target.Dispose();
+
+                if (_targets.Count == 0)
+                {
+                    ReleaseCapture();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool StartOrUpdate(string sourceDeviceId, IEnumerable<string> targetDeviceIds, float[] equalizerGains, SpatialPreset spatialPreset)
         {
             LastError = null;
@@ -607,6 +630,8 @@ namespace KhurramAudioRoute.Core
 
             if (!EnsureCapture(sourceDeviceId))
                 return false;
+
+            DuplicationManager.StealPlaybackTargetsExclusive(sourceDeviceId, desiredTargets);
 
             lock (_sync)
             {
@@ -793,6 +818,23 @@ namespace KhurramAudioRoute.Core
 
         public static bool IsDuplicating(string? sourceDeviceId)
             => !string.IsNullOrWhiteSpace(sourceDeviceId) && _sessions.ContainsKey(sourceDeviceId);
+
+        internal static void StealPlaybackTargetsExclusive(string reservingSourceId, List<string> newTargets)
+        {
+            foreach (var targetId in newTargets)
+            {
+                if (string.IsNullOrWhiteSpace(targetId)) continue;
+
+                foreach (var kv in _sessions.ToArray())
+                {
+                    if (kv.Key == reservingSourceId) continue;
+
+                    bool sessionEnded = kv.Value.ReleaseMirrorTo(targetId);
+                    if (sessionEnded)
+                        _sessions.Remove(kv.Key);
+                }
+            }
+        }
 
         public static void UpdateEqualizer(string? sourceDeviceId, float[] equalizerGains)
         {

@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Wpf.Ui.Controls;
 using KhurramAudioRoute.Core;
+using KhurramAudioRoute.Core.Spatial;
 using KhurramAudioRoute.ViewModels;
 using KhurramAudioRoute.Tests;
 
@@ -40,8 +41,14 @@ public partial class MainWindow : FluentWindow
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         var workArea = SystemParameters.WorkArea;
-        Height = Math.Max(680, workArea.Height * 0.60);
-        Width = Math.Min(1350, workArea.Width * 0.82);
+        double minW = MinWidth > 0 ? MinWidth : 1024;
+        double minH = MinHeight > 0 ? MinHeight : 700;
+        double targetW = Math.Min(1350, workArea.Width * 0.82);
+        double targetH = Math.Max(680, workArea.Height * 0.60);
+        Width = Math.Max(minW, targetW);
+        Height = Math.Max(minH, targetH);
+        Width = Math.Min(Width, workArea.Width - 48);
+        Height = Math.Min(Height, workArea.Height - 48);
         _meterTimer.Start();
     }
 
@@ -244,29 +251,85 @@ public partial class MainWindow : FluentWindow
 
     private static void ApplyEqualizerPreset(AudioDevice device, string preset)
     {
-        float[] gains = preset switch
+        string keyLabel;
+        float[] gains;
+        switch ((preset ?? "").Trim())
         {
-            "Bass" => PresetBass,
-            "Voice" => PresetVoice,
-            "Bright" => PresetBright,
-            "Club" => PresetClub,
-            "Live" => PresetLive,
-            "Pop" => PresetPop,
-            "Rock" => PresetRock,
-            "Classical" => PresetClassical,
-            "Techno" => PresetTechno,
-            "Soft" => PresetSoft,
-            _ => PresetFlat,
-        };
+            case "Bass":
+                gains = PresetBass;
+                keyLabel = "Bass";
+                break;
+            case "Voice":
+                gains = PresetVoice;
+                keyLabel = "Voice";
+                break;
+            case "Bright":
+                gains = PresetBright;
+                keyLabel = "Bright";
+                break;
+            case "Club":
+                gains = PresetClub;
+                keyLabel = "Club";
+                break;
+            case "Live":
+                gains = PresetLive;
+                keyLabel = "Live";
+                break;
+            case "Pop":
+                gains = PresetPop;
+                keyLabel = "Pop";
+                break;
+            case "Rock":
+                gains = PresetRock;
+                keyLabel = "Rock";
+                break;
+            case "Classical":
+                gains = PresetClassical;
+                keyLabel = "Classical";
+                break;
+            case "Techno":
+                gains = PresetTechno;
+                keyLabel = "Techno";
+                break;
+            case "Soft":
+                gains = PresetSoft;
+                keyLabel = "Soft";
+                break;
+            default:
+                gains = PresetFlat;
+                keyLabel = "Flat";
+                break;
+        }
 
         device.SetEqualizerGains(gains);
-        
+        device.SelectedEqPresetKey = keyLabel;
+
         // Update audio engines
         if (!string.IsNullOrWhiteSpace(device.Id))
         {
             DuplicationManager.UpdateEqualizer(device.Id, gains);
             BassEngine.UpdateEqualizer(device.Id, gains);
         }
+    }
+
+    private void OnEqPresetRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || rb.DataContext is not AudioDevice device)
+            return;
+        if (!IsLoaded || rb.Tag is not string key || string.IsNullOrWhiteSpace(key))
+            return;
+        ApplyEqualizerPreset(device, key);
+    }
+
+    private void OnSpatialPresetRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || rb.DataContext is not AudioDevice device)
+            return;
+        if (!IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+            return;
+        if (!Enum.TryParse<SpatialPreset>(tag, ignoreCase: false, out var preset))
+            return;
+        device.SpatialPreset = preset;
     }
 
     private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();
@@ -364,6 +427,23 @@ public class SpectrumBarHeightConverter : IValueConverter
     }
 }
 
+public class SpatialPresetEnumMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter is not string paramStr || !Enum.TryParse<SpatialPreset>(paramStr, out var needle))
+            return false;
+        if (value is SpatialPreset vp)
+            return vp == needle;
+        if (value != null && Enum.TryParse<SpatialPreset>(value.ToString(), out var parsed))
+            return parsed == needle;
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
+}
+
 /// <summary>
 /// Produces a brighter accent when a device or app is actively playing.
 /// </summary>
@@ -415,4 +495,43 @@ public class NullToCollapsedConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => throw new NotImplementedException();
+}
+
+/// <summary>Radio segmented EQ: compares <see cref="AudioDevice.SelectedEqPresetKey"/> to Tag string.</summary>
+public class EqPresetKeyMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => string.Equals(value?.ToString(), parameter?.ToString(), StringComparison.Ordinal);
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool b && b)
+            return parameter?.ToString() ?? "Flat";
+        return Binding.DoNothing;
+    }
+}
+
+/// <summary>Returns true when a render endpoint friendly name hints at headphones/headset.</summary>
+public class PlaybackNameSuggestsHeadphonesConverter : IValueConverter
+{
+    private static readonly string[] HeadphoneHints =
+    [
+        "headphone", "headset", "earphone", "earbud", "airpods",
+        " buds", " xm4", " xm5",
+    ];
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is not string s || string.IsNullOrWhiteSpace(s))
+            return false;
+        foreach (var h in HeadphoneHints)
+        {
+            if (s.Contains(h, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
 }

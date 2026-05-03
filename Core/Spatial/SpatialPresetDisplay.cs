@@ -22,6 +22,19 @@ namespace KhurramAudioRoute.Core.Spatial
             SpatialPreset.GameMode             => "Game Mode (low latency)",
             _ => p.ToString()
         };
+
+        /// <summary>Tight labels for vertical pill selectors (tooltip keeps full Name).</summary>
+        public static string ShortName(SpatialPreset p) => p switch
+        {
+            SpatialPreset.Off                  => "Off",
+            SpatialPreset.HeadphoneStereoPlus  => "Stereo+",
+            SpatialPreset.HeadphoneStudio      => "Studio",
+            SpatialPreset.HeadphoneCinema      => "Cinema 7.1",
+            SpatialPreset.HeadphoneConcertHall => "Concert hall",
+            SpatialPreset.Speakers_5_1         => "5.1 speakers",
+            SpatialPreset.GameMode             => "Game",
+            _ => p.ToString()
+        };
     }
 
     /// <summary>
