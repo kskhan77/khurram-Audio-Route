@@ -1017,6 +1017,10 @@
                                            Command="{Binding OpenSyncCalibrationWizardCommand}"
                                            ToolTip="3-tap perceptual sync vs a timing reference — see docs/LATENCY_PLAN.md (L2)."
                                            Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
+                                <ui:Button Content="Auto-sync" Icon="MicSparkle24" Appearance="Secondary" Margin="0,0,8,0"
+                                           Command="{Binding OpenAutoSyncWizardCommand}"
+                                           ToolTip="Mic-based auto-sync: plays a chirp on each ACTIVE output and listens via the system microphone — see docs/LATENCY_PLAN.md (L3)."
+                                           Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
                                 <ui:Button Content="Refresh list" Icon="ArrowSync24" Appearance="Secondary"
                                            Command="{Binding RefreshDataCommand}"
                                            Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
@@ -1306,6 +1310,31 @@
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
                                     </UniformGrid>
                                 </Border>
+
+                                <!-- Master stereo width: scales mid/side at the head of every spatial preset chain.
+                                     1.0 = no effect; <1 narrows toward mono, >1 widens. No effect when preset = Off. -->
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Width" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"
+                                               ToolTip="Stereo width applied to every spatial preset (no effect when preset is Off)."/>
+                                    <Slider Grid.Column="1"
+                                            Minimum="0.5" Maximum="1.6"
+                                            TickFrequency="0.1" IsSnapToTickEnabled="False"
+                                            SmallChange="0.02" LargeChange="0.1"
+                                            Value="{Binding MasterStereoWidth, Mode=TwoWay}"
+                                            IsEnabled="{Binding MasterSpatialActive}"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding MasterStereoWidth, StringFormat={}{0:F2}×}"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Width="48" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </Grid>
                             </Grid>
                         </Border>
 
@@ -1970,6 +1999,16 @@
                                                                ToolTip="Your last Sync wizard run used a different mix format than Windows is using now. Open Sync wizard (Outputs tab) to re-calibrate."
                                                                VerticalAlignment="Center"
                                                                Command="{Binding DataContext.OpenSyncCalibrationWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                    <ui:Button Margin="8,0,0,0" Padding="8,4" FontSize="9" Appearance="Transparent"
+                                                               Content="DRIFT?"
+                                                               Visibility="{Binding AutoSyncDrift, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                               ToolTip="Mix format changed since the last Auto-sync. Re-run to refresh the offset."
+                                                               VerticalAlignment="Center"
+                                                               Command="{Binding DataContext.OpenAutoSyncWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                    <TextBlock Margin="8,0,0,0" FontSize="9" Foreground="#74D1FF" VerticalAlignment="Center"
+                                                               Text="{Binding AutoSyncCaption}"
+                                                               Visibility="{Binding HasAutoSyncCaption, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                               ToolTip="Last L3 mic-based auto-sync timestamp for this output."/>
                                                 </StackPanel>
                                                 <Slider Grid.Column="1"
                                                         Minimum="0" Maximum="120"
@@ -2309,6 +2348,60 @@
                                 </StackPanel>
                             </Border>
                         </UniformGrid>
+
+                        <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,8,0,16">
+                            <StackPanel>
+                                <TextBlock Text="Default Sync by device class (L1/L4)" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,8,0,12"
+                                           Text="Baseline Sync slider for new Windows endpoints only (after L4 name presets). Per-device overrides stay in settings.json; use Refresh after plugging hardware to pick up seeds for brand-new ids."/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="108"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="52"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="On-board" VerticalAlignment="Center" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                    <Slider Grid.Row="0" Grid.Column="1" Margin="10,6,10,6" Style="{StaticResource SonicVolumeSlider}"
+                                            Minimum="0" Maximum="120" SmallChange="1" LargeChange="5"
+                                            Value="{Binding LatencyDefaultOnBoardMs, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding LatencyDefaultOnBoardMs, StringFormat={}{0} ms}" VerticalAlignment="Center" Foreground="White" FontSize="11" FontWeight="SemiBold" TextAlignment="Right"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="USB" VerticalAlignment="Center" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                    <Slider Grid.Row="1" Grid.Column="1" Margin="10,6,10,6" Style="{StaticResource SonicVolumeSlider}"
+                                            Minimum="0" Maximum="120" SmallChange="1" LargeChange="5"
+                                            Value="{Binding LatencyDefaultUsbMs, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding LatencyDefaultUsbMs, StringFormat={}{0} ms}" VerticalAlignment="Center" Foreground="White" FontSize="11" FontWeight="SemiBold" TextAlignment="Right"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="HDMI" VerticalAlignment="Center" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                    <Slider Grid.Row="2" Grid.Column="1" Margin="10,6,10,6" Style="{StaticResource SonicVolumeSlider}"
+                                            Minimum="0" Maximum="120" SmallChange="1" LargeChange="5"
+                                            Value="{Binding LatencyDefaultHdmiMs, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding LatencyDefaultHdmiMs, StringFormat={}{0} ms}" VerticalAlignment="Center" Foreground="White" FontSize="11" FontWeight="SemiBold" TextAlignment="Right"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Bluetooth" VerticalAlignment="Center" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                    <Slider Grid.Row="3" Grid.Column="1" Margin="10,6,10,6" Style="{StaticResource SonicVolumeSlider}"
+                                            Minimum="0" Maximum="120" SmallChange="1" LargeChange="5"
+                                            Value="{Binding LatencyDefaultBtMs, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding LatencyDefaultBtMs, StringFormat={}{0} ms}" VerticalAlignment="Center" Foreground="White" FontSize="11" FontWeight="SemiBold" TextAlignment="Right"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Network" VerticalAlignment="Center" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                    <Slider Grid.Row="4" Grid.Column="1" Margin="10,6,10,6" Style="{StaticResource SonicVolumeSlider}"
+                                            Minimum="0" Maximum="120" SmallChange="1" LargeChange="5"
+                                            Value="{Binding LatencyDefaultNetworkMs, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding LatencyDefaultNetworkMs, StringFormat={}{0} ms}" VerticalAlignment="Center" Foreground="White" FontSize="11" FontWeight="SemiBold" TextAlignment="Right"/>
+                                </Grid>
+                                <ui:Button Content="Reset to built-in class values" Appearance="Secondary" Margin="0,14,0,0" HorizontalAlignment="Left" Padding="14,8"
+                                           Command="{Binding ResetLatencyClassDefaultsToBuiltInCommand}"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

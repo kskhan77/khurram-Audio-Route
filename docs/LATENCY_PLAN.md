@@ -154,7 +154,8 @@ Implementation notes:
 **Code:** `Core/Latency/PredictiveLatencyDefaults.cs`, `LatencySeedResolver.cs`, wired from `DeviceManager.GetRenderDevices`.
 
 - **Name-based table** (substring match, first hit wins): common headphones, TVs, and cast-like devices get a better first Sync seed than the coarse L1 class alone. Values are conservative and clamped `0 … 120` ms.
-- **User `LatencyClassDefaults` map** (from `UserSettings`) is now actually applied when seeding a new endpoint id, after L4 name match and before the hard-coded `DeviceClassInfo` baseline — so a power user can tune "BT" once and have it affect *new* BT devices.
+- **User `LatencyClassDefaults` map** (from `UserSettings`) is applied when seeding a new endpoint id, after L4 name match and before the hard-coded `DeviceClassInfo` baseline.
+- **Tools page UI** — five sliders (**On-board**, **USB**, **HDMI**, **Bluetooth**, **Network**) + **Reset to built-in class values** edit `LatencyClassDefaults` without touching JSON.
 - **Future:** median offsets from anonymised calibration telemetry, or a downloadable JSON table.
 
 ## Risk register

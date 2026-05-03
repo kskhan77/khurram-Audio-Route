@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using KhurramAudioRoute.Core.Spatial;
 using KhurramAudioRoute.Core.SyncCalibration;
+using KhurramAudioRoute.Core.SyncCalibration.L3;
 
 namespace KhurramAudioRoute.Core
 {
@@ -46,6 +47,11 @@ namespace KhurramAudioRoute.Core
             // a string so the JSON survives enum reordering.
             public string MasterSpatialPreset { get; set; } = "Off";
 
+            // Master stereo-width multiplier (mid/side scale). 1.0 = no effect;
+            // < 1 narrows toward mono; > 1 widens. Applied as the FIRST stage
+            // of every non-Off spatial preset pipeline.
+            public float MasterStereoWidth { get; set; } = 1.0f;
+
             // Map of device-class key (e.g. "BT", "HDMI", "USB", "OnBoard") ->
             // baseline LatencyOffsetMs. Populated lazily by the L1 heuristic
             // and editable per device. See docs/LATENCY_PLAN.md.
@@ -59,6 +65,10 @@ namespace KhurramAudioRoute.Core
             public Dictionary<string, bool> AdvancedExpandedByDeviceId { get; set; } = new();
 
             public Dictionary<string, L2SyncCalibrationRow> L2SyncCalibrations { get; set; } = new();
+
+            // Per-physical-endpoint L3 auto-sync result (offset + timestamp).
+            // Drives the "Auto-synced N days ago" tag on each ACTIVE card.
+            public Dictionary<string, L3AutoSyncRow> L3AutoSyncCalibrations { get; set; } = new();
 
             /// <summary>
             /// When true, suppress the modal shown on startup when VB-CABLE is missing.
@@ -195,6 +205,25 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        public static float GetMasterStereoWidth()
+        {
+            float v = LoadCached().MasterStereoWidth;
+            if (v <= 0f) return 1.0f; // defensive: legacy file w/o the field deserialises as 0
+            return Math.Clamp(v, 0.5f, 1.6f);
+        }
+
+        public static void SetMasterStereoWidth(float width)
+        {
+            float clamped = Math.Clamp(width, 0.5f, 1.6f);
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (Math.Abs(s.MasterStereoWidth - clamped) < 0.0005f) return;
+                s.MasterStereoWidth = clamped;
+                SaveLocked(s);
+            }
+        }
+
         public static IReadOnlyDictionary<string, int> GetLatencyClassDefaults()
             => new Dictionary<string, int>(LoadCached().LatencyClassDefaults);
 
@@ -207,6 +236,18 @@ namespace KhurramAudioRoute.Core
                 if (s.LatencyClassDefaults.TryGetValue(classKey, out var existing) && existing == latencyMs)
                     return;
                 s.LatencyClassDefaults[classKey] = latencyMs;
+                SaveLocked(s);
+            }
+        }
+
+        /// <summary>Clears user overrides so <see cref="DeviceClassInfo"/> baselines apply again.</summary>
+        public static void ClearLatencyClassDefaults()
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (s.LatencyClassDefaults.Count == 0) return;
+                s.LatencyClassDefaults.Clear();
                 SaveLocked(s);
             }
         }
@@ -282,6 +323,31 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        public static L3AutoSyncRow? GetL3AutoSync(string deviceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId)) return null;
+            var dict = LoadCached().L3AutoSyncCalibrations;
+            return dict != null && dict.TryGetValue(deviceId, out var row) ? row : null;
+        }
+
+        public static void SetL3AutoSync(string deviceId, int offsetMs, float snrDb, string? waveFormatFingerprint = null)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId)) return;
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                s.L3AutoSyncCalibrations ??= new Dictionary<string, L3AutoSyncRow>();
+                s.L3AutoSyncCalibrations[deviceId] = new L3AutoSyncRow
+                {
+                    CompletedUtcTicks = DateTime.UtcNow.Ticks,
+                    OffsetMs = offsetMs,
+                    SnrDb = snrDb,
+                    WaveFormatFingerprint = waveFormatFingerprint ?? string.Empty,
+                };
+                SaveLocked(s);
+            }
+        }
+
         public static bool GetSuppressVbCableStartupReminder() =>
             LoadCached().SuppressVbCableStartupReminder;
 
@@ -314,6 +380,7 @@ namespace KhurramAudioRoute.Core
                     _cache = JsonSerializer.Deserialize<SettingsModel>(json) ?? new SettingsModel();
                     _cache.AdvancedExpandedByDeviceId ??= new Dictionary<string, bool>();
                     _cache.L2SyncCalibrations ??= new Dictionary<string, L2SyncCalibrationRow>();
+                    _cache.L3AutoSyncCalibrations ??= new Dictionary<string, L3AutoSyncRow>();
                     return _cache;
                 }
             }

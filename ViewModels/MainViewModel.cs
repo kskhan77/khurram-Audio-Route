@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using KhurramAudioRoute.Core;
 using KhurramAudioRoute.Core.Spatial;
 using KhurramAudioRoute.Core.SyncCalibration;
+using KhurramAudioRoute.Core.SyncCalibration.L3;
 using KhurramAudioRoute;
 using System;
 using System.Collections.ObjectModel;
@@ -42,13 +43,82 @@ namespace KhurramAudioRoute.ViewModels
                 }
 
                 MasterSpatialPreset = UserSettings.GetMasterSpatialPreset();
+                MasterStereoWidth = UserSettings.GetMasterStereoWidth();
+                BassEngine.SetMasterStereoWidth(MasterStereoWidth);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"MainViewModel master state load failed: {ex.Message}");
             }
 
+            LoadLatencyClassDefaultsForUi();
+
             Power.PropertyChanged += OnPowerPropertyChanged;
+        }
+
+        private bool _latencyClassDefaultsLoading;
+
+        /// <summary>
+        /// Baseline Sync slider seed per device class for <b>new</b> Windows endpoint ids
+        /// (after L4 name presets). Persisted in <see cref="UserSettings.LatencyClassDefaults"/>.
+        /// </summary>
+        [ObservableProperty]
+        private int latencyDefaultOnBoardMs;
+
+        [ObservableProperty]
+        private int latencyDefaultUsbMs;
+
+        [ObservableProperty]
+        private int latencyDefaultHdmiMs;
+
+        [ObservableProperty]
+        private int latencyDefaultBtMs;
+
+        [ObservableProperty]
+        private int latencyDefaultNetworkMs;
+
+        private void LoadLatencyClassDefaultsForUi()
+        {
+            _latencyClassDefaultsLoading = true;
+            try
+            {
+                var m = UserSettings.GetLatencyClassDefaults();
+                LatencyDefaultOnBoardMs = ReadClassDefault(m, "On-board", DeviceClassInfo.DefaultOnBoardOffsetMs);
+                LatencyDefaultUsbMs = ReadClassDefault(m, "USB", DeviceClassInfo.DefaultUsbOffsetMs);
+                LatencyDefaultHdmiMs = ReadClassDefault(m, "HDMI", DeviceClassInfo.DefaultHdmiOffsetMs);
+                LatencyDefaultBtMs = ReadClassDefault(m, "BT", DeviceClassInfo.DefaultBluetoothOffsetMs);
+                LatencyDefaultNetworkMs = ReadClassDefault(m, "Network", DeviceClassInfo.DefaultNetworkOffsetMs);
+            }
+            finally
+            {
+                _latencyClassDefaultsLoading = false;
+            }
+        }
+
+        private static int ReadClassDefault(IReadOnlyDictionary<string, int> map, string key, int builtin)
+            => map.TryGetValue(key, out var v) ? v : builtin;
+
+        private void PersistLatencyClassDefault(string classKey, int value)
+        {
+            if (_latencyClassDefaultsLoading) return;
+            UserSettings.SetLatencyClassDefault(classKey, Math.Clamp(value, 0, 120));
+        }
+
+        partial void OnLatencyDefaultOnBoardMsChanged(int value) => PersistLatencyClassDefault("On-board", value);
+
+        partial void OnLatencyDefaultUsbMsChanged(int value) => PersistLatencyClassDefault("USB", value);
+
+        partial void OnLatencyDefaultHdmiMsChanged(int value) => PersistLatencyClassDefault("HDMI", value);
+
+        partial void OnLatencyDefaultBtMsChanged(int value) => PersistLatencyClassDefault("BT", value);
+
+        partial void OnLatencyDefaultNetworkMsChanged(int value) => PersistLatencyClassDefault("Network", value);
+
+        [RelayCommand]
+        private void ResetLatencyClassDefaultsToBuiltIn()
+        {
+            UserSettings.ClearLatencyClassDefaults();
+            LoadLatencyClassDefaultsForUi();
         }
 
         [ObservableProperty]
@@ -120,6 +190,20 @@ namespace KhurramAudioRoute.ViewModels
 
         [ObservableProperty]
         private SpatialPreset masterSpatialPreset = SpatialPreset.Off;
+
+        /// <summary>
+        /// Mid/side stereo width applied as the first stage of every non-Off spatial preset.
+        /// 1.0 = no effect; &lt;1 narrows toward mono; &gt;1 widens. Persisted in <see cref="UserSettings"/>.
+        /// No audible effect when <see cref="MasterSpatialPreset"/> is Off — see docs/LATENCY_PLAN.md / SpatialPipeline.
+        /// </summary>
+        [ObservableProperty]
+        private float masterStereoWidth = 1.0f;
+
+        partial void OnMasterStereoWidthChanged(float value)
+        {
+            UserSettings.SetMasterStereoWidth(value);
+            BassEngine.SetMasterStereoWidth(value);
+        }
 
         /// <summary>Convenience for two-way binding to the Spatial card master switch.</summary>
         public bool MasterSpatialActive
@@ -610,6 +694,49 @@ namespace KhurramAudioRoute.ViewModels
             L2CalibrationStaleHints.Refresh(Devices.ToList());
         }
 
+        /// <summary>L3 mic-based auto-sync wizard — docs/LATENCY_PLAN.md.</summary>
+        [RelayCommand]
+        public void OpenAutoSyncWizard()
+        {
+            var physicalActive = Devices
+                .Where(d => d is { IsActiveOutput: true, IsSonicFlowVirtual: false } && !string.IsNullOrWhiteSpace(d.Id))
+                .Select(d => new AutoSyncRunner.Target(d.Id!, d.Name ?? "(unnamed)"))
+                .ToList();
+
+            if (physicalActive.Count == 0)
+            {
+                MessageBox.Show(
+                    "Mark at least one hardware output as ACTIVE before running auto-sync.",
+                    "Auto-sync", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var win = new AutoSyncWindow(physicalActive);
+            if (Application.Current?.MainWindow is Window owner)
+                win.Owner = owner;
+
+            bool? ok = win.ShowDialog();
+            if (ok != true || win.AppliedResult is null) return;
+
+            foreach (var t in win.AppliedResult.Targets)
+            {
+                if (!t.Accepted) continue;
+                var dev = Devices.FirstOrDefault(d => string.Equals(d.Id, t.DeviceId, StringComparison.OrdinalIgnoreCase));
+                if (dev is null) continue;
+
+                // Setting TargetLatencyOffsetMs cascades to BassEngine.UpdateBridgeTargetLatency
+                // and UserSettings.SetTargetLatencyOffset via the existing PropertyChanged hook.
+                dev.TargetLatencyOffsetMs = t.NormalisedOffsetMs;
+
+                string? fingerprint = null;
+                if (SyncClickPlayer.TryCaptureFingerprint(t.DeviceId, out var fp))
+                    fingerprint = fp;
+                UserSettings.SetL3AutoSync(t.DeviceId, t.NormalisedOffsetMs, t.SnrDb, fingerprint);
+            }
+
+            L3AutoSyncCaption.Refresh(Devices.ToList());
+        }
+
         [RelayCommand]
         public void RefreshData()
         {
@@ -663,6 +790,7 @@ namespace KhurramAudioRoute.ViewModels
                 Microphones = new ObservableCollection<AudioDevice>(availableMicrophones);
 
                 L2CalibrationStaleHints.Refresh(availableDevices);
+                L3AutoSyncCaption.Refresh(availableDevices);
                 
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
                 SonicFlowVirtualDevice = SonicFlowVirtualAudio.FindVirtualRenderDevice(availableDevices);

@@ -104,7 +104,7 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 ### v2 (after v1 ships)
 
 - **L3 latency** — mic-based auto-sync (chirp + cross-correlate). **Code-complete** on `feature/spatial-audio` (`Core/SyncCalibration/L3/*`, `AutoSyncWindow`, **Auto-sync** button on Outputs); pending hardware QA on real mic + speakers.
-- **L4 latency (predictive defaults)** — **partially shipped:** `Core/Latency/*` name-based Sync seeds + `UserSettings.LatencyClassDefaults` now applied for new device ids; see [`docs/LATENCY_PLAN.md`](docs/LATENCY_PLAN.md) L4.
+- **L4 latency (predictive defaults)** — **partially shipped:** `Core/Latency/*` name-based Sync seeds + `UserSettings.LatencyClassDefaults` (editable under **Tools** default Sync by class) for new device ids; see [`docs/LATENCY_PLAN.md`](docs/LATENCY_PLAN.md) L4.
 - **Sound upscaling** — **partially shipped:** master stereo-width (`MainViewModel.MasterStereoWidth`, `BassEngine.SetMasterStereoWidth`, `StereoWidthStage` on master path). **Still TODO:** `MatrixUpmixStage` to real multichannel hardware and any remaining width UX.
 - **Applications page** — per-app routing onto the bus + optional EQ overrides (`PLAN.md` scope creep).
 - **Microphones page** — [`docs/MIC_CHAIN_PLAN.md`](docs/MIC_CHAIN_PLAN.md).
@@ -131,3 +131,4 @@ Use a profile without stale `%APPDATA%\SonicFlow\settings.json` when possible **
 - [ ] First-run **VB-CABLE** modal shows when cable missing and reminder not suppressed; **Don't show again** persists; **`SuppressVbCableStartupReminder`** survives restart.
 - [ ] Uninstall VB-CABLE — backup banner + loopback behaviour; reinstall hot-plugs via `RefreshBus`.
 - [ ] **Other Options -> Diagnostics**: three Audio Core Integrity checks log to Debug Output (equalizer silence, gain bump, enumeration); confirm no FAILED lines.
+- [ ] **Tools -> Default Sync by class** persists in `settings.json` (`LatencyClassDefaults`); new endpoint ids pick up after **Refresh**; **Reset to built-in** clears overrides.
