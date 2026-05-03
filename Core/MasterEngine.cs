@@ -33,7 +33,8 @@ public static class MasterEngine
                 lBand = i,
                 fCenter = centerFreqs[i],
                 fBandwidth = 2.5f,
-                fGain = i < gains.Length ? gains[i] : 0f
+                fGain = i < gains.Length ? gains[i] : 0f,
+                lChannel = FXChannelFlags.All // stereo bus — EQ both channels
             });
         }
 

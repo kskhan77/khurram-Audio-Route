@@ -2419,8 +2419,25 @@
                                           Content="Matrix surround upmix on 5.1 / 7.1 outputs @ 48 kHz"
                                           IsChecked="{Binding MatrixSurroundBridgeUpmix, Mode=TwoWay}"
                                           Foreground="#DDE3EA" FontSize="12"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,12,0,4"
+                                           Text="7.1 channel order on HDMI / WASAPI"/>
+                                <ComboBox Margin="0,0,0,0"
+                                          SelectedValue="{Binding MatrixBridgeChannelOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          SelectedValuePath="Tag"
+                                          Foreground="#E8EEF5"
+                                          Background="#111921"
+                                          BorderBrush="#243547"
+                                          Padding="10,6"
+                                          FontSize="12">
+                                    <ComboBoxItem Tag="Auto"
+                                                  Content="Auto — Windows / HDMI 7.1 packing when output is 8 channels"/>
+                                    <ComboBoxItem Tag="Internal"
+                                                  Content="Internal — matrix order as shipped (SL/SR before BL/BR)"/>
+                                    <ComboBoxItem Tag="WindowsHdmi7_1"
+                                                  Content="Always Windows-style 7.1 (BL/BR then SL/SR) on 8 ch"/>
+                                </ComboBox>
                                 <TextBlock TextWrapping="Wrap" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" Margin="0,8,0,0"
-                                           Text="When an ACTIVE sink negotiates six or eight channels at 48 kHz, feed Hafler-style stereo expansion instead of the generic BASS mixer path. Turn off if speaker mapping sounds wrong on your AVR or soundbar. Restart the bus (power cycle) after toggling if audio already playing."/>
+                                           Text="When an ACTIVE sink negotiates six or eight channels at 48 kHz, matrix mode expands stereo before this reorder step (6 ch unchanged). Choose Internal if surrounds sound swapped on your gear. Power-cycle the bus after changing order."/>
                             </StackPanel>
                         </Border>
                     </StackPanel>

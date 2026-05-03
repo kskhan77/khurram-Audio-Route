@@ -80,6 +80,11 @@ namespace KhurramAudioRoute.Core
             /// expansion instead of BASS generic mixer upmix. Experimental — see PLAN / BassEngine.
             /// </summary>
             public bool MatrixSurroundBridgeUpmix { get; set; }
+
+            /// <summary>
+            /// Matrix bridge channel packing: Auto | Internal | WindowsHdmi7_1 — see <see cref="MatrixBridgeChannelReorder"/>.
+            /// </summary>
+            public string MatrixBridgeChannelOrder { get; set; } = MatrixBridgeChannelReorder.OrderAuto;
         }
 
         private static readonly object _gate = new();
@@ -381,6 +386,34 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        public static string GetMatrixBridgeChannelOrder()
+        {
+            var v = LoadCached().MatrixBridgeChannelOrder?.Trim();
+            if (string.IsNullOrEmpty(v)) return MatrixBridgeChannelReorder.OrderAuto;
+            if (v != MatrixBridgeChannelReorder.OrderAuto
+                && v != MatrixBridgeChannelReorder.OrderInternal
+                && v != MatrixBridgeChannelReorder.OrderWindowsHdmi7_1)
+                return MatrixBridgeChannelReorder.OrderAuto;
+            return v;
+        }
+
+        public static void SetMatrixBridgeChannelOrder(string value)
+        {
+            var normalised = string.IsNullOrWhiteSpace(value) ? MatrixBridgeChannelReorder.OrderAuto : value.Trim();
+            if (normalised != MatrixBridgeChannelReorder.OrderAuto
+                && normalised != MatrixBridgeChannelReorder.OrderInternal
+                && normalised != MatrixBridgeChannelReorder.OrderWindowsHdmi7_1)
+                normalised = MatrixBridgeChannelReorder.OrderAuto;
+
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (string.Equals(s.MatrixBridgeChannelOrder, normalised, StringComparison.Ordinal)) return;
+                s.MatrixBridgeChannelOrder = normalised;
+                SaveLocked(s);
+            }
+        }
+
         private static SettingsModel LoadCached()
         {
             lock (_gate) return LoadCachedLocked();
@@ -400,6 +433,7 @@ namespace KhurramAudioRoute.Core
                     _cache.AdvancedExpandedByDeviceId ??= new Dictionary<string, bool>();
                     _cache.L2SyncCalibrations ??= new Dictionary<string, L2SyncCalibrationRow>();
                     _cache.L3AutoSyncCalibrations ??= new Dictionary<string, L3AutoSyncRow>();
+                    _cache.MatrixBridgeChannelOrder ??= MatrixBridgeChannelReorder.OrderAuto;
                     return _cache;
                 }
             }

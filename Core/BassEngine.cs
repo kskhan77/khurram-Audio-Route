@@ -144,6 +144,8 @@ namespace KhurramAudioRoute.Core
         private static readonly Dictionary<string, WasapiProcedure> _bridgeTargetProcs = new();
         private static int _bridgeLimiterFx;
         private static WasapiProcedure? _bridgeSourceProc;
+        /// <summary>Persisted Tools matrix channel order; snapshot when <see cref="StartBridge"/> begins.</summary>
+        private static string _bridgeMatrixChannelOrder = MatrixBridgeChannelReorder.OrderAuto;
 
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
@@ -169,6 +171,8 @@ namespace KhurramAudioRoute.Core
             try
             {
                 StopBridge();
+
+                _bridgeMatrixChannelOrder = UserSettings.GetMatrixBridgeChannelOrder();
 
                 int sourceIndex = GetDeviceIndex(sourceId);
                 int sourceWasapiIndex = GetWasapiDeviceIndex(sourceId, true); // Loopback
@@ -228,6 +232,9 @@ namespace KhurramAudioRoute.Core
                 }
                 BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgePushStream,
                     BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
+
+                if (!Bass.ChannelPlay(_bridgePushStream))
+                    Debug.WriteLine($"BASS BRIDGE: ChannelPlay(push stream) failed — EQ/spatial may be bypassed ({Bass.LastError})");
 
                 float[] eqGains = gains ?? Array.Empty<float>();
                 int[] handles = MasterEngine.AttachIsoPeakEq(_bridgeMasterMixer, eqGains);
@@ -308,7 +315,7 @@ namespace KhurramAudioRoute.Core
                             try { BassWasapi.Stop(true); BassWasapi.Free(); } catch { }
 
                             int outCh = tInfo.Channels;
-                            WasapiProcedure matrixProc = CreateMatrixBridgePullProc(split, outCh);
+                            WasapiProcedure matrixProc = CreateMatrixBridgePullProc(split, outCh, _bridgeMatrixChannelOrder);
                             _bridgeTargetProcs[targetId] = matrixProc;
 
                             bool mOk = BassWasapi.Init(
@@ -954,7 +961,7 @@ namespace KhurramAudioRoute.Core
         }
 
         /// <summary>Stereo bridge split → multichannel WASAPI pull at 48 kHz (6 or 8 channels).</summary>
-        private static WasapiProcedure CreateMatrixBridgePullProc(int splitHandle, int outChannels)
+        private static WasapiProcedure CreateMatrixBridgePullProc(int splitHandle, int outChannels, string channelOrderMode)
         {
             return (IntPtr buf, int len, IntPtr user) =>
             {
@@ -979,6 +986,12 @@ namespace KhurramAudioRoute.Core
 
                         SurroundUpmixer.ExpandFrames(
                             st.AsSpan(0, gotFrames * 2),
+                            mc.AsSpan(0, gotFrames * outChannels),
+                            gotFrames,
+                            outChannels);
+
+                        MatrixBridgeChannelReorder.Apply(
+                            channelOrderMode,
                             mc.AsSpan(0, gotFrames * outChannels),
                             gotFrames,
                             outChannels);

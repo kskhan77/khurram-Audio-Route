@@ -46,6 +46,7 @@ namespace KhurramAudioRoute.ViewModels
                 MasterStereoWidth = UserSettings.GetMasterStereoWidth();
                 BassEngine.SetMasterStereoWidth(MasterStereoWidth);
                 MatrixSurroundBridgeUpmix = UserSettings.GetMatrixSurroundBridgeUpmix();
+                MatrixBridgeChannelOrder = UserSettings.GetMatrixBridgeChannelOrder();
             }
             catch (Exception ex)
             {
@@ -216,6 +217,16 @@ namespace KhurramAudioRoute.ViewModels
         partial void OnMatrixSurroundBridgeUpmixChanged(bool value)
         {
             UserSettings.SetMatrixSurroundBridgeUpmix(value);
+            RebuildMasterBridge();
+        }
+
+        /// <summary>Tools → Multichannel bridge: WASAPI 7.1 packing vs internal matrix order.</summary>
+        [ObservableProperty]
+        private string matrixBridgeChannelOrder = MatrixBridgeChannelReorder.OrderAuto;
+
+        partial void OnMatrixBridgeChannelOrderChanged(string value)
+        {
+            UserSettings.SetMatrixBridgeChannelOrder(value ?? MatrixBridgeChannelReorder.OrderAuto);
             RebuildMasterBridge();
         }
 
