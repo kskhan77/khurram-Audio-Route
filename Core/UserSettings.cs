@@ -5,6 +5,7 @@ using System.Text.Json;
 using KhurramAudioRoute.Core.Spatial;
 using KhurramAudioRoute.Core.SyncCalibration;
 using KhurramAudioRoute.Core.SyncCalibration.L3;
+using KhurramAudioRoute.Core.Voice;
 
 namespace KhurramAudioRoute.Core
 {
@@ -85,20 +86,75 @@ namespace KhurramAudioRoute.Core
             /// Matrix bridge channel packing: Auto | Internal | WindowsHdmi7_1 — see <see cref="MatrixBridgeChannelReorder"/>.
             /// </summary>
             public string MatrixBridgeChannelOrder { get; set; } = MatrixBridgeChannelReorder.OrderAuto;
+
+            // ── Mic chain (CABLE-B voice studio) ─────────────────────────────
+            // Persisted across restarts so the Voice Studio card on the
+            // Microphones page can re-engage the same setup automatically.
+            public string? MicChainMicId { get; set; }
+            public string? MicChainRenderId { get; set; }
+            public bool MicChainEnabled { get; set; }
+            public float MicChainGateThresholdDb { get; set; } = -40f;
+            public float MicChainGateHoldMs { get; set; } = 80f;
+            public string MicChainVoiceEqPreset { get; set; } = "Off";
+            public float MicChainPitchSemitones { get; set; } = 0f;
+            public string MicChainCharacterPreset { get; set; } = "None";
         }
 
         private static readonly object _gate = new();
         private static SettingsModel? _cache;
+        private static string? _settingsPath;
 
         private static string SettingsPath
         {
             get
             {
-                var dir = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "SonicFlow");
-                Directory.CreateDirectory(dir);
-                return Path.Combine(dir, "settings.json");
+                if (_settingsPath != null) return _settingsPath;
+
+                foreach (var dir in CandidateSettingsDirs())
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                        var path = Path.Combine(dir, "settings.json");
+                        EnsureSettingsPathWritable(dir, path);
+                        _settingsPath = path;
+                        return _settingsPath;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"UserSettings path skipped ({dir}): {ex.Message}");
+                    }
+                }
+
+                var fallbackDir = Path.Combine(Path.GetTempPath(), "SonicFlow");
+                Directory.CreateDirectory(fallbackDir);
+                _settingsPath = Path.Combine(fallbackDir, "settings.json");
+                return _settingsPath;
+            }
+        }
+
+        private static IEnumerable<string> CandidateSettingsDirs()
+        {
+            // Prefer LocalApplicationData first — roaming (%AppData%) often syncs via OneDrive and can
+            // flip to read-only or deny atomic writes mid-session (UnauthorizedAccessException).
+            var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            if (!string.IsNullOrWhiteSpace(local))
+                yield return Path.Combine(local, "SonicFlow");
+
+            var roaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!string.IsNullOrWhiteSpace(roaming))
+                yield return Path.Combine(roaming, "SonicFlow");
+        }
+
+        private static void EnsureSettingsPathWritable(string dir, string path)
+        {
+            var probe = Path.Combine(dir, $".write-test-{Guid.NewGuid():N}.tmp");
+            File.WriteAllText(probe, string.Empty);
+            File.Delete(probe);
+
+            if (File.Exists(path))
+            {
+                using var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
             }
         }
 
@@ -414,6 +470,137 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        // ── Mic chain accessors ───────────────────────────────────────────────
+
+        public static string? GetMicChainMicId() => LoadCached().MicChainMicId;
+
+        public static void SetMicChainMicId(string? deviceId)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (string.Equals(s.MicChainMicId, deviceId, StringComparison.Ordinal)) return;
+                s.MicChainMicId = deviceId;
+                SaveLocked(s);
+            }
+        }
+
+        public static string? GetMicChainRenderId() => LoadCached().MicChainRenderId;
+
+        public static void SetMicChainRenderId(string? deviceId)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (string.Equals(s.MicChainRenderId, deviceId, StringComparison.Ordinal)) return;
+                s.MicChainRenderId = deviceId;
+                SaveLocked(s);
+            }
+        }
+
+        public static bool GetMicChainEnabled() => LoadCached().MicChainEnabled;
+
+        public static void SetMicChainEnabled(bool value)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (s.MicChainEnabled == value) return;
+                s.MicChainEnabled = value;
+                SaveLocked(s);
+            }
+        }
+
+        public static float GetMicChainGateThresholdDb()
+        {
+            float v = LoadCached().MicChainGateThresholdDb;
+            return Math.Clamp(v, -80f, 0f);
+        }
+
+        public static void SetMicChainGateThresholdDb(float db)
+        {
+            float clamped = Math.Clamp(db, -80f, 0f);
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (Math.Abs(s.MicChainGateThresholdDb - clamped) < 0.05f) return;
+                s.MicChainGateThresholdDb = clamped;
+                SaveLocked(s);
+            }
+        }
+
+        public static float GetMicChainGateHoldMs()
+        {
+            float v = LoadCached().MicChainGateHoldMs;
+            return Math.Clamp(v, 0f, 1000f);
+        }
+
+        public static void SetMicChainGateHoldMs(float ms)
+        {
+            float clamped = Math.Clamp(ms, 0f, 1000f);
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (Math.Abs(s.MicChainGateHoldMs - clamped) < 0.5f) return;
+                s.MicChainGateHoldMs = clamped;
+                SaveLocked(s);
+            }
+        }
+
+        public static VoiceEqPreset GetMicChainVoiceEqPreset()
+        {
+            var s = LoadCached();
+            return Enum.TryParse<VoiceEqPreset>(s.MicChainVoiceEqPreset, out var p) ? p : VoiceEqPreset.Off;
+        }
+
+        public static void SetMicChainVoiceEqPreset(VoiceEqPreset preset)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                var name = preset.ToString();
+                if (string.Equals(s.MicChainVoiceEqPreset, name, StringComparison.Ordinal)) return;
+                s.MicChainVoiceEqPreset = name;
+                SaveLocked(s);
+            }
+        }
+
+        public static float GetMicChainPitchSemitones()
+        {
+            float v = LoadCached().MicChainPitchSemitones;
+            return Math.Clamp(v, PitchShifter.MinSemitones, PitchShifter.MaxSemitones);
+        }
+
+        public static void SetMicChainPitchSemitones(float semitones)
+        {
+            float clamped = Math.Clamp(semitones, PitchShifter.MinSemitones, PitchShifter.MaxSemitones);
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                if (Math.Abs(s.MicChainPitchSemitones - clamped) < 0.01f) return;
+                s.MicChainPitchSemitones = clamped;
+                SaveLocked(s);
+            }
+        }
+
+        public static VoiceCharacterPreset GetMicChainCharacterPreset()
+        {
+            var s = LoadCached();
+            return Enum.TryParse<VoiceCharacterPreset>(s.MicChainCharacterPreset, out var p) ? p : VoiceCharacterPreset.None;
+        }
+
+        public static void SetMicChainCharacterPreset(VoiceCharacterPreset preset)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                var name = preset.ToString();
+                if (string.Equals(s.MicChainCharacterPreset, name, StringComparison.Ordinal)) return;
+                s.MicChainCharacterPreset = name;
+                SaveLocked(s);
+            }
+        }
+
         private static SettingsModel LoadCached()
         {
             lock (_gate) return LoadCachedLocked();
@@ -447,7 +634,9 @@ namespace KhurramAudioRoute.Core
 
         // Atomic write: serialize to a sibling temp file then move into place,
         // so a crash mid-write can't corrupt the existing settings.
-        private static void SaveLocked(SettingsModel s)
+        private static void SaveLocked(SettingsModel s) => SaveLockedCore(s, resetPathOnFailure: true);
+
+        private static void SaveLockedCore(SettingsModel s, bool resetPathOnFailure)
         {
             try
             {
@@ -456,6 +645,13 @@ namespace KhurramAudioRoute.Core
                 var json = JsonSerializer.Serialize(s, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(tmp, json);
                 File.Move(tmp, path, overwrite: true);
+            }
+            catch (Exception ex) when (resetPathOnFailure
+                                       && (ex is UnauthorizedAccessException or IOException))
+            {
+                System.Diagnostics.Debug.WriteLine($"UserSettings save failed (retry new path): {ex.Message}");
+                _settingsPath = null;
+                SaveLockedCore(s, resetPathOnFailure: false);
             }
             catch (Exception ex)
             {

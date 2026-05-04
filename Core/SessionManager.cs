@@ -184,6 +184,13 @@ namespace KhurramAudioRoute.Core
                                     if (exePath == null)
                                         try { exePath = proc.MainModule?.FileName; } catch { }
                                 }
+                                catch (ArgumentException)
+                                {
+                                    // PIDs for system / host sessions (e.g. AudioSrv) are not real processes.
+                                    processName = !string.IsNullOrEmpty(session.DisplayName)
+                                        ? session.DisplayName
+                                        : $"Session ({pid})";
+                                }
                                 catch
                                 {
                                     processName = !string.IsNullOrEmpty(session.DisplayName)

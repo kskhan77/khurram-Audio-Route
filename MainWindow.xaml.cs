@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using Wpf.Ui.Controls;
 using KhurramAudioRoute.Core;
 using KhurramAudioRoute.Core.Spatial;
+using KhurramAudioRoute.Core.Voice;
 using KhurramAudioRoute.ViewModels;
 using KhurramAudioRoute.Tests;
 
@@ -354,6 +355,28 @@ public partial class MainWindow : FluentWindow
         vm.MasterSpatialPreset = preset;
     }
 
+    private void OnVoiceEqRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+            return;
+        if (!Enum.TryParse<VoiceEqPreset>(tag, ignoreCase: false, out var preset))
+            return;
+        if (DataContext is not MainViewModel vm)
+            return;
+        vm.MicChain.SelectedVoicePreset = preset;
+    }
+
+    private void OnVoiceCharacterRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+            return;
+        if (!Enum.TryParse<VoiceCharacterPreset>(tag, ignoreCase: false, out var preset))
+            return;
+        if (DataContext is not MainViewModel vm)
+            return;
+        vm.MicChain.SelectedCharacter = preset;
+    }
+
     private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();
 
     /// <summary>
@@ -480,6 +503,40 @@ public class SpatialPresetEnumMatchConverter : IValueConverter
         if (value is SpatialPreset vp)
             return vp == needle;
         if (value != null && Enum.TryParse<SpatialPreset>(value.ToString(), out var parsed))
+            return parsed == needle;
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+public class VoiceEqPresetEnumMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter is not string paramStr || !Enum.TryParse<VoiceEqPreset>(paramStr, out var needle))
+            return false;
+        if (value is VoiceEqPreset vp)
+            return vp == needle;
+        if (value != null && Enum.TryParse<VoiceEqPreset>(value.ToString(), out var parsed))
+            return parsed == needle;
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+public class VoiceCharacterPresetEnumMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter is not string paramStr || !Enum.TryParse<VoiceCharacterPreset>(paramStr, out var needle))
+            return false;
+        if (value is VoiceCharacterPreset vp)
+            return vp == needle;
+        if (value != null && Enum.TryParse<VoiceCharacterPreset>(value.ToString(), out var parsed))
             return parsed == needle;
         return false;
     }

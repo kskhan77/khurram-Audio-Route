@@ -3,7 +3,20 @@
     "allow": [
       "Bash(dotnet build *)",
       "Bash(tasklist *)",
-      "PowerShell(Get-Process *)"
+      "PowerShell(Get-Process *)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File .\\\\Scripts\\\\RegressionPass.ps1 -Configuration Debug)",
+      "mcp__codebase-memory__search_graph",
+      "Bash(powershell -ExecutionPolicy Bypass -File .\\\\Scripts\\\\RegressionPass.ps1 -Configuration Debug)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-Object -Last 30)",
+      "mcp__codebase-memory__index_repository",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-Object -Last 25)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-Object -Last 12)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Warning|Error\" | Select-Object -First 5)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Warning|Error|FAILED|Build succeeded\" | Select-Object -First 6)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Warning|Error|Build succeeded|FAILED\" | Select-Object -First 8)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Warning|Error|Build succeeded|FAILED|error\" | Select-Object -First 15)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Output:|Launch:|Warning|Error\" | Select-Object -First 8)",
+      "PowerShell(powershell -ExecutionPolicy Bypass -File \".\\\\Scripts\\\\RegressionPass.ps1\" -Configuration Debug 2>&1 | Select-String \"Warning|Error|Build succeeded|FAILED\" | Select-Object -First 12)"
     ]
   },
   "enabledMcpjsonServers": [

@@ -72,6 +72,8 @@
 
 
         <local:SpatialPresetEnumMatchConverter x:Key="SpatialPresetEnumMatchConverter"/>
+        <local:VoiceEqPresetEnumMatchConverter x:Key="VoiceEqPresetEnumMatchConverter"/>
+        <local:VoiceCharacterPresetEnumMatchConverter x:Key="VoiceCharacterPresetEnumMatchConverter"/>
 
         <!-- Custom Styles -->
         <Style x:Key="SonicHeaderNavLink" TargetType="Button">
@@ -714,7 +716,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -781,100 +782,6 @@
                         </Button.Style>
                     </Button>
                 </StackPanel>
-
-                <!-- Master power chip — engages / disengages the SonicFlow audio bus.
-                     Active: VB-CABLE is the Windows default + bridge runs across active outputs.
-                     Disabled: previous Windows default is restored, bridge stops. -->
-                <Border Grid.Column="2" VerticalAlignment="Center" Margin="12,0,0,0"
-                        ToolTipService.InitialShowDelay="200" ToolTipService.ShowDuration="20000">
-                    <Border.ToolTip>
-                        <ToolTip MaxWidth="320">
-                            <StackPanel>
-                                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">SonicFlow audio bus</TextBlock>
-                                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SonicOutlineBrush}"
-                                           Text="{Binding Power.StatusMessage}"/>
-                                <TextBlock Margin="0,6,0,0" FontSize="10" FontWeight="SemiBold"
-                                           Foreground="{StaticResource SonicPrimaryBrush}"
-                                           Text="{Binding TotalLatencyBanner}"/>
-                            </StackPanel>
-                        </ToolTip>
-                    </Border.ToolTip>
-                    <Button Command="{Binding TogglePowerCommand}"
-                            Padding="10,5" Cursor="Hand" BorderThickness="1"
-                            FontSize="11" FontWeight="SemiBold" MinHeight="30">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#15FFFFFF"/>
-                                <Setter Property="BorderBrush" Value="#2EFFFFFF"/>
-                                <Setter Property="Foreground" Value="#9BA9B7"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border x:Name="ChipBg" CornerRadius="14"
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter VerticalAlignment="Center"
-                                                                  HorizontalAlignment="Center"
-                                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="ChipBg" Property="Background" Value="#22FFFFFF"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
-                                        <Setter Property="Background" Value="#1A86DC52"/>
-                                        <Setter Property="BorderBrush" Value="#5A86DC52"/>
-                                        <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
-                                        <Setter Property="Background" Value="#1AE3B341"/>
-                                        <Setter Property="BorderBrush" Value="#55E3B341"/>
-                                        <Setter Property="Foreground" Value="#E3B341"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
-                                <Ellipse.Style>
-                                    <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="#586470"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
-                                                <Setter Property="Fill" Value="{StaticResource SonicSecondaryBrush}"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
-                                                <Setter Property="Fill" Value="#E3B341"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Ellipse.Style>
-                            </Ellipse>
-                            <TextBlock VerticalAlignment="Center">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="Bus: off"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
-                                                <Setter Property="Text" Value="Bus: on"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
-                                                <Setter Property="Text" Value="Bus: …"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
-                </Border>
             </Grid>
         </Border>
 
@@ -1010,9 +917,45 @@
                         <Grid Margin="0,0,0,20">
                             <StackPanel>
                                 <TextBlock Text="Playback &amp; profiles" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="24" FontWeight="SemiBold"/>
-                                <TextBlock Text="Turn the bus ON (top-right), route apps through VB-CABLE when installed, tune master EQ/spatial once, then mark hardware outputs ACTIVE to mirror the processed signal (see docs/AUDIO_BUS_PLAN.md)." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Text="Use Audio bus in the toolbar (or tray), route apps through VB-CABLE when installed, tune master EQ/spatial once, then mark hardware outputs ACTIVE to mirror the processed signal (see docs/AUDIO_BUS_PLAN.md)." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <ui:Button Command="{Binding TogglePowerCommand}"
+                                           Content="{Binding Power.BusChipShortLabel}"
+                                           Icon="Power20"
+                                           Appearance="Secondary"
+                                           Margin="0,0,8,0"
+                                           MinHeight="32"
+                                           Padding="12,6"
+                                           IsEnabled="{Binding Power.IsTransitioning, Converter={StaticResource InverseBooleanConverter}}"
+                                           ToolTipService.InitialShowDelay="200"
+                                           ToolTipService.ShowDuration="20000">
+                                    <ui:Button.ToolTip>
+                                        <ToolTip MaxWidth="320">
+                                            <StackPanel>
+                                                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">SonicFlow audio bus</TextBlock>
+                                                <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SonicOutlineBrush}"
+                                                           Text="{Binding Power.StatusMessage}"/>
+                                                <TextBlock Margin="0,6,0,0" FontSize="10" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource SonicPrimaryBrush}"
+                                                           Text="{Binding TotalLatencyBanner}"/>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </ui:Button.ToolTip>
+                                    <ui:Button.Style>
+                                        <Style TargetType="ui:Button">
+                                            <Setter Property="Appearance" Value="Secondary"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Power.IsActive}" Value="True">
+                                                    <Setter Property="Appearance" Value="Primary"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Power.IsTransitioning}" Value="True">
+                                                    <Setter Property="Appearance" Value="Caution"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ui:Button.Style>
+                                </ui:Button>
                                 <ui:Button Content="Sync wizard" Icon="SoundSource24" Appearance="Secondary" Margin="0,0,8,0"
                                            Command="{Binding OpenSyncCalibrationWizardCommand}"
                                            ToolTip="3-tap perceptual sync vs a timing reference — see docs/LATENCY_PLAN.md (L2)."
@@ -1117,14 +1060,14 @@
                         </Border>
 
                         <!-- Master engine: a single bus-level EQ + spatial that applies to every active output.
-                             Works only when the bus power chip is on (top-right of the page).
-                             See docs/AUDIO_BUS_PLAN.md for the architecture. -->
+                             Works only when Audio bus is on (Outputs toolbar). See docs/AUDIO_BUS_PLAN.md. -->
                         <Border CornerRadius="14" Padding="16,14" Margin="0,0,0,18"
                                 Background="{StaticResource SonicSurfaceContainerBrush}"
                                 BorderBrush="#1AFFFFFF" BorderThickness="1">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/> <!-- header -->
+                                    <RowDefinition Height="Auto"/> <!-- bridge live / why EQ may be dry -->
                                     <RowDefinition Height="Auto"/> <!-- EQ sliders -->
                                     <RowDefinition Height="Auto"/> <!-- EQ preset chips -->
                                     <RowDefinition Height="Auto"/> <!-- spatial header row -->
@@ -1151,7 +1094,7 @@
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="320">
                                                     <TextBlock TextWrapping="Wrap" MaxWidth="320">
-                                                    One EQ + Spatial pipeline applied to every active output. Engages when the bus chip in the header is on.</TextBlock>
+                                                    One EQ + spatial pipeline applied to every active output. Engages when Audio bus is on (Outputs toolbar or tray).</TextBlock>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -1163,8 +1106,25 @@
                                     </StackPanel>
                                 </DockPanel>
 
+                                <Border Grid.Row="1" Margin="0,0,0,10" Padding="10,8" CornerRadius="8" BorderThickness="1">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#14005374"/>
+                                            <Setter Property="BorderBrush" Value="#3374D1FF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMasterBridgeLive}" Value="False">
+                                                    <Setter Property="Background" Value="#1AF5A623"/>
+                                                    <Setter Property="BorderBrush" Value="#66E3B341"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding MasterEngineStatusHint}" TextWrapping="Wrap" FontSize="11"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}"/>
+                                </Border>
+
                                 <!-- 10-band EQ sliders (compact). Each binds to MasterEqBandN on the view model. -->
-                                <UniformGrid Grid.Row="1" Columns="10">
+                                <UniformGrid Grid.Row="2" Columns="10">
                                     <StackPanel Margin="0,0,1,0" VerticalAlignment="Top" HorizontalAlignment="Center">
                                         <Slider Orientation="Vertical" Height="60" Minimum="-12" Maximum="12" Value="{Binding MasterEqBand0, Mode=TwoWay}"
                                                 Foreground="{StaticResource SonicPrimaryBrush}" Background="#0FFFFFFF" HorizontalAlignment="Center"/>
@@ -1220,7 +1180,7 @@
                                 <!-- EQ preset chip strip — same set as the per-device EQ in older builds.
                                      Click highlights the chip and snaps every band; dragging a band
                                      after that drops the chip back to "Custom" via ApplyMasterEqLive. -->
-                                <Border Grid.Row="2" Margin="0,8,0,0" Padding="6,5" CornerRadius="8"
+                                <Border Grid.Row="3" Margin="0,8,0,0" Padding="6,5" CornerRadius="8"
                                         Background="#121820" BorderBrush="#223040" BorderThickness="1">
                                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                                         <StackPanel Orientation="Horizontal">
@@ -1273,7 +1233,7 @@
                                 </Border>
 
                                 <!-- Spatial pills row. Sits inside the master card so the user picks scene + EQ together. -->
-                                <DockPanel Grid.Row="3" Margin="0,12,0,0" LastChildFill="True">
+                                <DockPanel Grid.Row="4" Margin="0,12,0,0" LastChildFill="True">
                                     <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,0,0"
                                                      IsChecked="{Binding MasterSpatialActive, Mode=TwoWay}"
                                                      ToolTip="Master switch — spatial DSP off restores passthrough."/>
@@ -1281,7 +1241,7 @@
                                                Foreground="{StaticResource SonicOnSurfaceBrush}" Text="Spatial scene"/>
                                 </DockPanel>
 
-                                <Border Grid.Row="4" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
+                                <Border Grid.Row="5" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
                                     <UniformGrid Columns="4" Rows="2" Margin="-2,-2,-2,-2">
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
@@ -1497,11 +1457,11 @@
                                                                                            Foreground="{StaticResource SonicOnSurfaceBrush}" Text="Mirror outputs"
                                                                                            ToolTipService.ShowDuration="20000">
                                                                                     <TextBlock.ToolTip>
-                                                                                        <ToolTip MaxWidth="300">
-                                                                                            <TextBlock TextWrapping="Wrap" MaxWidth="300">
-                                                                                            Route mirrored audio to hardware sinks. Toggle the chevron above to tuck the checklist away—all targets scroll with the surrounding page instead of trapping a scrollbar inside this card.</TextBlock>
-                                                                                                                                            </ToolTip>
-                                                                                                                                    </TextBlock.ToolTip>
+                                                                                        <ToolTip MaxWidth="320">
+                                                                                            <TextBlock TextWrapping="Wrap" MaxWidth="320">
+                                                                                            For this virtual profile only: duplicate sessions that clone app audio to ticked outputs (per-profile EQ/spatial on that mirror path). Real speakers and HDMI use the row chip labeled Active plus the header audio bus—those feed the master engine, not this toggle. Toggle the chevron to show or hide the checklist.</TextBlock>
+                                                                                        </ToolTip>
+                                                                                    </TextBlock.ToolTip>
                                                                                 </TextBlock>
                                                                                     <TextBlock Margin="14,11,0,0" VerticalAlignment="Center"
                                                                                                FontSize="10" FontWeight="Normal"
@@ -2229,6 +2189,212 @@
                                        Command="{Binding RefreshDataCommand}"
                                        Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
                         </Grid>
+
+                        <!-- Voice studio card: routes a real mic through the SonicFlow voice chain into a
+                             render endpoint (typically CABLE-B Input). See docs/MIC_CHAIN_PLAN.md. -->
+                        <Border Style="{StaticResource SonicCard}" Padding="22" Margin="0,0,0,20">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,14">
+                                    <StackPanel>
+                                        <TextBlock Text="Voice studio" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                                        <TextBlock Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
+                                                   Text="Pipe a real mic through SonicFlow's voice chain (noise gate today; voice EQ &amp; limiter coming) into a render endpoint. Apps then pick that endpoint as their input — typically CABLE-B Output."/>
+                                    </StackPanel>
+                                    <ui:Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                                               Command="{Binding MicChain.TogglePowerCommand}"
+                                               IsEnabled="{Binding MicChain.CanPower}"
+                                               Icon="Mic24"
+                                               Appearance="Secondary"
+                                               MinWidth="120" MinHeight="32" Padding="12,6">
+                                        <ui:Button.Style>
+                                            <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                                <Setter Property="Content" Value="Engage"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding MicChain.IsPowered}" Value="True">
+                                                        <Setter Property="Content" Value="Disengage"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ui:Button.Style>
+                                    </ui:Button>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Microphone source" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                        <ComboBox ItemsSource="{Binding MicChain.AvailableMics}"
+                                                  SelectedItem="{Binding MicChain.SelectedMic, Mode=TwoWay}"
+                                                  DisplayMemberPath="Name"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Render to (virtual mic)" Foreground="{StaticResource SonicOutlineBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                        <ComboBox ItemsSource="{Binding MicChain.AvailableRenderTargets}"
+                                                  SelectedItem="{Binding MicChain.SelectedRender, Mode=TwoWay}"
+                                                  DisplayMemberPath="Name"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Voice character: bundles EQ + pitch + gate; moving any slider clears back to None. -->
+                                <TextBlock Text="Voice character" Foreground="{StaticResource SonicOutlineBrush}"
+                                           FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
+                                           ToolTip="One-click voice presets. Picking one writes EQ, pitch, and gate values; touching a slider after clears back to None."/>
+                                <Border Margin="0,0,0,12" Padding="6,6" CornerRadius="10"
+                                        Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                    <UniformGrid Columns="3" Rows="2" Margin="-2,-2,-2,-2">
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="None" Content="None" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=None}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="Robot" Content="Robot" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Robot}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="Girl1" Content="Girl 1" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Girl1}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="Girl2" Content="Girl 2" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Girl2}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="DeepVoice" Content="Deep" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=DeepVoice}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainCharacter" Tag="Chipmunk" Content="Chipmunk" Click="OnVoiceCharacterRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Chipmunk}"/>
+                                    </UniformGrid>
+                                </Border>
+
+                                <!-- Voice EQ: pill grid (Off + 4 presets). -->
+                                <TextBlock Text="Voice EQ" Foreground="{StaticResource SonicOutlineBrush}"
+                                           FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
+                                           ToolTip="Preset EQ curves applied to the mic stream — independent of master EQ."/>
+                                <Border Margin="0,0,0,14" Padding="6,6" CornerRadius="10"
+                                        Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                    <UniformGrid Columns="5" Rows="1" Margin="-2,-2,-2,-2">
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoiceEq" Tag="Off" Content="Off" Click="OnVoiceEqRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Off}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoiceEq" Tag="Bright" Content="Bright" Click="OnVoiceEqRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Bright}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoiceEq" Tag="Warm" Content="Warm" Click="OnVoiceEqRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Warm}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoiceEq" Tag="Radio" Content="Radio" Click="OnVoiceEqRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Radio}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoiceEq" Tag="Telephone" Content="Telephone" Click="OnVoiceEqRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Telephone}"/>
+                                    </UniformGrid>
+                                </Border>
+
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Noise gate" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <ui:Button Content="Reset" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                               Command="{Binding MicChain.ResetGateCommand}"
+                                               Appearance="Secondary" MinHeight="24" Padding="10,2" FontSize="10"
+                                               ToolTip="Restore gate threshold = -40 dBFS, gate hold = 80 ms"/>
+                                </Grid>
+
+                                <Grid Margin="0,4,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Threshold" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <Slider Grid.Column="1" Minimum="-80" Maximum="0"
+                                            TickFrequency="5" SmallChange="1" LargeChange="5"
+                                            Value="{Binding MicChain.GateThresholdDb, Mode=TwoWay}"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding MicChain.GateThresholdDb, StringFormat={}{0:F0} dBFS}"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Width="64" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Hold" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <Slider Grid.Column="1" Minimum="0" Maximum="500"
+                                            TickFrequency="20" SmallChange="5" LargeChange="20"
+                                            Value="{Binding MicChain.GateHoldMs, Mode=TwoWay}"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding MicChain.GateHoldMs, StringFormat={}{0:F0} ms}"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Width="64" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Pitch" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"
+                                               ToolTip="Pitch shift in semitones (tempo preserved). 0 = bypass; positive = higher voice; negative = deeper voice."/>
+                                    <Slider Grid.Column="1" Minimum="-12" Maximum="12"
+                                            TickFrequency="1" SmallChange="0.5" LargeChange="1"
+                                            Value="{Binding MicChain.PitchSemitones, Mode=TwoWay}"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding MicChain.PitchSemitones, StringFormat={}{0:+0.0;-0.0;0} st}"
+                                               Foreground="{StaticResource SonicOnSurfaceBrush}"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Width="64" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <Grid Margin="0,14,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="76"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Input level" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <Border Grid.Column="1" Height="8" Background="#0FFFFFFF" CornerRadius="4" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Border Background="{StaticResource SonicPrimaryBrush}" CornerRadius="4" HorizontalAlignment="Left"
+                                                    Width="{Binding MicChain.InputPeak, Converter={StaticResource PeakToHeightConverter}, ConverterParameter=320}"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="76"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Output level" Foreground="{StaticResource SonicOutlineBrush}"
+                                               FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"
+                                               ToolTip="Post-chain peak (after EQ, gate, limiter). Should land below the right edge — if it pins, lower the gate threshold or pick a tamer EQ preset."/>
+                                    <Border Grid.Column="1" Height="8" Background="#0FFFFFFF" CornerRadius="4" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Border Background="#FFB48A" CornerRadius="4" HorizontalAlignment="Left"
+                                                    Width="{Binding MicChain.OutputPeak, Converter={StaticResource PeakToHeightConverter}, ConverterParameter=320}"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <TextBlock Margin="0,12,0,0" FontSize="11"
+                                           Foreground="{StaticResource SonicOutlineBrush}"
+                                           Text="{Binding MicChain.StatusMessage}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
 
                         <Border Margin="0,0,0,20" Padding="28,26" CornerRadius="12" Background="{StaticResource SonicSurfaceContainerBrush}" BorderBrush="#263038" BorderThickness="1">
                             <Border.Style>

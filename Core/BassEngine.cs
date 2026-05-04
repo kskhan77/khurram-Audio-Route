@@ -147,6 +147,9 @@ namespace KhurramAudioRoute.Core
         /// <summary>Persisted Tools matrix channel order; snapshot when <see cref="StartBridge"/> begins.</summary>
         private static string _bridgeMatrixChannelOrder = MatrixBridgeChannelReorder.OrderAuto;
 
+        /// <summary>True when bridge master EQ uses DX8 Param EQ (BASS_FX PeakEQ rejected this stream).</summary>
+        private static bool _bridgeMasterUsesDxPeakEq;
+
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
         // init floods the debug console with the same error every tick.
@@ -182,7 +185,22 @@ namespace KhurramAudioRoute.Core
                     return false;
                 }
 
-                if (!InitializeDevice(sourceIndex)) return false;
+                // VB-CABLE / some loopback endpoints don’t expose a usable DirectSound device for
+                // BASS_Init(deviceIndex), which breaks Bass.CurrentDevice + stream creation. WASAPI
+                // loopback still works via BassWasapi indices — build decode-only streams on device 0.
+                int graphDeviceIndex = sourceIndex;
+                if (!InitializeDevice(sourceIndex))
+                {
+                    Debug.WriteLine($"BASS BRIDGE: BASS.Init({sourceIndex}) failed for capture endpoint — decode graph on device 0");
+                    graphDeviceIndex = 0;
+                    if (!InitializeDevice(0))
+                    {
+                        Debug.WriteLine("BASS BRIDGE: BASS.Init(0) failed");
+                        StopBridge();
+                        return false;
+                    }
+                }
+
                 _bridgeSourceId = sourceId;
 
                 // 1. Init source loopback first so we can read the negotiated capture format,
@@ -209,6 +227,14 @@ namespace KhurramAudioRoute.Core
                 int captureChans = info.Channels;
                 _captureFormats[sourceId] = (captureFreq, captureChans);
 
+                bool devOk = TrySetBassCurrentDevice(graphDeviceIndex);
+                if (!devOk && graphDeviceIndex != 0)
+                {
+                    graphDeviceIndex = 0;
+                    InitializeDevice(0);
+                    TrySetBassCurrentDevice(0);
+                }
+
                 // 2. Push stream in the source's native float format. Decode + Float so the
                 // mixer can pull. WASAPI capture in AutoFormat is 32-bit float.
                 _bridgePushStream = Bass.CreateStream(captureFreq, captureChans,
@@ -233,11 +259,13 @@ namespace KhurramAudioRoute.Core
                 BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgePushStream,
                     BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
 
-                if (!Bass.ChannelPlay(_bridgePushStream))
-                    Debug.WriteLine($"BASS BRIDGE: ChannelPlay(push stream) failed — EQ/spatial may be bypassed ({Bass.LastError})");
+                // Master mixer is a *decoding* mixer (same as push source). Decode streams cannot use
+                // ChannelPlay — they advance only when downstream splits/WASAPI pull from the mixer.
+                // Do not switch this to a playback mixer on the VB-CABLE device: ChannelPlay would feed
+                // processed audio back into the cable and fight loopback capture.
 
                 float[] eqGains = gains ?? Array.Empty<float>();
-                int[] handles = MasterEngine.AttachIsoPeakEq(_bridgeMasterMixer, eqGains);
+                int[] handles = MasterEngine.AttachIsoPeakEq(_bridgeMasterMixer, eqGains, out _bridgeMasterUsesDxPeakEq);
                 _deviceEqHandles["BRIDGE_MASTER"] = handles;
 
                 _bridgeLimiterFx = MasterEngine.AttachBusSoftLimiterFx(_bridgeMasterMixer);
@@ -458,6 +486,12 @@ namespace KhurramAudioRoute.Core
                     ApplySpatialIfActive(sourceId, buffer, length);
 
                 Bass.StreamPutData(push, buffer, length);
+
+                // Nudge the decoding mixer so FX (peak EQ, limiter) stay aligned with the push cadence;
+                // downstream WASAPI targets still drive the real pull.
+                int mix = _bridgeMasterMixer;
+                if (mix != 0)
+                    Bass.ChannelUpdate(mix, length);
             }
             catch
             {
@@ -516,6 +550,7 @@ namespace KhurramAudioRoute.Core
 
             if (_bridgeMasterMixer != 0)
             {
+                _bridgeMasterUsesDxPeakEq = false;
                 MasterEngine.RemoveFx(_bridgeMasterMixer, ref _bridgeLimiterFx);
                 try { Bass.StreamFree(_bridgeMasterMixer); } catch { }
                 _bridgeMasterMixer = 0;
@@ -533,14 +568,20 @@ namespace KhurramAudioRoute.Core
         public static void UpdateBridgeEqualizer(float[] gains)
         {
             if (_bridgeMasterMixer != 0 && _deviceEqHandles.TryGetValue("BRIDGE_MASTER", out var handles))
+                MasterEngine.ApplyIsoPeakEqGains(handles, gains ?? Array.Empty<float>(), _bridgeMasterUsesDxPeakEq);
+        }
+
+        private static bool TrySetBassCurrentDevice(int deviceIndex)
+        {
+            try
             {
-                for (int i = 0; i < Math.Min(handles.Length, gains.Length); i++)
-                {
-                    var eq = new PeakEQParameters();
-                    Bass.FXGetParameters(handles[i], eq);
-                    eq.fGain = gains[i];
-                    Bass.FXSetParameters(handles[i], eq);
-                }
+                Bass.CurrentDevice = deviceIndex;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"BASS BRIDGE: Bass.CurrentDevice={deviceIndex}: {ex.Message}");
+                return false;
             }
         }
 
@@ -551,6 +592,20 @@ namespace KhurramAudioRoute.Core
         /// bridge fresh and live-updating it.
         /// </summary>
         public static bool IsBridgeRunning => _bridgeMasterMixer != 0 && _bridgeSourceId != null;
+
+        public static bool IsBridgeEndpoint(string? deviceId)
+        {
+            if (string.IsNullOrWhiteSpace(deviceId)) return false;
+            if (_bridgeSourceId != null
+                && string.Equals(deviceId, _bridgeSourceId, StringComparison.OrdinalIgnoreCase))
+                return true;
+            foreach (var targetId in _bridgeTargetIds)
+            {
+                if (string.Equals(deviceId, targetId, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// The endpoint id currently driving the bridge as the capture source,
@@ -765,6 +820,11 @@ namespace KhurramAudioRoute.Core
         {
             try
             {
+                // The master bridge owns EQ/spatial for its source and target endpoints.
+                // Re-opening the legacy self-EQ loopback during a live bridge can leave
+                // WASAPI targets busy and makes slider changes appear to do nothing.
+                if (IsBridgeEndpoint(deviceId)) return;
+
                 int deviceIndex = GetDeviceIndex(deviceId);
                 int wasapiIndex = GetWasapiDeviceIndex(deviceId, true); // Loopback capture for EQ
                 if (deviceIndex == -1 || wasapiIndex == -1) return;
@@ -786,20 +846,18 @@ namespace KhurramAudioRoute.Core
                     // 10-band ISO-octave graphic EQ. Bandwidth stays at 2.5 octaves to
                     // keep the wide, "musical" feel from the previous 5-band layout -
                     // narrower Q on 10 bands made each slider feel weak in testing.
-                    float[] centerFreqs = { 31f, 62f, 125f, 250f, 500f, 1000f, 2000f, 4000f, 8000f, 16000f };
-                    int[] handles = new int[centerFreqs.Length];
+                    int[] handles = new int[MasterEngine.IsoCenterFrequencies.Length];
 
-                    for (int i = 0; i < centerFreqs.Length; i++)
+                    for (int i = 0; i < MasterEngine.IsoCenterFrequencies.Length; i++)
                     {
                         handles[i] = Bass.ChannelSetFX(mixerStream, EffectType.PeakEQ, 1);
-                        var eq = new PeakEQParameters
+                        if (handles[i] == 0)
                         {
-                            lBand = i,
-                            fCenter = centerFreqs[i],
-                            fBandwidth = 2.5f,
-                            fGain = i < gains.Length ? gains[i] : 0f
-                        };
-                        Bass.FXSetParameters(handles[i], eq);
+                            Debug.WriteLine($"BASS EQ: PeakEQ band {i} attach failed for {deviceId}: {Bass.LastError}");
+                            continue;
+                        }
+
+                        MasterEngine.SetIsoPeakEqBand(handles[i], i, i < gains.Length ? gains[i] : 0f);
                     }
                     _deviceEqHandles[deviceId] = handles;
 
@@ -853,12 +911,7 @@ namespace KhurramAudioRoute.Core
                     if (_deviceEqHandles.TryGetValue(deviceId, out var handles))
                     {
                         for (int i = 0; i < Math.Min(handles.Length, gains.Length); i++)
-                        {
-                            var eq = new PeakEQParameters();
-                            Bass.FXGetParameters(handles[i], eq);
-                            eq.fGain = gains[i];
-                            Bass.FXSetParameters(handles[i], eq);
-                        }
+                            MasterEngine.SetIsoPeakEqBand(handles[i], i, gains[i]);
                     }
                 }
             }

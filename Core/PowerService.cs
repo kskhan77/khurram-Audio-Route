@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KhurramAudioRoute.Core
 {
@@ -71,10 +72,24 @@ namespace KhurramAudioRoute.Core
         [ObservableProperty]
         private bool isBackupModeActive;
 
+        /// <summary>
+        /// Compact label for the Outputs toolbar chip (same logical state as <see cref="State"/>).
+        /// </summary>
+        public string BusChipShortLabel => State switch
+        {
+            PowerState.Active => "Audio bus on",
+            PowerState.Engaging => "Audio bus…",
+            PowerState.Disengaging => "Audio bus…",
+            PowerState.Failed => "Audio bus error",
+            _ => "Audio bus off",
+        };
+
         partial void OnStateChanged(PowerState value)
         {
+            // Derived bindings (IsActive, toolbar label) — State mutations happen on UI thread only.
             OnPropertyChanged(nameof(IsActive));
             OnPropertyChanged(nameof(IsTransitioning));
+            OnPropertyChanged(nameof(BusChipShortLabel));
         }
 
         public bool IsTransitioning => State == PowerState.Engaging || State == PowerState.Disengaging;
@@ -114,6 +129,13 @@ namespace KhurramAudioRoute.Core
             }
         }
 
+        private enum EngageUiResult
+        {
+            SkipAlreadyHandled,
+            BackupModeDone,
+            ProceedToSetDefault,
+        }
+
         /// <summary>
         /// Engages the master bus: makes VB-CABLE the Windows default,
         /// remembers the previous default, and signals the bridge to start.
@@ -124,57 +146,72 @@ namespace KhurramAudioRoute.Core
             await _stateGate.WaitAsync().ConfigureAwait(false);
             try
             {
-                if (State == PowerState.Active || State == PowerState.Engaging)
-                    return;
-
-                State = PowerState.Engaging;
-                StatusMessage = "Engaging audio bus...";
-
-                if (BusDevice?.Id == null)
+                var dispatcher = Application.Current?.Dispatcher;
+                if (dispatcher is null)
                 {
-                    // No virtual cable installed — flip to backup mode and
-                    // surface a banner. The actual self-mirror plumbing is
-                    // wired by MainViewModel based on IsBackupModeActive.
-                    IsBackupModeActive = true;
-                    StatusMessage = "Install VB-CABLE for processed audio on every output.";
-                    State = PowerState.Active;
-                    PersistPoweredOnAtClose(true);
+                    Debug.WriteLine("PowerService.EngageAsync: no Application dispatcher.");
                     return;
                 }
 
-                // Remember the user's pre-engage Windows default so we can
-                // restore it on disengage. Skip the save if we'd be saving
-                // the bus itself (idempotent re-engage).
-                var current = TryGetCurrentDefaultDeviceId();
-                if (!string.IsNullOrWhiteSpace(current)
-                    && !string.Equals(current, BusDevice.Id, StringComparison.OrdinalIgnoreCase))
+                var uiPhase = await dispatcher.InvokeAsync(() =>
                 {
-                    UserSettings.SetLastWindowsDefaultDeviceId(current);
-                }
+                    if (State == PowerState.Active || State == PowerState.Engaging)
+                        return EngageUiResult.SkipAlreadyHandled;
+
+                    State = PowerState.Engaging;
+                    StatusMessage = "Engaging audio bus...";
+
+                    if (BusDevice?.Id == null)
+                    {
+                        IsBackupModeActive = true;
+                        StatusMessage = "Install VB-CABLE for processed audio on every output.";
+                        State = PowerState.Active;
+                        PersistPoweredOnAtClose(true);
+                        return EngageUiResult.BackupModeDone;
+                    }
+
+                    var current = TryGetCurrentDefaultDeviceId();
+                    if (!string.IsNullOrWhiteSpace(current)
+                        && !string.Equals(current, BusDevice.Id, StringComparison.OrdinalIgnoreCase))
+                        UserSettings.SetLastWindowsDefaultDeviceId(current);
+
+                    return EngageUiResult.ProceedToSetDefault;
+                }).Task.ConfigureAwait(false);
+
+                if (uiPhase != EngageUiResult.ProceedToSetDefault)
+                    return;
+
+                string busId = await dispatcher.InvokeAsync(() => BusDevice!.Id!).Task.ConfigureAwait(false);
 
                 await Task.Run(() =>
                 {
-                    bool ok = AudioRouterNative.SetSystemDefaultDevice(BusDevice.Id);
+                    bool ok = AudioRouterNative.SetSystemDefaultDevice(busId);
                     if (!ok)
-                    {
                         Debug.WriteLine("PowerService: SetSystemDefaultDevice failed for bus.");
-                    }
                 }).ConfigureAwait(false);
 
-                // The bridge itself is started by the orchestrator that owns
-                // the active output list (MainViewModel). PowerService just
-                // owns the master Windows-default flip + persistence; the
-                // orchestrator listens to State to know when to call into
-                // BassEngine.StartBridge.
-                State = PowerState.Active;
-                StatusMessage = "Audio bus is active.";
-                PersistPoweredOnAtClose(true);
+                await dispatcher.InvokeAsync(() =>
+                {
+                    State = PowerState.Active;
+                    StatusMessage = "Audio bus is active.";
+                    PersistPoweredOnAtClose(true);
+                }).Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"PowerService.EngageAsync failed: {ex.Message}");
-                State = PowerState.Failed;
-                StatusMessage = $"Could not engage the audio bus: {ex.Message}";
+                try
+                {
+                    Application.Current?.Dispatcher.Invoke(() =>
+                    {
+                        State = PowerState.Failed;
+                        StatusMessage = $"Could not engage the audio bus: {ex.Message}";
+                    });
+                }
+                catch (Exception inner)
+                {
+                    Debug.WriteLine($"PowerService.EngageAsync UI failure update: {inner.Message}");
+                }
             }
             finally
             {
@@ -192,46 +229,64 @@ namespace KhurramAudioRoute.Core
             await _stateGate.WaitAsync().ConfigureAwait(false);
             try
             {
-                if (State == PowerState.Disabled || State == PowerState.Disengaging)
+                var dispatcher = Application.Current?.Dispatcher;
+                if (dispatcher is null)
                     return;
 
-                State = PowerState.Disengaging;
-                StatusMessage = "Restoring previous audio device...";
+                bool skip = await dispatcher.InvokeAsync(() =>
+                {
+                    if (State == PowerState.Disabled || State == PowerState.Disengaging)
+                        return true;
 
-                var previous = UserSettings.GetLastWindowsDefaultDeviceId();
+                    State = PowerState.Disengaging;
+                    StatusMessage = "Restoring previous audio device...";
+                    return false;
+                }).Task.ConfigureAwait(false);
+
+                if (skip)
+                    return;
+
+                string? previous = await dispatcher.InvokeAsync(() => UserSettings.GetLastWindowsDefaultDeviceId()).Task.ConfigureAwait(false);
+                string? busId = await dispatcher.InvokeAsync(() => BusDevice?.Id).Task.ConfigureAwait(false);
+
                 if (!string.IsNullOrWhiteSpace(previous)
-                    && BusDevice?.Id != null
-                    && !string.Equals(previous, BusDevice.Id, StringComparison.OrdinalIgnoreCase))
+                    && !string.IsNullOrWhiteSpace(busId)
+                    && !string.Equals(previous, busId, StringComparison.OrdinalIgnoreCase))
                 {
                     await Task.Run(() =>
                     {
                         bool ok = AudioRouterNative.SetSystemDefaultDevice(previous);
                         if (ok)
-                        {
-                            // Only clear once the restore actually succeeded so
-                            // a failed call (device unplugged) keeps the value
-                            // for the next attempt.
                             UserSettings.SetLastWindowsDefaultDeviceId(null);
-                        }
                         else
-                        {
                             Debug.WriteLine($"PowerService: failed to restore default to {previous}.");
-                        }
                     }).ConfigureAwait(false);
                 }
 
-                IsBackupModeActive = false;
-                State = PowerState.Disabled;
-                StatusMessage = "Audio bus is off.";
-
-                if (persistPreference)
-                    PersistPoweredOnAtClose(false);
+                await dispatcher.InvokeAsync(() =>
+                {
+                    IsBackupModeActive = false;
+                    State = PowerState.Disabled;
+                    StatusMessage = "Audio bus is off.";
+                    if (persistPreference)
+                        PersistPoweredOnAtClose(false);
+                }).Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"PowerService.DisengageAsync failed: {ex.Message}");
-                State = PowerState.Failed;
-                StatusMessage = $"Could not disengage cleanly: {ex.Message}";
+                try
+                {
+                    Application.Current?.Dispatcher.Invoke(() =>
+                    {
+                        State = PowerState.Failed;
+                        StatusMessage = $"Could not disengage cleanly: {ex.Message}";
+                    });
+                }
+                catch (Exception inner)
+                {
+                    Debug.WriteLine($"PowerService.DisengageAsync UI failure update: {inner.Message}");
+                }
             }
             finally
             {

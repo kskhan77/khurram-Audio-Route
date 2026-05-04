@@ -167,6 +167,12 @@ namespace KhurramAudioRoute.ViewModels
         /// </summary>
         public PowerService Power { get; } = new PowerService();
 
+        /// <summary>
+        /// Voice studio (CABLE-B) mic chain. See <c>docs/MIC_CHAIN_PLAN.md</c>.
+        /// Bound from the Microphones page Voice Studio card.
+        /// </summary>
+        public MicChainViewModel MicChain { get; } = new MicChainViewModel();
+
         // ── Master engine state (one EQ curve, one spatial preset for the bus) ──
 
         [ObservableProperty]
@@ -407,6 +413,7 @@ namespace KhurramAudioRoute.ViewModels
         private void OnPowerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(PowerService.IsActive)
+                || e.PropertyName == nameof(PowerService.State)
                 || e.PropertyName == nameof(PowerService.BusDevice)
                 || e.PropertyName == nameof(PowerService.IsBackupModeActive))
             {
@@ -494,6 +501,10 @@ namespace KhurramAudioRoute.ViewModels
                     }
 
                     var gains = GetMasterEqualizerGains();
+                    BassEngine.StopStandaloneDeviceProcessing(bridgeSourceId!);
+                    foreach (var targetId in activeTargets)
+                        BassEngine.StopStandaloneDeviceProcessing(targetId);
+
                     bool started = BassEngine.StartBridge(bridgeSourceId!, activeTargets, gains);
                     if (started)
                     {
@@ -522,6 +533,10 @@ namespace KhurramAudioRoute.ViewModels
             {
                 Debug.WriteLine($"RebuildMasterBridge failed: {ex.Message}");
             }
+            finally
+            {
+                UpdateMasterEngineStatusHint();
+            }
         }
 
         /// <summary>
@@ -532,6 +547,56 @@ namespace KhurramAudioRoute.ViewModels
         /// </summary>
         [ObservableProperty]
         private string totalLatencyBanner = "≈ 50 ms total";
+
+        /// <summary>Shown on Outputs — explains whether master EQ/spatial fan-out is actually running.</summary>
+        [ObservableProperty]
+        private string masterEngineStatusHint =
+            "Audio bus OFF — master EQ and spatial only apply when the bus is ON and the engine below is LIVE.";
+
+        /// <summary>True when <see cref="BassEngine.IsBridgeRunning"/> after the last rebuild.</summary>
+        [ObservableProperty]
+        private bool isMasterBridgeLive;
+
+        private void UpdateMasterEngineStatusHint()
+        {
+            IsMasterBridgeLive = BassEngine.IsBridgeRunning;
+
+            if (!Power.IsActive)
+            {
+                MasterEngineStatusHint =
+                    "Audio bus OFF — master EQ and spatial are not in the signal path. Turn the bus ON (header or tray), then mark hardware ACTIVE.";
+                return;
+            }
+
+            if (BassEngine.IsBridgeRunning)
+            {
+                MasterEngineStatusHint = Power.IsBackupModeActive
+                    ? "Master engine LIVE (backup): processed audio only reaches other ACTIVE outputs below—the Windows default you hear directly stays dry. For full routing, install VB-CABLE and set it as default."
+                    : "Master engine LIVE: apps → VB-CABLE → capture → master EQ + spatial → ACTIVE speakers/HDMI below. Listen on those ACTIVE devices; monitoring only the cable device is dry (this app does not re-inject FX back into the cable). For true 5.1/7.1 out of ACTIVE HDMI/receiver, enable Matrix surround upmix on Tools (48 kHz multichannel).";
+                return;
+            }
+
+            var tap = ResolveMasterBridgeCaptureId();
+            if (string.IsNullOrWhiteSpace(tap))
+            {
+                MasterEngineStatusHint =
+                    "Bus ON but capture device unresolved — click Refresh. With VB-CABLE installed, the bus endpoint must appear in the device list.";
+                return;
+            }
+
+            int activeFanOut = Devices.Count(d => d.IsActiveOutput
+                                                 && !string.IsNullOrWhiteSpace(d.Id)
+                                                 && !string.Equals(d.Id, tap, StringComparison.OrdinalIgnoreCase));
+            if (activeFanOut == 0)
+            {
+                MasterEngineStatusHint =
+                    "Bus ON — no fan-out: tick ACTIVE on at least one real speaker or HDMI (not the virtual cable). Without an ACTIVE destination the bridge does not start.";
+                return;
+            }
+
+            MasterEngineStatusHint =
+                "Bus ON but the bridge failed to start — see Debug Output for lines starting with BASS BRIDGE. Try Refresh, exit apps using exclusive audio on those outputs, or restart.";
+        }
 
         private void UpdateTotalLatencyBanner()
         {
@@ -674,6 +739,7 @@ namespace KhurramAudioRoute.ViewModels
             SessionManager.UpdateSessionLevels(Sessions);
             DeviceManager.UpdateDeviceLevels(Devices);
             DeviceManager.UpdateDeviceLevels(Microphones);
+            MicChain.Pump();
 
             // Duplicate-to targets (NAudio sessions) always follow master EQ even when
             // duplicated from Applications (session flag) rather than Outputs (IsDuplicating).
@@ -684,6 +750,10 @@ namespace KhurramAudioRoute.ViewModels
                 if (string.IsNullOrWhiteSpace(device.Id))
                     continue;
                 if (DuplicationManager.IsDuplicating(device.Id))
+                    continue;
+                if (Power.IsActive)
+                    continue;
+                if (BassEngine.IsBridgeEndpoint(device.Id))
                     continue;
 
                 BassEngine.UpdateEqualizer(device.Id, device.GetEqualizerGains());
@@ -836,6 +906,7 @@ namespace KhurramAudioRoute.ViewModels
 
                 L2CalibrationStaleHints.Refresh(availableDevices);
                 L3AutoSyncCaption.Refresh(availableDevices);
+                MicChain.RefreshDevices();
                 
                 var defaultDevice = Devices.FirstOrDefault(d => d.IsDefault);
                 SonicFlowVirtualDevice = SonicFlowVirtualAudio.FindVirtualRenderDevice(availableDevices);
