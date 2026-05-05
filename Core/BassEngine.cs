@@ -171,6 +171,10 @@ namespace KhurramAudioRoute.Core
         private static long _bridgeSourceCallbacks;
         private static long _bridgeSourceFrames;
         private static float _bridgeSourceMaxAbsSample;
+        // Peak |sample| of the buffer AFTER ApplySpatialIfActive runs — lets us
+        // confirm the spatial pipeline is modifying samples even when the user
+        // can't hear a difference (e.g. mono headset).
+        private static float _bridgeSpatialOutMaxAbsSample;
 
         // Diagnostic counters for Bass.StreamPutData on the push stream.
         // _bridgePushOk: number of successful StreamPutData calls.
@@ -215,6 +219,7 @@ namespace KhurramAudioRoute.Core
                 System.Threading.Interlocked.Exchange(ref _bridgeSourceCallbacks, 0);
                 System.Threading.Interlocked.Exchange(ref _bridgeSourceFrames, 0);
                 _bridgeSourceMaxAbsSample = 0f;
+                _bridgeSpatialOutMaxAbsSample = 0f;
                 System.Threading.Interlocked.Exchange(ref _bridgePushOk, 0);
                 System.Threading.Interlocked.Exchange(ref _bridgePushFailures, 0);
                 System.Threading.Interlocked.Exchange(ref _bridgePushBytesAttempted, 0);
@@ -605,6 +610,29 @@ namespace KhurramAudioRoute.Core
                 if (sourceId != null)
                     ApplySpatialIfActive(sourceId, buffer, length);
 
+                // Sample the post-spatial peak so we can prove the pipeline
+                // is producing different output from the source. If Source
+                // peak ≈ Spatial-out peak with a non-Off preset selected, the
+                // pipeline is no-op (bug). If they differ, the pipeline is
+                // alive and any "no audible change" is expectation / hardware.
+                if (length > 0)
+                {
+                    int floatCount = length / sizeof(float);
+                    unsafe
+                    {
+                        float* p = (float*)buffer.ToPointer();
+                        float peak = 0f;
+                        for (int i = 0; i < floatCount; i++)
+                        {
+                            float v = p[i];
+                            if (v < 0f) v = -v;
+                            if (v > peak) peak = v;
+                        }
+                        float prev = _bridgeSpatialOutMaxAbsSample * 0.995f;
+                        _bridgeSpatialOutMaxAbsSample = peak > prev ? peak : prev;
+                    }
+                }
+
                 int queued = Bass.StreamPutData(push, buffer, length);
                 if (length > 0)
                     System.Threading.Interlocked.Add(ref _bridgePushBytesAttempted, length);
@@ -732,6 +760,7 @@ namespace KhurramAudioRoute.Core
             sb.AppendLine($"  Source loopback hits : {System.Threading.Interlocked.Read(ref _bridgeSourceCallbacks)} (must be > 0 — if 0, WASAPI loopback isn't delivering)");
             sb.AppendLine($"  Source loopback frms : {System.Threading.Interlocked.Read(ref _bridgeSourceFrames)}");
             sb.AppendLine($"  Source peak |sample| : {_bridgeSourceMaxAbsSample:0.000000} (near 0 = silence captured; ≥ 0.001 = real audio captured)");
+            sb.AppendLine($"  Spatial-out peak     : {_bridgeSpatialOutMaxAbsSample:0.000000} (different from Source peak with non-Off preset = pipeline is modifying audio)");
             sb.AppendLine($"  StreamPutData ok     : {System.Threading.Interlocked.Read(ref _bridgePushOk)}");
             sb.AppendLine($"  StreamPutData fail   : {System.Threading.Interlocked.Read(ref _bridgePushFailures)} (last Bass.LastError = {(Errors)_bridgePushLastError})");
             sb.AppendLine($"  Push bytes attempted : {System.Threading.Interlocked.Read(ref _bridgePushBytesAttempted)}");

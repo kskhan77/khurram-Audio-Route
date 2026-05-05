@@ -441,27 +441,32 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!-- Compact preset chips (~half toolbar height vs SonicEqPresetRadio) -->
+        <!-- Compact preset chips (~half toolbar height vs SonicEqPresetRadio).
+             MinWidth=58 keeps chips visually uniform inside a WrapPanel so the
+             eye reads a clean grid even though each chip sizes to its content. -->
         <Style x:Key="SonicEqPresetRadioCompact" TargetType="RadioButton" BasedOn="{StaticResource SonicEqPresetRadio}">
-            <Setter Property="FontSize" Value="9"/>
-            <Setter Property="Padding" Value="5,1"/>
-            <Setter Property="MinHeight" Value="19"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Padding" Value="10,3"/>
+            <Setter Property="MinHeight" Value="22"/>
+            <Setter Property="MinWidth" Value="58"/>
             <Setter Property="Margin" Value="0"/>
         </Style>
-        <!-- Spatial mode picker: full-width stacked pills (same highlight language as EQ) -->
+        <!-- Spatial mode picker pills. WrapPanel-friendly: MinWidth keeps them
+             visually balanced (Stereo + and 7.1 speakers stay similar size)
+             without stretching to full row width. -->
         <Style x:Key="SonicSpatialPresetListRadio" TargetType="RadioButton">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="#B4C4D8"/>
             <Setter Property="Background" Value="#111921"/>
             <Setter Property="BorderBrush" Value="#243547"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="MinHeight" Value="29"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="MinWidth" Value="120"/>
             <Setter Property="Margin" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -977,6 +982,7 @@
                                            Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
                                 <ui:Button Content="Refresh list" Icon="ArrowSync24" Appearance="Secondary"
                                            Command="{Binding RefreshDataCommand}"
+                                           ToolTip="Re-enumerate playback and capture devices. Use after plugging or unplugging a USB device."
                                            Background="{StaticResource SonicSurfaceContainerHighBrush}" BorderBrush="#1AFFFFFF"/>
                             </StackPanel>
                         </Grid>
@@ -1077,12 +1083,13 @@
                                 BorderBrush="#1AFFFFFF" BorderThickness="1">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/> <!-- header -->
-                                    <RowDefinition Height="Auto"/> <!-- bridge live / why EQ may be dry -->
-                                    <RowDefinition Height="Auto"/> <!-- EQ sliders -->
-                                    <RowDefinition Height="Auto"/> <!-- EQ preset chips -->
-                                    <RowDefinition Height="Auto"/> <!-- spatial header row -->
-                                    <RowDefinition Height="Auto"/> <!-- spatial pill grid -->
+                                    <RowDefinition Height="Auto"/> <!-- 0: header -->
+                                    <RowDefinition Height="Auto"/> <!-- 1: bridge live / why EQ may be dry -->
+                                    <RowDefinition Height="Auto"/> <!-- 2: EQ sliders -->
+                                    <RowDefinition Height="Auto"/> <!-- 3: EQ preset chips -->
+                                    <RowDefinition Height="Auto"/> <!-- 4: spatial header row -->
+                                    <RowDefinition Height="Auto"/> <!-- 5: spatial pill grid -->
+                                    <RowDefinition Height="Auto"/> <!-- 6: stereo width slider -->
                                 </Grid.RowDefinitions>
 
                                 <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="True">
@@ -1188,15 +1195,14 @@
                                     </StackPanel>
                                 </UniformGrid>
 
-                                <!-- EQ preset chips, laid out as a UniformGrid so every chip gets
-                                     equal width and the row fills the card width — no more
-                                     horizontal-scroll dead space. Built-in presets occupy rows 1-3
-                                     (5 cols × 3 rows = 15 chips), and the bottom row holds three
-                                     user-saveable custom slots paired with a small ⤓ save button. -->
+                                <!-- EQ preset chips. WrapPanel so each chip sizes to its content
+                                     instead of UniformGrid's equal-column-width (which left
+                                     enormous whitespace inside every chip). Built-in presets
+                                     wrap densely; custom slots sit on a separate row beneath. -->
                                 <Border Grid.Row="3" Margin="0,8,0,0" Padding="6,6" CornerRadius="8"
                                         Background="#121820" BorderBrush="#223040" BorderThickness="1">
                                     <StackPanel>
-                                        <UniformGrid Columns="5" Rows="3">
+                                        <WrapPanel Orientation="Horizontal">
                                             <RadioButton Style="{StaticResource SonicEqPresetRadioCompact}" Content="Flat" Tag="Flat" Margin="3"
                                                          GroupName="{Binding MasterEqPresetGroupToken}"
                                                          Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Flat"
@@ -1257,7 +1263,7 @@
                                                          GroupName="{Binding MasterEqPresetGroupToken}"
                                                          Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Dance"
                                                          IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Dance}"/>
-                                        </UniformGrid>
+                                        </WrapPanel>
 
                                         <!-- Three custom slots. Click chip = recall slot; click ⤓ = save current curve to that slot. -->
                                         <UniformGrid Columns="3" Rows="1" Margin="0,6,0,0">
@@ -1321,42 +1327,42 @@
 
                                 <Border Grid.Row="5" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <UniformGrid Columns="4" Rows="2" Margin="-2,-2,-2,-2">
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="HeadphoneStereoPlus" Content="Stereo +"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="HeadphoneStudio" Content="Studio"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="HeadphoneCinema" Content="Cinema · 7.1"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="HeadphoneConcertHall" Content="Concert hall"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="Speakers_5_1" Content="5.1 speakers"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="Speakers_7_1" Content="7.1 speakers"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
-                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
                                                      Tag="GameMode" Content="Game"
                                                      GroupName="{Binding MasterSpatialPresetGroupToken}"
                                                      IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
-                                    </UniformGrid>
+                                    </WrapPanel>
                                 </Border>
 
                                 <!-- Stereo width slider — first stage of every spatial preset chain.
                                      <1 narrows toward mono, 1.0 = pass-through, >1 widens.
                                      Greyed out when Spatial scene is Off (no pipeline running). -->
-                                <Grid Margin="0,12,0,0">
+                                <Grid Grid.Row="6" Margin="0,12,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -1869,9 +1875,16 @@
                         <!-- Hardware endpoints -->
                         <TextBlock Text="HARDWARE PLAYBACK DEVICES" Style="{StaticResource SonicSectionHeader}" Margin="0,0,0,12"/>
                         <ItemsControl ItemsSource="{Binding PhysicalDevices}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <!-- Two cards per row. UniformGrid drops to one column automatically when the
+                                         window is too narrow because each card has Margin so they wrap visually. -->
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource SonicSurfaceContainerBrush}" CornerRadius="14" BorderThickness="1" Margin="0,0,0,12">
+                                    <Border Background="{StaticResource SonicSurfaceContainerBrush}" CornerRadius="14" BorderThickness="1" Margin="0,0,8,8">
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
@@ -1885,7 +1898,7 @@
                                             </Style>
                                         </Border.Style>
                                         <StackPanel>
-                                            <Grid Margin="18,16,14,12">
+                                            <Grid Margin="14,12,10,8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
@@ -1893,7 +1906,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Border Grid.Column="0" Width="46" Height="46" CornerRadius="23" BorderThickness="1" Margin="0,0,14,0">
+                                                <Border Grid.Column="0" Width="38" Height="38" CornerRadius="19" BorderThickness="1" Margin="0,0,10,0">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Setter Property="Background" Value="#1B1D20"/>
@@ -1906,7 +1919,7 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Border.Style>
-                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="20">
+                                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="16">
                                                         <ui:SymbolIcon.Style>
                                                             <Style TargetType="ui:SymbolIcon">
                                                                 <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
@@ -1922,7 +1935,8 @@
 
                                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="15" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="240"
+                                                                   ToolTip="{Binding Name}"/>
                                                         <Border Margin="10,0,0,0" Background="{StaticResource SonicSecondaryBrush}" CornerRadius="9" Padding="7,2"
                                                                 Visibility="{Binding IsDefault, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <TextBlock Text="DEFAULT" Foreground="#092100" FontSize="9" FontWeight="Bold"/>
@@ -2004,10 +2018,11 @@
                                                     </StackPanel>
                                                 </StackPanel>
 
-                                                <ctrl:SpectrumMeter Grid.Column="2" Width="200" Height="44" Margin="14,0,14,0"
+                                                <ctrl:SpectrumMeter Grid.Column="2" Width="120" Height="32" Margin="8,0,8,0"
                                                                     Level="{Binding PeakValue}"
                                                                     IsActive="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}"
-                                                                    BarCount="20"/>
+                                                                    BarCount="14"
+                                                                    ToolTip="Live output level for this device"/>
 
                                                 <Button Grid.Column="3" Style="{StaticResource SonicIconFrameButton}" Margin="0,0,0,0"
                                                         ToolTip="Set as default playback"
@@ -2018,13 +2033,14 @@
                                                 </Button>
                                             </Grid>
 
-                                            <Grid Margin="18,0,18,16">
+                                            <Grid Margin="14,0,14,8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="0" Style="{StaticResource SonicIconFrameButton}" Click="OnDeviceMuteClicked" Margin="0,0,10,0" Padding="8">
+                                                <Button Grid.Column="0" Style="{StaticResource SonicIconFrameButton}" Click="OnDeviceMuteClicked" Margin="0,0,8,0" Padding="6"
+                                                        ToolTip="Mute / unmute this device">
                                                     <ui:SymbolIcon FontSize="16">
                                                         <ui:SymbolIcon.Style>
                                                             <Style TargetType="ui:SymbolIcon">
@@ -2040,14 +2056,15 @@
                                                         </ui:SymbolIcon.Style>
                                                     </ui:SymbolIcon>
                                                 </Button>
-                                                <Slider Grid.Column="1" Style="{StaticResource SonicVolumeSlider}" Value="{Binding Volume, Mode=TwoWay}" Minimum="0" Maximum="1" IsEnabled="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}" ValueChanged="OnOutputDeviceVolumeChanged" VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="12" FontWeight="SemiBold" Width="42" TextAlignment="Right" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                                <Slider Grid.Column="1" Style="{StaticResource SonicVolumeSlider}" Value="{Binding Volume, Mode=TwoWay}" Minimum="0" Maximum="1" IsEnabled="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}" ValueChanged="OnOutputDeviceVolumeChanged" VerticalAlignment="Center"
+                                                        ToolTip="Output volume for this device (independent of Windows volume)"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="11" FontWeight="SemiBold" Width="38" TextAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0"/>
                                             </Grid>
 
                                             <!-- Sync offset: tunes how far behind the master bus this device plays.
                                                  Range is intentionally small (0..120 ms) for the L1 baseline; mic
                                                  auto-sync (L3) will replace this with one-tap calibration. -->
-                                            <Grid Margin="18,0,18,12">
+                                            <Grid Margin="14,0,14,8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
