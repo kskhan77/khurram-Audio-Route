@@ -311,8 +311,18 @@ namespace KhurramAudioRoute.Core
                     StopBridge();
                     return false;
                 }
+                // CRITICAL: do NOT pass BassFlags.MixerNonStop here. The flag bit
+                // 0x20000 is BASS_MIXER_NONSTOP at stream-create time but
+                // BASS_MIXER_CHAN_PAUSE when adding a channel — same numeric
+                // value, opposite meaning. ManagedBass aliases both names to
+                // 0x20000 so the C# code compiles, but BASSmix sees PAUSE here
+                // and the push stream is added with processing disabled. The
+                // mixer then pulls silence forever and every split downstream
+                // returns zeros to the WASAPI target proc. Keep the flag list
+                // to channel-only flags (MixerChanDownMix is the only one
+                // needed for our 2ch source -> 2ch mixer layout).
                 BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgePushStream,
-                    BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
+                    BassFlags.MixerChanDownMix);
 
                 // Master mixer is a *decoding* mixer (same as push source). Decode streams cannot use
                 // ChannelPlay — they advance only when downstream splits/WASAPI pull from the mixer.
