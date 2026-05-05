@@ -410,6 +410,15 @@ namespace KhurramAudioRoute.ViewModels
         private readonly object _masterBridgeGate = new();
         private bool _autoEngageAttempted;
 
+        // True only while RebuildMasterBridge is executing on the current thread.
+        // Used to suppress the OnOutputDevicePropertyChanged → OnPhysicalActiveToggled →
+        // RebuildMasterBridge recursion that fires when RebuildMasterBridge itself
+        // sets IsActiveOutput on the previous-default device. Without this guard
+        // the rebuild starts the bridge, the setter triggers another rebuild that
+        // tears it down and starts it again — a rapid stop/start cycle that
+        // intermittently fails WASAPI device init and leaves the bus silent.
+        [ThreadStatic] private static bool _isInRebuild;
+
         private void OnPowerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(PowerService.IsActive)
@@ -468,6 +477,8 @@ namespace KhurramAudioRoute.ViewModels
         /// </summary>
         public void RebuildMasterBridge()
         {
+            bool topLevel = !_isInRebuild;
+            if (topLevel) _isInRebuild = true;
             try
             {
                 lock (_masterBridgeGate)
@@ -556,6 +567,7 @@ namespace KhurramAudioRoute.ViewModels
             }
             finally
             {
+                if (topLevel) _isInRebuild = false;
                 UpdateMasterEngineStatusHint();
             }
         }
@@ -1003,20 +1015,48 @@ namespace KhurramAudioRoute.ViewModels
 
             // Restore the user's previously-selected ACTIVE group from settings.
             // Empty + ActiveBridgeTargetsExplicit = user has chosen no devices on purpose.
-            // Empty + !explicit (fresh install) = legacy default-on behaviour: only the
-            // current Windows playback default is ACTIVE. Other devices opt-in.
+            // Empty + !explicit (fresh install) = legacy default-on behaviour: pick the
+            // hardware device the user was last listening on. Other devices opt-in.
             var activeIds = UserSettings.GetActiveBridgeTargetIds();
             bool activeExplicit = UserSettings.GetActiveBridgeTargetsExplicit();
             string? freshDefaultDeviceId = null;
             if (!activeExplicit)
             {
-                try
+                // Prefer the last hardware default captured BEFORE any bus engage.
+                // If the bus is already engaged (auto-engage on launch, or this
+                // refresh fired while bus is on), the live OS default is VB-CABLE
+                // and would get filtered out as virtual — leaving no ACTIVE device
+                // and the bridge with zero fan-out. The persisted last-default is
+                // the device the user was actually listening on.
+                var lastHardwareId = UserSettings.GetLastWindowsDefaultDeviceId();
+                if (!string.IsNullOrWhiteSpace(lastHardwareId)
+                    && devices.Any(d => !d.IsSonicFlowVirtual
+                                        && !string.IsNullOrWhiteSpace(d.Id)
+                                        && string.Equals(d.Id, lastHardwareId, StringComparison.OrdinalIgnoreCase)))
                 {
-                    using var enumerator = new MMDeviceEnumerator();
-                    using var dev = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-                    freshDefaultDeviceId = dev.ID;
+                    freshDefaultDeviceId = lastHardwareId;
                 }
-                catch { /* ignore */ }
+                else
+                {
+                    try
+                    {
+                        using var enumerator = new MMDeviceEnumerator();
+                        using var dev = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                        string? liveId = dev.ID;
+                        // Only seed from the live OS default if it points to a
+                        // non-virtual device in our list. If it's the bus itself
+                        // (VB-CABLE), leave freshDefaultDeviceId null and let
+                        // RebuildMasterBridge fall back via LastWindowsDefaultDeviceId.
+                        if (!string.IsNullOrWhiteSpace(liveId)
+                            && devices.Any(d => !d.IsSonicFlowVirtual
+                                                && !string.IsNullOrWhiteSpace(d.Id)
+                                                && string.Equals(d.Id, liveId, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            freshDefaultDeviceId = liveId;
+                        }
+                    }
+                    catch { /* ignore */ }
+                }
             }
 
             foreach (var source in devices)
@@ -1153,15 +1193,19 @@ namespace KhurramAudioRoute.ViewModels
 
             if (e.PropertyName == nameof(AudioDevice.IsActiveOutput))
             {
-                // Persist the ACTIVE group across rebuilds + restarts. Skip if
-                // _isRestoringActiveOutputs is set (the restore-from-settings
-                // pass during ConfigureDeviceDuplicateTargets shouldn't trigger
-                // a save).
+                // Persist the new ACTIVE list either way so the user's choice
+                // survives restart. The setter wired in ConfigureDeviceDuplicateTargets
+                // runs only after that initial restore pass, so the persist path
+                // already starts from the user-toggled state.
                 PersistActiveBridgeTargets();
-                // Toggling a real output's [Active] chip while the master bus
-                // is on rebuilds the bridge fan-out. When the bus is off this
-                // is a pure UI state change with no engine work.
-                OnPhysicalActiveToggled(sourceDevice);
+
+                // If we're already inside RebuildMasterBridge (the rebuild itself
+                // marked the previous-default device ACTIVE), do NOT recurse:
+                // the in-flight rebuild is about to fan out to this device anyway.
+                // Recursing causes a stop/start/stop/start cycle on the WASAPI
+                // target that intermittently fails device init.
+                if (!_isInRebuild)
+                    OnPhysicalActiveToggled(sourceDevice);
                 UpdateTotalLatencyBanner();
                 return;
             }

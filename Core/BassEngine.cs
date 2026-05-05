@@ -161,6 +161,17 @@ namespace KhurramAudioRoute.Core
         /// </summary>
         private static MasterEqDsp? _bridgeEqDsp;
 
+        // Diagnostic counters for the source loopback callback. If
+        // _bridgeSourceCallbacks stays at 0 after the bridge has been running
+        // for a few seconds, WASAPI loopback on the bus device is not
+        // delivering data — the bridge is fanning out silence regardless of
+        // what apps are doing. _bridgeSourceMaxAbsSample tracks the loudest
+        // float magnitude observed in the captured buffer; a value persistently
+        // near 0 means loopback is delivering empty buffers.
+        private static long _bridgeSourceCallbacks;
+        private static long _bridgeSourceFrames;
+        private static float _bridgeSourceMaxAbsSample;
+
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
         // init floods the debug console with the same error every tick.
@@ -185,6 +196,12 @@ namespace KhurramAudioRoute.Core
             try
             {
                 StopBridge();
+
+                // Reset source-callback diagnostics so DumpBridgeDiagnostics shows
+                // counts only for the live bridge run, not accumulation across runs.
+                System.Threading.Interlocked.Exchange(ref _bridgeSourceCallbacks, 0);
+                System.Threading.Interlocked.Exchange(ref _bridgeSourceFrames, 0);
+                _bridgeSourceMaxAbsSample = 0f;
 
                 _bridgeMatrixChannelOrder = UserSettings.GetMatrixBridgeChannelOrder();
 
@@ -515,6 +532,38 @@ namespace KhurramAudioRoute.Core
                 int push = _bridgePushStream;
                 if (push == 0) return length;
 
+                // Bump callback diagnostics first — even a 0-byte buffer is
+                // useful evidence that WASAPI loopback at least fired.
+                System.Threading.Interlocked.Increment(ref _bridgeSourceCallbacks);
+
+                if (length > 0)
+                {
+                    int floatCount = length / sizeof(float);
+                    var (sr, ch) = _captureFormats.TryGetValue(_bridgeSourceId ?? string.Empty, out var fmt)
+                        ? fmt : (48000, 2);
+                    int frames = ch > 0 ? floatCount / ch : 0;
+                    if (frames > 0)
+                        System.Threading.Interlocked.Add(ref _bridgeSourceFrames, frames);
+
+                    // Cheap loudness probe: scan the buffer for the loudest
+                    // sample. Stays branch-light so we don't drag the audio
+                    // thread. Sub-10^-6 = essentially silence.
+                    unsafe
+                    {
+                        float* p = (float*)buffer.ToPointer();
+                        float peak = 0f;
+                        for (int i = 0; i < floatCount; i++)
+                        {
+                            float v = p[i];
+                            if (v < 0f) v = -v;
+                            if (v > peak) peak = v;
+                        }
+                        // Decay slightly so transient peaks don't pin the value forever.
+                        float prev = _bridgeSourceMaxAbsSample * 0.995f;
+                        _bridgeSourceMaxAbsSample = peak > prev ? peak : prev;
+                    }
+                }
+
                 var sourceId = _bridgeSourceId;
                 if (sourceId != null)
                     ApplySpatialIfActive(sourceId, buffer, length);
@@ -620,6 +669,9 @@ namespace KhurramAudioRoute.Core
             }
             catch (Exception ex) { sb.AppendLine($"  Windows default out  : (error: {ex.Message})"); }
             sb.AppendLine($"  Source ID            : {_bridgeSourceId ?? "(none)"}");
+            sb.AppendLine($"  Source loopback hits : {System.Threading.Interlocked.Read(ref _bridgeSourceCallbacks)} (must be > 0 — if 0, WASAPI loopback isn't delivering)");
+            sb.AppendLine($"  Source loopback frms : {System.Threading.Interlocked.Read(ref _bridgeSourceFrames)}");
+            sb.AppendLine($"  Source peak |sample| : {_bridgeSourceMaxAbsSample:0.000000} (near 0 = silence captured; ≥ 0.001 = real audio captured)");
             sb.AppendLine($"  Push stream handle   : {_bridgePushStream}");
             sb.AppendLine($"  Master mixer handle  : {_bridgeMasterMixer}");
             sb.AppendLine($"  Limiter FX handle    : {_bridgeLimiterFx}");

@@ -183,15 +183,31 @@ namespace KhurramAudioRoute.Core
 
                 string busId = await dispatcher.InvokeAsync(() => BusDevice!.Id!).Task.ConfigureAwait(false);
 
-                await Task.Run(() =>
+                bool defaultOk = await Task.Run(() =>
                 {
                     bool ok = AudioRouterNative.SetSystemDefaultDevice(busId);
                     if (!ok)
                         Debug.WriteLine("PowerService: SetSystemDefaultDevice failed for bus.");
+                    return ok;
                 }).ConfigureAwait(false);
 
                 await dispatcher.InvokeAsync(() =>
                 {
+                    if (!defaultOk)
+                    {
+                        // Don't flip State to Active when the OS default never moved —
+                        // the bridge would capture silence from VB-CABLE while the
+                        // user's apps keep playing direct to the old device, and the
+                        // chip would lie about routing being live. Surface the failure
+                        // so the user can retry / check VB-CABLE.
+                        State = PowerState.Failed;
+                        StatusMessage = "Could not set VB-CABLE as the Windows default. "
+                                        + "Open Windows Sound settings, set 'CABLE Input' "
+                                        + "as default, then click Power again.";
+                        PersistPoweredOnAtClose(false);
+                        return;
+                    }
+
                     State = PowerState.Active;
                     StatusMessage = "Application is ON. Audio routes through SonicFlow → ACTIVE devices.";
                     PersistPoweredOnAtClose(true);
