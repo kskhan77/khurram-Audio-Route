@@ -421,8 +421,18 @@ namespace KhurramAudioRoute.ViewModels
 
         private void OnPowerPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            // Match IsActive (the only logical signal we care about), BusDevice
+            // (bus endpoint hot-plug), and IsBackupModeActive. We deliberately
+            // do NOT match nameof(PowerService.State) — when State transitions
+            // to Active, the [ObservableProperty] generator fires PropertyChanged
+            // for the derived IsActive *first*, then for State itself, which
+            // would cause two back-to-back rebuilds. The second rebuild stops
+            // and re-inits the WASAPI source loopback that bridge 1 just
+            // started, and BASSwasapi loopback on VB-CABLE doesn't recover —
+            // the source proc never fires again and the bridge fans out
+            // silence. Reacting only to IsActive collapses both events into a
+            // single rebuild.
             if (e.PropertyName == nameof(PowerService.IsActive)
-                || e.PropertyName == nameof(PowerService.State)
                 || e.PropertyName == nameof(PowerService.BusDevice)
                 || e.PropertyName == nameof(PowerService.IsBackupModeActive))
             {
