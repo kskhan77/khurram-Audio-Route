@@ -412,7 +412,9 @@
         <Style x:Key="SonicEqPresetRadio" TargetType="RadioButton">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="#9CA8B3"/>
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="#1A1F26"/>
+            <Setter Property="BorderBrush" Value="#2A323C"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="8,5"/>
@@ -424,16 +426,20 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="Outer" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Outer" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
                                               TextElement.Foreground="{TemplateBinding Foreground}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Outer" Property="Background" Value="#18FFFFFF"/>
+                                <Setter TargetName="Outer" Property="BorderBrush" Value="#3B4148"/>
+                                <Setter TargetName="Outer" Property="Background" Value="#22272F"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="Outer" Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
+                                <Setter TargetName="Outer" Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
                                 <Setter Property="Foreground" Value="#0A1218"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -451,9 +457,11 @@
             <Setter Property="MinWidth" Value="58"/>
             <Setter Property="Margin" Value="0"/>
         </Style>
-        <!-- Spatial mode picker pills. WrapPanel-friendly: MinWidth keeps them
-             visually balanced (Stereo + and 7.1 speakers stay similar size)
-             without stretching to full row width. -->
+        <!-- Spatial mode picker pills. The host UniformGrid stretches each pill
+             to fill its column, so we deliberately don't set MinWidth — that
+             lets the pills shrink fluidly on narrower windows instead of
+             overflowing the card. Padding + MinHeight keep the touch target
+             generous even when the column is narrow. -->
         <Style x:Key="SonicSpatialPresetListRadio" TargetType="RadioButton">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="#B4C4D8"/>
@@ -464,7 +472,6 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="14,6"/>
             <Setter Property="MinHeight" Value="30"/>
-            <Setter Property="MinWidth" Value="120"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -1289,11 +1296,11 @@
                                                     <Border x:Name="Outer" CornerRadius="6" Padding="10,5" BorderThickness="1">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
-                                                                <!-- Clean/recall state: same chrome as built-in chips at rest. -->
+                                                                <!-- Clean/recall state: same chrome as built-in chips at rest, plus a subtle border. -->
                                                                 <Setter Property="Background" Value="#1A1F26"/>
                                                                 <Setter Property="BorderBrush" Value="#2A323C"/>
                                                                 <Style.Triggers>
-                                                                    <!-- Clean + currently selected: highlight as primary. -->
+                                                                    <!-- Clean + currently selected: highlight as primary blue (matches built-in chip selection). -->
                                                                     <MultiDataTrigger>
                                                                         <MultiDataTrigger.Conditions>
                                                                             <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
@@ -1302,9 +1309,10 @@
                                                                         <Setter Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
                                                                         <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
                                                                     </MultiDataTrigger>
-                                                                    <!-- Dirty/save state: secondary green to invite the save click. -->
+                                                                    <!-- Dirty/save state: solid secondary green so the user can't miss
+                                                                         that this button is now a "save" action. -->
                                                                     <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
-                                                                        <Setter Property="Background" Value="#1F3A1F"/>
+                                                                        <Setter Property="Background" Value="{StaticResource SonicSecondaryBrush}"/>
                                                                         <Setter Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
@@ -1314,9 +1322,11 @@
                                                             <ui:SymbolIcon FontSize="13" Margin="0,0,6,0">
                                                                 <ui:SymbolIcon.Style>
                                                                     <Style TargetType="ui:SymbolIcon">
+                                                                        <!-- Default (clean + idle): hollow star, dim. -->
                                                                         <Setter Property="Symbol" Value="Star24"/>
                                                                         <Setter Property="Foreground" Value="#9CA8B3"/>
                                                                         <Style.Triggers>
+                                                                            <!-- Clean + currently selected: dark text on primary fill. -->
                                                                             <MultiDataTrigger>
                                                                                 <MultiDataTrigger.Conditions>
                                                                                     <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
@@ -1324,9 +1334,10 @@
                                                                                 </MultiDataTrigger.Conditions>
                                                                                 <Setter Property="Foreground" Value="#0A1218"/>
                                                                             </MultiDataTrigger>
+                                                                            <!-- Dirty/save: save floppy icon, dark for legibility on solid green. -->
                                                                             <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
                                                                                 <Setter Property="Symbol" Value="Save24"/>
-                                                                                <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                                <Setter Property="Foreground" Value="#092100"/>
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
@@ -1347,7 +1358,8 @@
                                                                                 <Setter Property="Foreground" Value="#0A1218"/>
                                                                             </MultiDataTrigger>
                                                                             <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
-                                                                                <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                                <Setter Property="Foreground" Value="#092100"/>
+                                                                                <Setter Property="FontWeight" Value="Bold"/>
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
@@ -1370,38 +1382,46 @@
                                                Foreground="{StaticResource SonicOnSurfaceBrush}" Text="Spatial scene"/>
                                 </DockPanel>
 
+                                <!-- Two stacked UniformGrids so each row stretches to fill the
+                                     available card width (no right-side gap) and shrinks fluidly
+                                     on narrower windows. Row 1 = 4 headphone presets; row 2 = 3
+                                     surround presets. Pills inherit Stretch from UniformGrid. -->
                                 <Border Grid.Row="5" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <WrapPanel Orientation="Horizontal">
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="HeadphoneStereoPlus" Content="Stereo +"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="HeadphoneStudio" Content="Studio"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="HeadphoneCinema" Content="Cinema · 7.1"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="HeadphoneConcertHall" Content="Concert hall"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="Speakers_5_1" Content="5.1 speakers"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="Speakers_7_1" Content="7.1 speakers"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
-                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     Tag="GameMode" Content="Game"
-                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
-                                    </WrapPanel>
+                                    <StackPanel>
+                                        <UniformGrid Columns="4" Rows="1">
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="HeadphoneStereoPlus" Content="Stereo +"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="HeadphoneStudio" Content="Studio"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="HeadphoneCinema" Content="Cinema · 7.1"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="HeadphoneConcertHall" Content="Concert hall"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
+                                        </UniformGrid>
+                                        <UniformGrid Columns="3" Rows="1">
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="Speakers_5_1" Content="5.1 speakers"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="Speakers_7_1" Content="7.1 speakers"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
+                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                         Tag="GameMode" Content="Game"
+                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
+                                        </UniformGrid>
+                                    </StackPanel>
                                 </Border>
 
                                 <!-- Stereo width slider — first stage of every spatial preset chain.
