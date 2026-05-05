@@ -306,6 +306,17 @@ namespace KhurramAudioRoute.ViewModels
         [ObservableProperty]
         private string selectedMasterEqPresetKey = EqualizerPresets.Flat;
 
+        // Each Custom button's "Save" state depends on the key — picking Bass
+        // must take all Custom chips back to clean even though the underlying
+        // gain comparison still says "different from saved Custom slot".
+        partial void OnSelectedMasterEqPresetKeyChanged(string value)
+        {
+            OnPropertyChanged(nameof(IsCustomEq1Dirty));
+            OnPropertyChanged(nameof(IsCustomEq2Dirty));
+            OnPropertyChanged(nameof(CustomEq1ButtonContent));
+            OnPropertyChanged(nameof(CustomEq2ButtonContent));
+        }
+
         /// <summary>Token bound to the master EQ preset radio group.</summary>
         public string MasterEqPresetGroupToken { get; } = "master-eq-preset";
 
@@ -365,52 +376,56 @@ namespace KhurramAudioRoute.ViewModels
                 3 => EqualizerPresets.Custom3,
                 _ => SelectedMasterEqPresetKey,
             };
-            OnPropertyChanged(nameof(IsCustomEqDirty));
-            OnPropertyChanged(nameof(CustomEqButtonContent));
+            OnPropertyChanged(nameof(IsCustomEq1Dirty));
+            OnPropertyChanged(nameof(IsCustomEq2Dirty));
+            OnPropertyChanged(nameof(CustomEq1ButtonContent));
+            OnPropertyChanged(nameof(CustomEq2ButtonContent));
         }
 
         /// <summary>
-        /// True when the live EQ curve does not match what's saved in
-        /// <c>UserSettings.CustomEqSlot1</c>. Drives the dual-mode Custom
-        /// button on the master EQ strip: dirty = "Save Custom" highlight,
-        /// clean = "Custom" recall affordance.
+        /// A Custom slot button is in "Save" mode only when BOTH conditions hold:
+        /// (1) the user has dragged a slider away from any known preset — i.e.
+        /// <see cref="SelectedMasterEqPresetKey"/> is the literal "Custom" the
+        /// EQ-band hooks set on a slider drag, AND (2) the live curve actually
+        /// differs from what's saved in that slot. Picking a built-in preset
+        /// (Bass, Rock, Flat, …) sets the key to that preset's name and so
+        /// short-circuits to false here, which keeps Custom buttons quiet
+        /// while the user is just auditioning presets.
         /// </summary>
-        public bool IsCustomEqDirty
+        private bool IsSlotDirty(int slot)
         {
-            get
-            {
-                var current = GetMasterEqualizerGains();
-                var saved = UserSettings.GetCustomEqSlot(1);
-                for (int i = 0; i < 10; i++)
-                    if (Math.Abs(current[i] - saved[i]) > 0.01f)
-                        return true;
+            if (!string.Equals(SelectedMasterEqPresetKey, "Custom", StringComparison.Ordinal))
                 return false;
-            }
+            var current = GetMasterEqualizerGains();
+            var saved = UserSettings.GetCustomEqSlot(slot);
+            for (int i = 0; i < 10; i++)
+                if (Math.Abs(current[i] - saved[i]) > 0.01f)
+                    return true;
+            return false;
         }
 
-        /// <summary>
-        /// "Custom" when the live curve matches the saved slot — clicking
-        /// recalls. "Save Custom" when the user has dragged sliders since
-        /// the last save — clicking persists the live curve into slot 1.
-        /// </summary>
-        public string CustomEqButtonContent => IsCustomEqDirty ? "Save Custom" : "Custom";
+        public bool IsCustomEq1Dirty => IsSlotDirty(1);
+        public bool IsCustomEq2Dirty => IsSlotDirty(2);
+
+        public string CustomEq1ButtonContent => IsCustomEq1Dirty ? "Save Custom 1" : "Custom 1";
+        public string CustomEq2ButtonContent => IsCustomEq2Dirty ? "Save Custom 2" : "Custom 2";
 
         /// <summary>
-        /// Single-click handler for the dual-mode Custom button. Save when
-        /// the live curve differs from the saved Custom slot; recall when
-        /// they match. Removes the need for two separate buttons.
+        /// Single-click handler for Custom slot N: save when the live curve
+        /// has drifted (dirty), otherwise recall the saved curve.
         /// </summary>
         [RelayCommand]
-        public void ToggleCustomEq()
+        public void ToggleCustomEq1()
         {
-            if (IsCustomEqDirty)
-            {
-                SaveCurrentToCustomSlot("1");
-            }
-            else
-            {
-                ApplyMasterEqPreset(EqualizerPresets.Custom1);
-            }
+            if (IsCustomEq1Dirty) SaveCurrentToCustomSlot("1");
+            else ApplyMasterEqPreset(EqualizerPresets.Custom1);
+        }
+
+        [RelayCommand]
+        public void ToggleCustomEq2()
+        {
+            if (IsCustomEq2Dirty) SaveCurrentToCustomSlot("2");
+            else ApplyMasterEqPreset(EqualizerPresets.Custom2);
         }
 
         // Set during preset application so the band PropertyChanged handlers
@@ -440,11 +455,13 @@ namespace KhurramAudioRoute.ViewModels
             // NAudio duplication (any tap): drive every open session from the master EQ strip.
             DuplicationManager.UpdateEqualizerMirrorSessions(gains);
 
-            // The Custom-slot button is dual-mode: when the live curve differs
-            // from the saved Custom slot, the chip relabels to "Save Custom"
-            // and re-themes itself. Notify so the UI re-evaluates.
-            OnPropertyChanged(nameof(IsCustomEqDirty));
-            OnPropertyChanged(nameof(CustomEqButtonContent));
+            // Both Custom slot buttons are dual-mode: when the user drags
+            // sliders past any known preset the chips relabel to "Save Custom N"
+            // (and only then). Notify so the UI re-evaluates.
+            OnPropertyChanged(nameof(IsCustomEq1Dirty));
+            OnPropertyChanged(nameof(IsCustomEq2Dirty));
+            OnPropertyChanged(nameof(CustomEq1ButtonContent));
+            OnPropertyChanged(nameof(CustomEq2ButtonContent));
 
             // The user dragged a slider, so the curve is no longer a known
             // preset. Clear the highlight unless a preset application is

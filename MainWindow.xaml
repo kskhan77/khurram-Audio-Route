@@ -457,21 +457,22 @@
             <Setter Property="MinWidth" Value="58"/>
             <Setter Property="Margin" Value="0"/>
         </Style>
-        <!-- Spatial mode picker pills. The host UniformGrid stretches each pill
-             to fill its column, so we deliberately don't set MinWidth — that
-             lets the pills shrink fluidly on narrower windows instead of
-             overflowing the card. Padding + MinHeight keep the touch target
-             generous even when the column is narrow. -->
+        <!-- Spatial mode picker pills. Compact enough that all 7 fit in a single
+             WrapPanel row at typical window widths; on narrower windows the
+             panel wraps the rest to a second row automatically. MinWidth
+             keeps each pill visually balanced so the strip reads as a clean
+             strip when wrapped. -->
         <Style x:Key="SonicSpatialPresetListRadio" TargetType="RadioButton">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Foreground" Value="#B4C4D8"/>
             <Setter Property="Background" Value="#111921"/>
             <Setter Property="BorderBrush" Value="#243547"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontSize" Value="10.5"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="14,6"/>
-            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="MinWidth" Value="100"/>
             <Setter Property="Margin" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -1270,94 +1271,54 @@
                                                          GroupName="{Binding MasterEqPresetGroupToken}"
                                                          Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Dance"
                                                          IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Dance}"/>
-                                        </WrapPanel>
 
-                                        <!-- Single dual-mode Custom button:
-                                               clean state ("Custom"): clicking recalls the saved slot.
-                                               dirty state ("Save Custom"): clicking saves the live
-                                               curve into slot 1. The visual swap (icon + colour) is
-                                               driven by IsCustomEqDirty so the user always knows
-                                               which action a click will perform. -->
-                                        <Button HorizontalAlignment="Stretch" Margin="3,8,3,2" Padding="0"
-                                                Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                                Command="{Binding ToggleCustomEqCommand}">
-                                            <Button.Style>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="ToolTip" Value="Click to recall your saved Custom EQ curve."/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
-                                                            <Setter Property="ToolTip" Value="You have changed the EQ. Click to save the current curve as your Custom preset."/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Button.Style>
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border x:Name="Outer" CornerRadius="6" Padding="10,5" BorderThickness="1">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <!-- Clean/recall state: same chrome as built-in chips at rest, plus a subtle border. -->
-                                                                <Setter Property="Background" Value="#1A1F26"/>
-                                                                <Setter Property="BorderBrush" Value="#2A323C"/>
-                                                                <Style.Triggers>
-                                                                    <!-- Clean + currently selected: highlight as primary blue (matches built-in chip selection). -->
-                                                                    <MultiDataTrigger>
-                                                                        <MultiDataTrigger.Conditions>
-                                                                            <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
-                                                                            <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
-                                                                        </MultiDataTrigger.Conditions>
-                                                                        <Setter Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
-                                                                        <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
-                                                                    </MultiDataTrigger>
-                                                                    <!-- Dirty/save state: solid secondary green so the user can't miss
-                                                                         that this button is now a "save" action. -->
-                                                                    <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
-                                                                        <Setter Property="Background" Value="{StaticResource SonicSecondaryBrush}"/>
-                                                                        <Setter Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                            <ui:SymbolIcon FontSize="13" Margin="0,0,6,0">
-                                                                <ui:SymbolIcon.Style>
-                                                                    <Style TargetType="ui:SymbolIcon">
-                                                                        <!-- Default (clean + idle): hollow star, dim. -->
-                                                                        <Setter Property="Symbol" Value="Star24"/>
-                                                                        <Setter Property="Foreground" Value="#9CA8B3"/>
-                                                                        <Style.Triggers>
-                                                                            <!-- Clean + currently selected: dark text on primary fill. -->
-                                                                            <MultiDataTrigger>
-                                                                                <MultiDataTrigger.Conditions>
-                                                                                    <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
-                                                                                    <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
-                                                                                </MultiDataTrigger.Conditions>
-                                                                                <Setter Property="Foreground" Value="#0A1218"/>
-                                                                            </MultiDataTrigger>
-                                                                            <!-- Dirty/save: save floppy icon, dark for legibility on solid green. -->
-                                                                            <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
-                                                                                <Setter Property="Symbol" Value="Save24"/>
-                                                                                <Setter Property="Foreground" Value="#092100"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </ui:SymbolIcon.Style>
-                                                            </ui:SymbolIcon>
-                                                            <TextBlock Text="{Binding CustomEqButtonContent}"
+                                            <!-- Custom slot 1. Same chip chrome as the built-ins so the strip
+                                                 reads as one continuous row, but the Background flips to
+                                                 SonicSecondary (green) when this slot is "dirty"
+                                                 (SelectedMasterEqPresetKey == "Custom" AND live gains differ
+                                                 from saved). Click recalls when clean, saves when dirty. -->
+                                            <Button Margin="3" Command="{Binding ToggleCustomEq1Command}" Cursor="Hand">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                        <Setter Property="ToolTip" Value="Click to recall your saved Custom 1 EQ curve."/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsCustomEq1Dirty}" Value="True">
+                                                                <Setter Property="ToolTip" Value="Click to save the current EQ curve into Custom 1."/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="Outer" CornerRadius="6" Padding="8,5" BorderThickness="1" MinHeight="32" MinWidth="58">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <!-- Idle: same chrome as built-in chips at rest. -->
+                                                                    <Setter Property="Background" Value="#1A1F26"/>
+                                                                    <Setter Property="BorderBrush" Value="#2A323C"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsCustomEq1Dirty}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <TextBlock Text="{Binding CustomEq1ButtonContent}"
                                                                        FontSize="10" FontWeight="SemiBold"
-                                                                       VerticalAlignment="Center">
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
                                                                         <Setter Property="Foreground" Value="#9CA8B3"/>
                                                                         <Style.Triggers>
-                                                                            <MultiDataTrigger>
-                                                                                <MultiDataTrigger.Conditions>
-                                                                                    <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
-                                                                                    <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
-                                                                                </MultiDataTrigger.Conditions>
+                                                                            <DataTrigger Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True">
                                                                                 <Setter Property="Foreground" Value="#0A1218"/>
-                                                                            </MultiDataTrigger>
-                                                                            <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsCustomEq1Dirty}" Value="True">
                                                                                 <Setter Property="Foreground" Value="#092100"/>
                                                                                 <Setter Property="FontWeight" Value="Bold"/>
                                                                             </DataTrigger>
@@ -1365,11 +1326,65 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
-                                                        </StackPanel>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+
+                                            <!-- Custom slot 2. Independent dirty state from slot 1. -->
+                                            <Button Margin="3" Command="{Binding ToggleCustomEq2Command}" Cursor="Hand">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                                        <Setter Property="ToolTip" Value="Click to recall your saved Custom 2 EQ curve."/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsCustomEq2Dirty}" Value="True">
+                                                                <Setter Property="ToolTip" Value="Click to save the current EQ curve into Custom 2."/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="Outer" CornerRadius="6" Padding="8,5" BorderThickness="1" MinHeight="32" MinWidth="58">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Background" Value="#1A1F26"/>
+                                                                    <Setter Property="BorderBrush" Value="#2A323C"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom2}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsCustomEq2Dirty}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <TextBlock Text="{Binding CustomEq2ButtonContent}"
+                                                                       FontSize="10" FontWeight="SemiBold"
+                                                                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Foreground" Value="#9CA8B3"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom2}" Value="True">
+                                                                                <Setter Property="Foreground" Value="#0A1218"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsCustomEq2Dirty}" Value="True">
+                                                                                <Setter Property="Foreground" Value="#092100"/>
+                                                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </WrapPanel>
                                     </StackPanel>
                                 </Border>
 
@@ -1382,46 +1397,44 @@
                                                Foreground="{StaticResource SonicOnSurfaceBrush}" Text="Spatial scene"/>
                                 </DockPanel>
 
-                                <!-- Two stacked UniformGrids so each row stretches to fill the
-                                     available card width (no right-side gap) and shrinks fluidly
-                                     on narrower windows. Row 1 = 4 headphone presets; row 2 = 3
-                                     surround presets. Pills inherit Stretch from UniformGrid. -->
+                                <!-- Single WrapPanel so all 7 spatial pills stay on one row when the
+                                     master engine card is wide enough to hold them, and wrap to a
+                                     second row only when the window narrows past their combined
+                                     min-width. Pills size to content + padding (smaller font / tighter
+                                     padding than before) so 7 of them fit comfortably across a
+                                     typical 1100-1200px window. -->
                                 <Border Grid.Row="5" Margin="0,8,0,0" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <StackPanel>
-                                        <UniformGrid Columns="4" Rows="1">
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="HeadphoneStereoPlus" Content="Stereo +"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="HeadphoneStudio" Content="Studio"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="HeadphoneCinema" Content="Cinema · 7.1"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="HeadphoneConcertHall" Content="Concert hall"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
-                                        </UniformGrid>
-                                        <UniformGrid Columns="3" Rows="1">
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="Speakers_5_1" Content="5.1 speakers"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="Speakers_7_1" Content="7.1 speakers"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
-                                            <RadioButton Margin="3" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                         Tag="GameMode" Content="Game"
-                                                         GroupName="{Binding MasterSpatialPresetGroupToken}"
-                                                         IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
-                                        </UniformGrid>
-                                    </StackPanel>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneStereoPlus" Content="Stereo +"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStereoPlus}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneStudio" Content="Studio"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneStudio}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneCinema" Content="Cinema · 7.1"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneCinema}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="HeadphoneConcertHall" Content="Concert hall"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=HeadphoneConcertHall}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="Speakers_5_1" Content="5.1 speakers"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_5_1}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="Speakers_7_1" Content="7.1 speakers"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=Speakers_7_1}"/>
+                                        <RadioButton Margin="3" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     Tag="GameMode" Content="Game"
+                                                     GroupName="{Binding MasterSpatialPresetGroupToken}"
+                                                     IsChecked="{Binding MasterSpatialPreset, Mode=TwoWay, Converter={StaticResource SpatialPresetEnumMatchConverter}, ConverterParameter=GameMode}"/>
+                                    </WrapPanel>
                                 </Border>
 
                                 <!-- Stereo width slider — first stage of every spatial preset chain.
