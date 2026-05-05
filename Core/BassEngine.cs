@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Buffers;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using KhurramAudioRoute.Core.Spatial;
 using ManagedBass;
 using ManagedBass.Mix;
@@ -150,6 +152,15 @@ namespace KhurramAudioRoute.Core
         /// <summary>True when bridge master EQ uses DX8 Param EQ (BASS_FX PeakEQ rejected this stream).</summary>
         private static bool _bridgeMasterUsesDxPeakEq;
 
+        /// <summary>
+        /// DSP-based EQ for the bridge master mixer. BASS FX (both PeakEQ and
+        /// DX8 ParamEQ) silently no-op on decode mixers, so we run a 10-band
+        /// biquad chain via <see cref="Bass.ChannelSetDSP"/> instead. Replaces
+        /// the legacy FX path on the bridge only — non-bridge per-device EQ
+        /// still uses BASS FX (those mixers are playback streams).
+        /// </summary>
+        private static MasterEqDsp? _bridgeEqDsp;
+
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
         // init floods the debug console with the same error every tick.
@@ -265,8 +276,17 @@ namespace KhurramAudioRoute.Core
                 // processed audio back into the cable and fight loopback capture.
 
                 float[] eqGains = gains ?? Array.Empty<float>();
-                int[] handles = MasterEngine.AttachIsoPeakEq(_bridgeMasterMixer, eqGains, out _bridgeMasterUsesDxPeakEq);
-                _deviceEqHandles["BRIDGE_MASTER"] = handles;
+                // BASS FX (both BASS_FX PeakEQ and DX8 ParamEQ) silently no-op on BASSmix decode
+                // streams. We use our own 10-band biquad EQ as a Bass.ChannelSetDSP callback
+                // instead — and we attach it to each PER-TARGET SPLIT below, not to the master
+                // mixer or the source push stream. BASSmix splits read directly from the mixer's
+                // internal pre-DSP buffer, so DSP on the mixer or source never reaches the audio
+                // that WASAPI consumes. The splits ARE the channels WASAPI pulls, so DSP on them
+                // always runs. Filter state lives in MasterEqDsp.AttachedFilters per split.
+                _bridgeEqDsp?.Dispose();
+                _bridgeEqDsp = new MasterEqDsp(eqGains);
+                _bridgeMasterUsesDxPeakEq = false;
+                _deviceEqHandles["BRIDGE_MASTER"] = new[] { 1,1,1,1,1,1,1,1,1,1 };
 
                 _bridgeLimiterFx = MasterEngine.AttachBusSoftLimiterFx(_bridgeMasterMixer);
 
@@ -295,6 +315,14 @@ namespace KhurramAudioRoute.Core
                     }
                     _bridgeTargetSplits[targetId] = split;
 
+                    // Register the split for inline EQ processing. The EQ runs inside
+                    // the WASAPI proc below, on the bytes returned by ChannelGetData,
+                    // because BASSmix splits don't surface DSP modifications via
+                    // ChannelGetData (Bass.ChannelSetDSP runs but its output is hidden
+                    // from the data caller). Format = master mixer's 48k/2 Float for
+                    // stereo targets; matrix mode uses the WASAPI's native channel count.
+                    _bridgeEqDsp?.RegisterTarget(split, 2, 48000);
+
                     // Try the master mixer's format (48k/2) first — Windows shared-mode
                     // SRC handles the conversion to the device. If the driver rejects
                     // that, fall back to AutoFormat and insert a per-target conversion
@@ -303,12 +331,18 @@ namespace KhurramAudioRoute.Core
                     int sourceForCallback = split;
                     int convertMixer = 0;
 
+                    int splitForEq = split;
                     WasapiProcedure proc = (buf, len, user) =>
                     {
                         int got = Bass.ChannelGetData(sourceForCallback, buf, len);
                         // Clamp negative (error) returns — WASAPI interprets a negative as
                         // a huge unsigned write count and that's the AV-trigger we hit.
-                        return got < 0 ? 0 : got;
+                        if (got <= 0) return 0;
+                        // Apply master EQ in-place on the bytes we hand WASAPI. This is the
+                        // only attachment point that affects audible output — see
+                        // MasterEqDsp's class-level remarks.
+                        _bridgeEqDsp?.ProcessInline(splitForEq, buf, got);
+                        return got;
                     };
                     _bridgeTargetProcs[targetId] = proc;
 
@@ -551,6 +585,9 @@ namespace KhurramAudioRoute.Core
             if (_bridgeMasterMixer != 0)
             {
                 _bridgeMasterUsesDxPeakEq = false;
+                StopBridgeTestTone();
+                _bridgeEqDsp?.Dispose();
+                _bridgeEqDsp = null;
                 MasterEngine.RemoveFx(_bridgeMasterMixer, ref _bridgeLimiterFx);
                 try { Bass.StreamFree(_bridgeMasterMixer); } catch { }
                 _bridgeMasterMixer = 0;
@@ -565,11 +602,195 @@ namespace KhurramAudioRoute.Core
             _deviceEqHandles.Remove("BRIDGE_MASTER");
         }
 
+        /// <summary>
+        /// Snapshot of the BASS bridge for the Tools-page Diagnose button. Returns
+        /// a multi-line string with mixer / push / EQ / target state so the user
+        /// can paste it back when reporting an audio issue.
+        /// </summary>
+        public static string DumpBridgeDiagnostics()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("=== BASS BRIDGE DIAGNOSTICS ===");
+            sb.AppendLine($"  IsBridgeRunning      : {IsBridgeRunning}");
+            try
+            {
+                using var enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+                using var defaultDev = enumerator.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.Role.Console);
+                sb.AppendLine($"  Windows default out  : {defaultDev.FriendlyName} ({defaultDev.ID})");
+            }
+            catch (Exception ex) { sb.AppendLine($"  Windows default out  : (error: {ex.Message})"); }
+            sb.AppendLine($"  Source ID            : {_bridgeSourceId ?? "(none)"}");
+            sb.AppendLine($"  Push stream handle   : {_bridgePushStream}");
+            sb.AppendLine($"  Master mixer handle  : {_bridgeMasterMixer}");
+            sb.AppendLine($"  Limiter FX handle    : {_bridgeLimiterFx}");
+            sb.AppendLine($"  EQ mode              : {(_bridgeEqDsp is not null ? "DSP biquad chain (per-split)" : (_bridgeMasterUsesDxPeakEq ? "DX8 ParamEQ (fallback)" : "BASS_FX PeakEQ"))}");
+            sb.AppendLine($"  EQ DSP attachments   : {(_bridgeEqDsp?.AttachedCount ?? 0)} (one per active split)");
+            if (_bridgeEqDsp is not null)
+            {
+                sb.AppendLine($"  EQ DSP total calls   : {_bridgeEqDsp.TotalCallbackCount} (must be > 0 for DSP to be running)");
+                sb.AppendLine($"  EQ DSP total frames  : {_bridgeEqDsp.TotalFrameCount}");
+                foreach (var (ch, cb, fr) in _bridgeEqDsp.AttachmentStats())
+                    sb.AppendLine($"    split={ch}: callbacks={cb}, frames={fr}");
+                sb.AppendLine($"  EQ TestKillFactor    : {_bridgeEqDsp.TestKillFactor:F2} (1.0 = no test override)");
+            }
+            sb.AppendLine($"  Last gain signature  : [{_bridgeEqLastSig}]");
+
+            if (_bridgeMasterMixer != 0)
+            {
+                try
+                {
+                    var info = Bass.ChannelGetInfo(_bridgeMasterMixer);
+                    sb.AppendLine($"  Master mixer format  : {info.Frequency}Hz / {info.Channels}ch / flags={info.Flags}");
+                }
+                catch (Exception ex) { sb.AppendLine($"  Master mixer info    : (error: {ex.Message})"); }
+
+                try
+                {
+                    bool isActive = Bass.ChannelIsActive(_bridgeMasterMixer) != PlaybackState.Stopped;
+                    sb.AppendLine($"  Master mixer active? : {isActive}");
+                }
+                catch { /* ignore */ }
+            }
+
+            sb.AppendLine($"  Target splits        : {_bridgeTargetSplits.Count}");
+            foreach (var kvp in _bridgeTargetSplits)
+            {
+                string name = "(unknown)";
+                try
+                {
+                    using var enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+                    using var dev = enumerator.GetDevice(kvp.Key);
+                    name = dev.FriendlyName ?? "(unnamed)";
+                }
+                catch { /* device may have been unplugged */ }
+                sb.AppendLine($"    split={kvp.Value} ← {name}");
+                sb.AppendLine($"      id={kvp.Key}");
+            }
+
+            sb.AppendLine("=== END DIAGNOSTICS ===");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Temporary diagnostic helper. Sets the master EQ DSP kill factor.
+        /// 1.0 = passthrough, 0.5 = -6 dB, 0.0 = silence. If audibly affects
+        /// output, the DSP path is reaching the speakers; if not, the audio
+        /// flows around our DSP attachment point.
+        /// </summary>
+        public static void SetEqTestKillFactor(float factor)
+        {
+            if (_bridgeEqDsp is null) return;
+            _bridgeEqDsp.TestKillFactor = factor;
+            Debug.WriteLine($"BASS BRIDGE: EQ TestKillFactor = {factor:F2}");
+        }
+
+        // ── Bridge test tone state ────────────────────────────────────────────
+        private static int _bridgeTestToneStream;
+        private static double _bridgeTestTonePhase;
+
+        /// <summary>
+        /// Injects a 1 kHz sine test tone directly into the master bridge for
+        /// <paramref name="durationMs"/>. Audio runs through the master EQ +
+        /// spatial chain and out to every ACTIVE target. The user hears a
+        /// short beep on every active device — proves the bridge fan-out is
+        /// working without depending on any external app routing.
+        /// </summary>
+        public static bool PlayBridgeTestTone(int durationMs = 2500)
+        {
+            if (!IsBridgeRunning || _bridgeMasterMixer == 0)
+            {
+                Debug.WriteLine("BASS BRIDGE: PlayBridgeTestTone — bridge not running");
+                return false;
+            }
+
+            try
+            {
+                StopBridgeTestTone();
+
+                _bridgeTestTonePhase = 0;
+                const int toneRate = 48000;
+                const int toneChannels = 2;
+                const float toneFreq = 1000f;
+                const float toneAmp = 0.25f; // ~ -12 dBFS
+
+                _bridgeTestToneStream = Bass.CreateStream(toneRate, toneChannels,
+                    BassFlags.Decode | BassFlags.Float, (handle, buffer, length, user) =>
+                {
+                    int sampleCount = length / 4;
+                    int frames = sampleCount / toneChannels;
+                    var pool = ArrayPool<float>.Shared;
+                    float[] tmp = pool.Rent(sampleCount);
+                    try
+                    {
+                        double dt = 2.0 * Math.PI * toneFreq / toneRate;
+                        for (int f = 0; f < frames; f++)
+                        {
+                            float v = (float)Math.Sin(_bridgeTestTonePhase) * toneAmp;
+                            _bridgeTestTonePhase += dt;
+                            int i = f * toneChannels;
+                            for (int c = 0; c < toneChannels; c++) tmp[i + c] = v;
+                        }
+                        if (_bridgeTestTonePhase > 1e6) _bridgeTestTonePhase %= 2.0 * Math.PI;
+                        Marshal.Copy(tmp, 0, buffer, sampleCount);
+                    }
+                    finally { pool.Return(tmp); }
+                    return length;
+                });
+
+                if (_bridgeTestToneStream == 0)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: test tone stream create failed: {Bass.LastError}");
+                    return false;
+                }
+
+                bool added = BassMix.MixerAddChannel(_bridgeMasterMixer, _bridgeTestToneStream,
+                    BassFlags.MixerChanDownMix | BassFlags.MixerNonStop);
+                if (!added)
+                {
+                    Debug.WriteLine($"BASS BRIDGE: test tone MixerAddChannel failed: {Bass.LastError}");
+                    Bass.StreamFree(_bridgeTestToneStream);
+                    _bridgeTestToneStream = 0;
+                    return false;
+                }
+
+                int handleSnapshot = _bridgeTestToneStream;
+                System.Threading.Tasks.Task.Delay(durationMs).ContinueWith(_ =>
+                {
+                    if (_bridgeTestToneStream == handleSnapshot) StopBridgeTestTone();
+                });
+
+                Debug.WriteLine($"BASS BRIDGE: test tone playing for {durationMs} ms");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"BASS BRIDGE: PlayBridgeTestTone failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static void StopBridgeTestTone()
+        {
+            if (_bridgeTestToneStream == 0) return;
+            try { BassMix.MixerRemoveChannel(_bridgeTestToneStream); } catch { }
+            try { Bass.StreamFree(_bridgeTestToneStream); } catch { }
+            _bridgeTestToneStream = 0;
+            _bridgeTestTonePhase = 0;
+        }
+
         public static void UpdateBridgeEqualizer(float[] gains)
         {
-            if (_bridgeMasterMixer != 0 && _deviceEqHandles.TryGetValue("BRIDGE_MASTER", out var handles))
-                MasterEngine.ApplyIsoPeakEqGains(handles, gains ?? Array.Empty<float>(), _bridgeMasterUsesDxPeakEq);
+            float[] g = gains ?? Array.Empty<float>();
+            string sig = string.Join(",", g.Select(v => v.ToString("+0.0;-0.0;0", System.Globalization.CultureInfo.InvariantCulture)));
+            if (!string.Equals(sig, _bridgeEqLastSig, StringComparison.Ordinal))
+            {
+                Debug.WriteLine($"BASS BRIDGE: UpdateBridgeEqualizer mixer={_bridgeMasterMixer}, mode=DSP, gains=[{sig}]");
+                _bridgeEqLastSig = sig;
+            }
+
+            _bridgeEqDsp?.UpdateGains(g);
         }
+        private static string _bridgeEqLastSig = "";
 
         private static bool TrySetBassCurrentDevice(int deviceIndex)
         {
@@ -790,7 +1011,11 @@ namespace KhurramAudioRoute.Core
                 int devIndex = GetDeviceIndex(deviceId);
                 if (devIndex != -1)
                 {
+                    // Silently swallow "Init" errors — this device may simply have never been
+                    // BASS-initialised in this session (we don't Bass.Init() bridge targets), and
+                    // the cleanup is harmless. Only log unexpected errors.
                     try { Bass.CurrentDevice = devIndex; }
+                    catch (BassException bex) when (bex.ErrorCode == Errors.Init) { /* expected during cleanup */ }
                     catch (Exception ex) { Debug.WriteLine($"BASS CurrentDevice ({deviceId}): {ex.Message}"); }
                 }
 
@@ -1036,6 +1261,20 @@ namespace KhurramAudioRoute.Core
                         if (got < 0) return 0;
                         int gotFrames = got / (2 * sizeof(float));
                         if (gotFrames <= 0) return 0;
+
+                        // Apply master EQ on stereo data BEFORE matrix upmix so the
+                        // upmixed channels inherit the same tonal shaping. The
+                        // splitHandle is registered with MasterEqDsp at 2ch/48k.
+                        var eqDsp = _bridgeEqDsp;
+                        if (eqDsp is not null)
+                        {
+                            var stHandle = System.Runtime.InteropServices.GCHandle.Alloc(st, System.Runtime.InteropServices.GCHandleType.Pinned);
+                            try
+                            {
+                                eqDsp.ProcessInline(splitHandle, stHandle.AddrOfPinnedObject(), got);
+                            }
+                            finally { stHandle.Free(); }
+                        }
 
                         SurroundUpmixer.ExpandFrames(
                             st.AsSpan(0, gotFrames * 2),

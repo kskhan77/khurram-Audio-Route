@@ -481,6 +481,27 @@ namespace KhurramAudioRoute.ViewModels
                         return;
                     }
 
+                    // Ensure the device that was Windows default BEFORE the bus
+                    // engaged is marked ACTIVE — otherwise the bridge has no
+                    // targets and the user hears nothing through the same
+                    // physical speaker they were just using. PowerService
+                    // captures that id into UserSettings.LastWindowsDefaultDeviceId
+                    // before flipping the default to the bus.
+                    var previousDefaultId = UserSettings.GetLastWindowsDefaultDeviceId();
+                    if (!string.IsNullOrWhiteSpace(previousDefaultId))
+                    {
+                        var previousDevice = Devices.FirstOrDefault(d =>
+                            !string.IsNullOrWhiteSpace(d.Id)
+                            && !d.IsSonicFlowVirtual
+                            && string.Equals(d.Id, previousDefaultId, StringComparison.OrdinalIgnoreCase));
+                        if (previousDevice is not null && !previousDevice.IsActiveOutput)
+                        {
+                            // Setter raises PropertyChanged → handler persists
+                            // the new ACTIVE list automatically.
+                            previousDevice.IsActiveOutput = true;
+                        }
+                    }
+
                     // Fan-out to every mirrored endpoint that is flagged Active.
                     // Use the full Devices list (not PhysicalDevices — virtual sinks
                     // like Voicemeeter cables are wrongly excluded there) while
@@ -637,6 +658,28 @@ namespace KhurramAudioRoute.ViewModels
         {
             if (Power.IsActive)
                 RebuildMasterBridge();
+        }
+
+        /// <summary>
+        /// Persists the user's current ACTIVE selection so it survives bridge
+        /// rebuilds and app restarts. Called from the IsActiveOutput
+        /// PropertyChanged hook.
+        /// </summary>
+        private void PersistActiveBridgeTargets()
+        {
+            try
+            {
+                var ids = Devices
+                    .Where(d => d is { IsActiveOutput: true, IsSonicFlowVirtual: false }
+                                && !string.IsNullOrWhiteSpace(d.Id))
+                    .Select(d => d.Id!)
+                    .ToList();
+                UserSettings.SetActiveBridgeTargetIds(ids);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"PersistActiveBridgeTargets failed: {ex.Message}");
+            }
         }
 
         /// <summary>Bound for empty-state UI when no apps expose an audio session.</summary>
@@ -958,8 +1001,42 @@ namespace KhurramAudioRoute.ViewModels
         {
             bool hasSonicFlowVirtualDevice = devices.Any(d => d.IsSonicFlowVirtual);
 
+            // Restore the user's previously-selected ACTIVE group from settings.
+            // Empty + ActiveBridgeTargetsExplicit = user has chosen no devices on purpose.
+            // Empty + !explicit (fresh install) = legacy default-on behaviour: only the
+            // current Windows playback default is ACTIVE. Other devices opt-in.
+            var activeIds = UserSettings.GetActiveBridgeTargetIds();
+            bool activeExplicit = UserSettings.GetActiveBridgeTargetsExplicit();
+            string? freshDefaultDeviceId = null;
+            if (!activeExplicit)
+            {
+                try
+                {
+                    using var enumerator = new MMDeviceEnumerator();
+                    using var dev = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                    freshDefaultDeviceId = dev.ID;
+                }
+                catch { /* ignore */ }
+            }
+
             foreach (var source in devices)
             {
+                // Restore IsActiveOutput from persisted set BEFORE we wire the
+                // PropertyChanged handler — otherwise the restore would itself
+                // trigger a save loop. Use SetProperty-skipping initial path.
+                if (source.IsSonicFlowVirtual)
+                {
+                    source.IsActiveOutput = false;
+                }
+                else if (!string.IsNullOrWhiteSpace(source.Id))
+                {
+                    bool shouldBeActive;
+                    if (activeExplicit)
+                        shouldBeActive = activeIds.Contains(source.Id);
+                    else
+                        shouldBeActive = string.Equals(source.Id, freshDefaultDeviceId, StringComparison.OrdinalIgnoreCase);
+                    source.IsActiveOutput = shouldBeActive;
+                }
                 HashSet<string>? restoredTargetIds = null;
                 float[]? equalizerValues = null;
                 Dictionary<string, int>? latencyMap = null;
@@ -1076,6 +1153,11 @@ namespace KhurramAudioRoute.ViewModels
 
             if (e.PropertyName == nameof(AudioDevice.IsActiveOutput))
             {
+                // Persist the ACTIVE group across rebuilds + restarts. Skip if
+                // _isRestoringActiveOutputs is set (the restore-from-settings
+                // pass during ConfigureDeviceDuplicateTargets shouldn't trigger
+                // a save).
+                PersistActiveBridgeTargets();
                 // Toggling a real output's [Active] chip while the master bus
                 // is on rebuilds the bridge fan-out. When the bus is off this
                 // is a pure UI state change with no engine work.
@@ -1178,6 +1260,64 @@ namespace KhurramAudioRoute.ViewModels
 
         [RelayCommand]
         public void ShowTools() => CurrentSection = DashboardSection.Tools;
+
+        /// <summary>
+        /// Outputs-page action: plays a 1 kHz test tone directly through the
+        /// SonicFlow bridge for a few seconds. Confirms the entire path
+        /// (master EQ + spatial → ACTIVE outputs → speakers) without depending
+        /// on any external app routing audio through VB-CABLE. If you hear the
+        /// beep on every ACTIVE device, the bridge is delivering audio.
+        /// </summary>
+        [RelayCommand]
+        public void PlayBridgeTestTone()
+        {
+            if (!Power.IsActive)
+            {
+                Debug.WriteLine("PlayBridgeTestTone: Application is OFF");
+                return;
+            }
+            BassEngine.PlayBridgeTestTone(2500);
+        }
+
+        /// <summary>
+        /// Tools-page diagnostic: toggles a 50% volume cut on the master EQ DSP.
+        /// If you can audibly hear the volume drop, our DSP attachment point is
+        /// reaching the speakers (so EQ inaudibility means the BiQuad math, not
+        /// the attachment). If you can't hear a drop, the DSP is attached to a
+        /// channel that doesn't carry the audio you're hearing.
+        /// </summary>
+        [RelayCommand]
+        public void ToggleEqKillTest()
+        {
+            // Round-trip: if currently 1.0, drop to 0.5; if anything else, restore to 1.0.
+            // The current factor isn't exposed back through MainViewModel; we just
+            // track our own intent.
+            _eqKillTestActive = !_eqKillTestActive;
+            BassEngine.SetEqTestKillFactor(_eqKillTestActive ? 0.5f : 1.0f);
+        }
+        private bool _eqKillTestActive;
+
+        /// <summary>
+        /// Tools-page action: dump bridge state to Debug Output so a user can
+        /// paste it back when reporting an audio issue. Also tries to highlight
+        /// any obvious red flags inline.
+        /// </summary>
+        [RelayCommand]
+        public void DiagnoseAudio()
+        {
+            try
+            {
+                var dump = BassEngine.DumpBridgeDiagnostics();
+                Debug.WriteLine(dump);
+                Debug.WriteLine($"DIAGNOSE: master EQ gains in VM = [{string.Join(",", GetMasterEqualizerGains().Select(v => v.ToString("+0.0;-0.0;0", System.Globalization.CultureInfo.InvariantCulture)))}]");
+                Debug.WriteLine($"DIAGNOSE: master spatial preset = {MasterSpatialPreset}, MasterSpatialActive = {MasterSpatialActive}");
+                Debug.WriteLine($"DIAGNOSE: power state = {Power.State}, IsBackupModeActive = {Power.IsBackupModeActive}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"DiagnoseAudio failed: {ex.Message}");
+            }
+        }
 
         public void UpdateTargetLatency(AudioDevice sourceDevice, string targetId, int offsetMs)
         {

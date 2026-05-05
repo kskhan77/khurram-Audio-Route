@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>KhurramAudioRoute</AssemblyName>
     <RootNamespace>KhurramAudioRoute</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

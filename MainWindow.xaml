@@ -26,7 +26,7 @@
             </MenuItem>
             <Separator/>
             <!-- Master power toggle. Header tracks state via the tray Click handler. -->
-            <MenuItem x:Name="TrayPowerMenuItem" Header="Turn audio bus ON" Click="OnTrayPowerClicked">
+            <MenuItem x:Name="TrayPowerMenuItem" Header="Turn Application ON" Click="OnTrayPowerClicked">
                 <MenuItem.Icon>
                     <ui:SymbolIcon Symbol="Pulse24"/>
                 </MenuItem.Icon>
@@ -72,8 +72,10 @@
 
 
         <local:SpatialPresetEnumMatchConverter x:Key="SpatialPresetEnumMatchConverter"/>
-        <local:VoiceEqPresetEnumMatchConverter x:Key="VoiceEqPresetEnumMatchConverter"/>
-        <local:VoiceCharacterPresetEnumMatchConverter x:Key="VoiceCharacterPresetEnumMatchConverter"/>
+        <local:VoicePresetEnumMatchConverter x:Key="VoicePresetEnumMatchConverter"/>
+        <local:StudioPolishPresetEnumMatchConverter x:Key="StudioPolishPresetEnumMatchConverter"/>
+        <local:ReverbPresetEnumMatchConverter x:Key="ReverbPresetEnumMatchConverter"/>
+        <local:NoiseReductionPresetEnumMatchConverter x:Key="NoiseReductionPresetEnumMatchConverter"/>
 
         <!-- Custom Styles -->
         <Style x:Key="SonicHeaderNavLink" TargetType="Button">
@@ -917,9 +919,18 @@
                         <Grid Margin="0,0,0,20">
                             <StackPanel>
                                 <TextBlock Text="Playback &amp; profiles" Foreground="{StaticResource SonicOnSurfaceBrush}" FontSize="24" FontWeight="SemiBold"/>
-                                <TextBlock Text="Use Audio bus in the toolbar (or tray), route apps through VB-CABLE when installed, tune master EQ/spatial once, then mark hardware outputs ACTIVE to mirror the processed signal (see docs/AUDIO_BUS_PLAN.md)." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Text="Turn Application ON to route audio through SonicFlow (VB-CABLE → master EQ + spatial → ACTIVE outputs). Tune master EQ/spatial once and tick ACTIVE on every device that should hear the processed audio." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <ui:Button Command="{Binding PlayBridgeTestToneCommand}"
+                                           Icon="Speaker224"
+                                           Appearance="Secondary"
+                                           Margin="0,0,8,0"
+                                           MinHeight="32"
+                                           Padding="12,6"
+                                           Content="Test bus output"
+                                           IsEnabled="{Binding Power.IsActive}"
+                                           ToolTip="Play a 1 kHz tone through the SonicFlow bridge to verify it's reaching every ACTIVE device. Confirms the entire route (master EQ + spatial → ACTIVE outputs → speakers) without needing any app to play through VB-CABLE."/>
                                 <ui:Button Command="{Binding TogglePowerCommand}"
                                            Content="{Binding Power.BusChipShortLabel}"
                                            Icon="Power20"
@@ -933,7 +944,7 @@
                                     <ui:Button.ToolTip>
                                         <ToolTip MaxWidth="320">
                                             <StackPanel>
-                                                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">SonicFlow audio bus</TextBlock>
+                                                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">SonicFlow Application</TextBlock>
                                                 <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SonicOutlineBrush}"
                                                            Text="{Binding Power.StatusMessage}"/>
                                                 <TextBlock Margin="0,6,0,0" FontSize="10" FontWeight="SemiBold"
@@ -2239,56 +2250,120 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <!-- Voice character: bundles EQ + pitch + gate; moving any slider clears back to None. -->
-                                <TextBlock Text="Voice character" Foreground="{StaticResource SonicOutlineBrush}"
+                                <!-- Voice preset (unified): row 1 is "tone" (EQ-only), row 2 is "character" (full macro: EQ + pitch + gate).
+                                     Picking None acts as a real reset for the row — restores EQ Off, pitch 0, and default gate.
+                                     Touching any slider afterwards clears the highlighted pill back to "no preset". -->
+                                <TextBlock Text="Voice preset" Foreground="{StaticResource SonicOutlineBrush}"
                                            FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
-                                           ToolTip="One-click voice presets. Picking one writes EQ, pitch, and gate values; touching a slider after clears back to None."/>
-                                <Border Margin="0,0,0,12" Padding="6,6" CornerRadius="10"
+                                           ToolTip="Top row = EQ flavours (no pitch change). Bottom row = full character macros (EQ + pitch + gate). None resets the row. Touching a slider clears the highlighted pill."/>
+                                <Border Margin="0,0,0,14" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <UniformGrid Columns="3" Rows="2" Margin="-2,-2,-2,-2">
+                                    <UniformGrid Columns="5" Rows="2" Margin="-2,-2,-2,-2">
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="None" Content="None" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=None}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="None" Content="None" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=None}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="Robot" Content="Robot" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Robot}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="Bright" Content="Bright" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Bright}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="Girl1" Content="Girl 1" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Girl1}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="Warm" Content="Warm" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Warm}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="Girl2" Content="Girl 2" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Girl2}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="Radio" Content="Radio" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Radio}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="DeepVoice" Content="Deep" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=DeepVoice}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="Telephone" Content="Telephone" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Telephone}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainCharacter" Tag="Chipmunk" Content="Chipmunk" Click="OnVoiceCharacterRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedCharacter, Mode=OneWay, Converter={StaticResource VoiceCharacterPresetEnumMatchConverter}, ConverterParameter=Chipmunk}"/>
+                                                     GroupName="MicChainVoicePreset" Tag="Robot" Content="Robot" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Robot}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoicePreset" Tag="Girl1" Content="Girl 1" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Girl1}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoicePreset" Tag="Girl2" Content="Girl 2" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Girl2}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoicePreset" Tag="Deep" Content="Deep" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Deep}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainVoicePreset" Tag="Chipmunk" Content="Chipmunk" Click="OnVoicePresetRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoicePresetEnumMatchConverter}, ConverterParameter=Chipmunk}"/>
                                     </UniformGrid>
                                 </Border>
 
-                                <!-- Voice EQ: pill grid (Off + 4 presets). -->
-                                <TextBlock Text="Voice EQ" Foreground="{StaticResource SonicOutlineBrush}"
+                                <!-- Studio polish: compressor + de-esser bundle.
+                                     Soft = gentle, Strong = studio voice, Broadcast = radio/podcast feel. -->
+                                <TextBlock Text="Studio polish" Foreground="{StaticResource SonicOutlineBrush}"
                                            FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
-                                           ToolTip="Preset EQ curves applied to the mic stream — independent of master EQ."/>
+                                           ToolTip="One-click compressor + de-esser presets. Soft = gentle, Strong = studio voice, Broadcast = radio/podcast."/>
+                                <Border Margin="0,0,0,12" Padding="6,6" CornerRadius="10"
+                                        Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                    <UniformGrid Columns="4" Rows="1" Margin="-2,-2,-2,-2">
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainPolish" Tag="None" Content="None" Click="OnStudioPolishRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedStudioPolish, Mode=OneWay, Converter={StaticResource StudioPolishPresetEnumMatchConverter}, ConverterParameter=None}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainPolish" Tag="Soft" Content="Soft" Click="OnStudioPolishRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedStudioPolish, Mode=OneWay, Converter={StaticResource StudioPolishPresetEnumMatchConverter}, ConverterParameter=Soft}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainPolish" Tag="Strong" Content="Strong" Click="OnStudioPolishRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedStudioPolish, Mode=OneWay, Converter={StaticResource StudioPolishPresetEnumMatchConverter}, ConverterParameter=Strong}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainPolish" Tag="Broadcast" Content="Broadcast" Click="OnStudioPolishRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedStudioPolish, Mode=OneWay, Converter={StaticResource StudioPolishPresetEnumMatchConverter}, ConverterParameter=Broadcast}"/>
+                                    </UniformGrid>
+                                </Border>
+
+                                <!-- Reverb: Freeverb-style Schroeder reverb. None bypasses the stage entirely.
+                                     Picks add ambience after the chain so the limiter still catches reverb peaks. -->
+                                <TextBlock Text="Reverb" Foreground="{StaticResource SonicOutlineBrush}"
+                                           FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
+                                           ToolTip="Adds room ambience to your voice. None = bypassed. Voice booth is barely-there air; Cathedral is dramatic long tail."/>
                                 <Border Margin="0,0,0,14" Padding="6,6" CornerRadius="10"
                                         Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
-                                    <UniformGrid Columns="5" Rows="1" Margin="-2,-2,-2,-2">
+                                    <UniformGrid Columns="6" Rows="1" Margin="-2,-2,-2,-2">
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainVoiceEq" Tag="Off" Content="Off" Click="OnVoiceEqRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Off}"/>
+                                                     GroupName="MicChainReverb" Tag="None" Content="None" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=None}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainVoiceEq" Tag="Bright" Content="Bright" Click="OnVoiceEqRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Bright}"/>
+                                                     GroupName="MicChainReverb" Tag="VoiceBooth" Content="Booth" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=VoiceBooth}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainVoiceEq" Tag="Warm" Content="Warm" Click="OnVoiceEqRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Warm}"/>
+                                                     GroupName="MicChainReverb" Tag="VocalPlate" Content="Plate" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=VocalPlate}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainVoiceEq" Tag="Radio" Content="Radio" Click="OnVoiceEqRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Radio}"/>
+                                                     GroupName="MicChainReverb" Tag="StudioRoom" Content="Room" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=StudioRoom}"/>
                                         <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
-                                                     GroupName="MicChainVoiceEq" Tag="Telephone" Content="Telephone" Click="OnVoiceEqRadioClick"
-                                                     IsChecked="{Binding MicChain.SelectedVoicePreset, Mode=OneWay, Converter={StaticResource VoiceEqPresetEnumMatchConverter}, ConverterParameter=Telephone}"/>
+                                                     GroupName="MicChainReverb" Tag="ConcertHall" Content="Hall" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=ConcertHall}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainReverb" Tag="Cathedral" Content="Cathedral" Click="OnReverbRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedReverb, Mode=OneWay, Converter={StaticResource ReverbPresetEnumMatchConverter}, ConverterParameter=Cathedral}"/>
+                                    </UniformGrid>
+                                </Border>
+
+                                <!-- Noise reduction: spectral subtraction. Off bypasses the FFT entirely.
+                                     Sits at the head of the chain so the gate / EQ / compressor see a cleaner signal. -->
+                                <TextBlock Text="Noise reduction" Foreground="{StaticResource SonicOutlineBrush}"
+                                           FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"
+                                           ToolTip="Continuous noise suppressor. Light removes faint room hum; Strong is for noisy environments but may add slight artifacts on consonants."/>
+                                <Border Margin="0,0,0,12" Padding="6,6" CornerRadius="10"
+                                        Background="#060A10" BorderBrush="#1F2C3F" BorderThickness="1">
+                                    <UniformGrid Columns="4" Rows="1" Margin="-2,-2,-2,-2">
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainNoiseReduction" Tag="Off" Content="Off" Click="OnNoiseReductionRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedNoiseReduction, Mode=OneWay, Converter={StaticResource NoiseReductionPresetEnumMatchConverter}, ConverterParameter=Off}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainNoiseReduction" Tag="Light" Content="Light" Click="OnNoiseReductionRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedNoiseReduction, Mode=OneWay, Converter={StaticResource NoiseReductionPresetEnumMatchConverter}, ConverterParameter=Light}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainNoiseReduction" Tag="Medium" Content="Medium" Click="OnNoiseReductionRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedNoiseReduction, Mode=OneWay, Converter={StaticResource NoiseReductionPresetEnumMatchConverter}, ConverterParameter=Medium}"/>
+                                        <RadioButton Margin="4" HorizontalAlignment="Stretch" Style="{StaticResource SonicSpatialPresetListRadio}"
+                                                     GroupName="MicChainNoiseReduction" Tag="Strong" Content="Strong" Click="OnNoiseReductionRadioClick"
+                                                     IsChecked="{Binding MicChain.SelectedNoiseReduction, Mode=OneWay, Converter={StaticResource NoiseReductionPresetEnumMatchConverter}, ConverterParameter=Strong}"/>
                                     </UniformGrid>
                                 </Border>
 
@@ -2503,8 +2578,14 @@
                             <Border Style="{StaticResource SonicCard}" Padding="20" Margin="0,0,16,16">
                                 <StackPanel>
                                     <TextBlock Text="Engine Diagnostics" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
-                                    <TextBlock Text="Run integrity checks on EQ filters and device enumeration." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,8,0,16"/>
-                                    <ui:Button Content="Run Core Tests" Click="OnRunDiagnostics" Appearance="Secondary" Padding="14,8"/>
+                                    <TextBlock Text="Run integrity checks on EQ filters and device enumeration. Use Diagnose Audio to dump bridge / EQ / spatial state to Debug Output when reporting an audio issue." Foreground="{StaticResource SonicOutlineBrush}" FontSize="12" Margin="0,8,0,16" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:Button Content="Run Core Tests" Click="OnRunDiagnostics" Appearance="Secondary" Padding="14,8" Margin="0,0,8,0"/>
+                                        <ui:Button Content="Diagnose Audio" Command="{Binding DiagnoseAudioCommand}" Appearance="Secondary" Padding="14,8" Margin="0,0,8,0"
+                                                   ToolTip="Dump BASS bridge + master EQ + spatial state to Debug Output. Open Visual Studio Output (Debug) to see it."/>
+                                        <ui:Button Content="EQ Kill 50%" Command="{Binding ToggleEqKillTestCommand}" Appearance="Secondary" Padding="14,8"
+                                                   ToolTip="Toggles a 50% volume cut on the master EQ DSP. If you hear the volume drop, our DSP path reaches the speakers and the EQ math is the issue. If you don't, the DSP is attached to the wrong channel."/>
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
 

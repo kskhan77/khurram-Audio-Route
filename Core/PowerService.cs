@@ -61,7 +61,7 @@ namespace KhurramAudioRoute.Core
         }
 
         [ObservableProperty]
-        private string statusMessage = "Audio bus is off.";
+        private string statusMessage = "Application is OFF.";
 
         [ObservableProperty]
         private AudioDevice? busDevice;
@@ -77,11 +77,11 @@ namespace KhurramAudioRoute.Core
         /// </summary>
         public string BusChipShortLabel => State switch
         {
-            PowerState.Active => "Audio bus on",
-            PowerState.Engaging => "Audio bus…",
-            PowerState.Disengaging => "Audio bus…",
-            PowerState.Failed => "Audio bus error",
-            _ => "Audio bus off",
+            PowerState.Active => "Application ON",
+            PowerState.Engaging => "Turning ON…",
+            PowerState.Disengaging => "Turning OFF…",
+            PowerState.Failed => "Application error",
+            _ => "Application OFF",
         };
 
         partial void OnStateChanged(PowerState value)
@@ -159,7 +159,7 @@ namespace KhurramAudioRoute.Core
                         return EngageUiResult.SkipAlreadyHandled;
 
                     State = PowerState.Engaging;
-                    StatusMessage = "Engaging audio bus...";
+                    StatusMessage = "Turning Application ON...";
 
                     if (BusDevice?.Id == null)
                     {
@@ -193,7 +193,7 @@ namespace KhurramAudioRoute.Core
                 await dispatcher.InvokeAsync(() =>
                 {
                     State = PowerState.Active;
-                    StatusMessage = "Audio bus is active.";
+                    StatusMessage = "Application is ON. Audio routes through SonicFlow → ACTIVE devices.";
                     PersistPoweredOnAtClose(true);
                 }).Task.ConfigureAwait(false);
             }
@@ -205,7 +205,7 @@ namespace KhurramAudioRoute.Core
                     Application.Current?.Dispatcher.Invoke(() =>
                     {
                         State = PowerState.Failed;
-                        StatusMessage = $"Could not engage the audio bus: {ex.Message}";
+                        StatusMessage = $"Could not turn Application ON: {ex.Message}";
                     });
                 }
                 catch (Exception inner)
@@ -239,7 +239,7 @@ namespace KhurramAudioRoute.Core
                         return true;
 
                     State = PowerState.Disengaging;
-                    StatusMessage = "Restoring previous audio device...";
+                    StatusMessage = "Turning Application OFF...";
                     return false;
                 }).Task.ConfigureAwait(false);
 
@@ -267,7 +267,7 @@ namespace KhurramAudioRoute.Core
                 {
                     IsBackupModeActive = false;
                     State = PowerState.Disabled;
-                    StatusMessage = "Audio bus is off.";
+                    StatusMessage = "Application is OFF.";
                     if (persistPreference)
                         PersistPoweredOnAtClose(false);
                 }).Task.ConfigureAwait(false);

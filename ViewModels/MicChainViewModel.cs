@@ -23,7 +23,7 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
 
     private readonly MicChainEngine _engine = new();
     private bool _suppressPersist;
-    private bool _applyingCharacter;
+    private bool _applyingPreset;
     private bool _disposed;
 
     public ObservableCollection<MicChainEndpoint> AvailableMics { get; } = new();
@@ -54,24 +54,41 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
     private float outputPeak;
 
     [ObservableProperty]
-    private VoiceEqPreset selectedVoicePreset = VoiceEqPreset.Off;
+    private VoicePreset? selectedVoicePreset;
 
     [ObservableProperty]
     private float pitchSemitones;
 
     [ObservableProperty]
-    private VoiceCharacterPreset selectedCharacter = VoiceCharacterPreset.None;
+    private StudioPolishPreset selectedStudioPolish = StudioPolishPreset.None;
 
-    public IReadOnlyList<VoiceEqPreset> VoicePresets { get; } = new[]
+    [ObservableProperty]
+    private ReverbPreset selectedReverb = ReverbPreset.None;
+
+    [ObservableProperty]
+    private NoiseReductionPreset selectedNoiseReduction = NoiseReductionPreset.Off;
+
+    public IReadOnlyList<VoicePreset> VoicePresetsList { get; } = new[]
     {
-        VoiceEqPreset.Off, VoiceEqPreset.Bright, VoiceEqPreset.Warm,
-        VoiceEqPreset.Radio, VoiceEqPreset.Telephone,
+        VoicePreset.None,      VoicePreset.Bright, VoicePreset.Warm,  VoicePreset.Radio,    VoicePreset.Telephone,
+        VoicePreset.Robot,     VoicePreset.Girl1,  VoicePreset.Girl2, VoicePreset.Deep,     VoicePreset.Chipmunk,
     };
 
-    public IReadOnlyList<VoiceCharacterPreset> CharacterPresets { get; } = new[]
+    public IReadOnlyList<StudioPolishPreset> StudioPolishPresetsList { get; } = new[]
     {
-        VoiceCharacterPreset.None, VoiceCharacterPreset.Robot, VoiceCharacterPreset.Girl1,
-        VoiceCharacterPreset.Girl2, VoiceCharacterPreset.DeepVoice, VoiceCharacterPreset.Chipmunk,
+        StudioPolishPreset.None, StudioPolishPreset.Soft, StudioPolishPreset.Strong, StudioPolishPreset.Broadcast,
+    };
+
+    public IReadOnlyList<ReverbPreset> ReverbPresetsList { get; } = new[]
+    {
+        ReverbPreset.None, ReverbPreset.VoiceBooth, ReverbPreset.VocalPlate,
+        ReverbPreset.StudioRoom, ReverbPreset.ConcertHall, ReverbPreset.Cathedral,
+    };
+
+    public IReadOnlyList<NoiseReductionPreset> NoiseReductionPresetsList { get; } = new[]
+    {
+        NoiseReductionPreset.Off, NoiseReductionPreset.Light,
+        NoiseReductionPreset.Medium, NoiseReductionPreset.Strong,
     };
 
     public bool CanPower => SelectedMic is not null && SelectedRender is not null;
@@ -91,9 +108,11 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         {
             GateThresholdDb = UserSettings.GetMicChainGateThresholdDb();
             GateHoldMs = UserSettings.GetMicChainGateHoldMs();
-            SelectedVoicePreset = UserSettings.GetMicChainVoiceEqPreset();
+            SelectedVoicePreset = UserSettings.GetMicChainVoicePreset();
             PitchSemitones = UserSettings.GetMicChainPitchSemitones();
-            SelectedCharacter = UserSettings.GetMicChainCharacterPreset();
+            SelectedStudioPolish = UserSettings.GetMicChainStudioPolish();
+            SelectedReverb = UserSettings.GetMicChainReverb();
+            SelectedNoiseReduction = UserSettings.GetMicChainNoiseReduction();
         }
         catch (Exception ex)
         {
@@ -163,6 +182,9 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
             ApplyGateToEngine();
             ApplyVoicePresetToEngine();
             ApplyPitchToEngine();
+            ApplyStudioPolishToEngine();
+            ApplyReverbToEngine();
+            ApplyNoiseReductionToEngine();
             IsPowered = true;
             StatusMessage = $"Live: {SelectedMic.Name} → {SelectedRender.Name} ({_engine.CaptureSampleRate} Hz → {_engine.RenderSampleRate} Hz).";
         }
@@ -192,9 +214,17 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
 
     private void ApplyVoicePresetToEngine()
     {
+        // The unified VoicePreset only writes the EQ stage's preset. Pitch and
+        // gate values are owned by their own sliders and persisted separately;
+        // when a preset is picked, the bundle-apply hook in
+        // OnSelectedVoicePresetChanged updates those sliders too.
         var eq = _engine.VoiceEq;
         if (eq is null) return;
-        eq.Preset = SelectedVoicePreset;
+        var preset = SelectedVoicePreset;
+        var bundle = preset is null
+            ? new VoicePresetBundle(VoiceEqPreset.Off, 0f, DefaultGateThresholdDb, DefaultGateHoldMs)
+            : VoicePresets.Resolve(preset.Value);
+        eq.Preset = bundle.Eq;
     }
 
     private void ApplyPitchToEngine()
@@ -202,6 +232,49 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         var ps = _engine.PitchShifter;
         if (ps is null) return;
         ps.Semitones = PitchSemitones;
+    }
+
+    private void ApplyReverbToEngine()
+    {
+        var rev = _engine.Reverb;
+        if (rev is null) return;
+        var bundle = ReverbPresets.Resolve(SelectedReverb);
+        rev.Enabled = bundle.Enabled;
+        rev.RoomSize = bundle.RoomSize;
+        rev.Damping = bundle.Damping;
+        rev.WetMix = bundle.WetMix;
+    }
+
+    private void ApplyNoiseReductionToEngine()
+    {
+        var dn = _engine.Denoise;
+        if (dn is null) return;
+        var bundle = NoiseReductionPresets.Resolve(SelectedNoiseReduction);
+        dn.Enabled = bundle.Enabled;
+        dn.ReductionDb = bundle.ReductionDb;
+        dn.Overestimate = bundle.Overestimate;
+    }
+
+    private void ApplyStudioPolishToEngine()
+    {
+        var bundle = StudioPolishPresets.Resolve(SelectedStudioPolish);
+
+        var comp = _engine.Compressor;
+        if (comp is not null)
+        {
+            comp.Enabled = bundle.CompressorEnabled;
+            comp.ThresholdDb = bundle.CompressorThresholdDb;
+            comp.Ratio = bundle.CompressorRatio;
+            comp.MakeupDb = bundle.CompressorMakeupDb;
+        }
+
+        var deEss = _engine.DeEsser;
+        if (deEss is not null)
+        {
+            deEss.Enabled = bundle.DeEsserEnabled;
+            deEss.ThresholdDb = bundle.DeEsserThresholdDb;
+            deEss.MaxReductionDb = bundle.DeEsserMaxReductionDb;
+        }
     }
 
     partial void OnSelectedMicChanged(MicChainEndpoint? value)
@@ -235,7 +308,7 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         if (_suppressPersist) return;
         UserSettings.SetMicChainGateThresholdDb(value);
         ApplyGateToEngine();
-        ClearCharacterIfManualEdit();
+        ClearVoicePresetIfManualEdit();
     }
 
     partial void OnGateHoldMsChanged(float value)
@@ -243,15 +316,7 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         if (_suppressPersist) return;
         UserSettings.SetMicChainGateHoldMs(value);
         ApplyGateToEngine();
-        ClearCharacterIfManualEdit();
-    }
-
-    partial void OnSelectedVoicePresetChanged(VoiceEqPreset value)
-    {
-        if (_suppressPersist) return;
-        UserSettings.SetMicChainVoiceEqPreset(value);
-        ApplyVoicePresetToEngine();
-        ClearCharacterIfManualEdit();
+        ClearVoicePresetIfManualEdit();
     }
 
     partial void OnPitchSemitonesChanged(float value)
@@ -259,30 +324,52 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         if (_suppressPersist) return;
         UserSettings.SetMicChainPitchSemitones(value);
         ApplyPitchToEngine();
-        ClearCharacterIfManualEdit();
+        ClearVoicePresetIfManualEdit();
     }
 
-    partial void OnSelectedCharacterChanged(VoiceCharacterPreset value)
+    partial void OnSelectedStudioPolishChanged(StudioPolishPreset value)
     {
         if (_suppressPersist) return;
-        UserSettings.SetMicChainCharacterPreset(value);
-        if (value == VoiceCharacterPreset.None) return;
+        UserSettings.SetMicChainStudioPolish(value);
+        ApplyStudioPolishToEngine();
+    }
 
-        // Apply the bundle to every slider/preset. _applyingCharacter prevents
-        // those slider OnXxxChanged hooks from clearing the character right back.
-        var bundle = VoiceCharacterPresets.Resolve(value);
-        _applyingCharacter = true;
+    partial void OnSelectedReverbChanged(ReverbPreset value)
+    {
+        if (_suppressPersist) return;
+        UserSettings.SetMicChainReverb(value);
+        ApplyReverbToEngine();
+    }
+
+    partial void OnSelectedNoiseReductionChanged(NoiseReductionPreset value)
+    {
+        if (_suppressPersist) return;
+        UserSettings.SetMicChainNoiseReduction(value);
+        ApplyNoiseReductionToEngine();
+    }
+
+    partial void OnSelectedVoicePresetChanged(VoicePreset? value)
+    {
+        if (_suppressPersist) return;
+        UserSettings.SetMicChainVoicePreset(value);
+
+        // Every preset writes the engine's EQ stage and the slider-bound EQ /
+        // pitch / gate values. Picking "None" therefore acts as a real reset.
+        if (value is null) { ApplyVoicePresetToEngine(); return; }
+
+        var bundle = VoicePresets.Resolve(value.Value);
+        _applyingPreset = true;
         try
         {
-            SelectedVoicePreset = bundle.Eq;
             PitchSemitones = bundle.PitchSemitones;
             GateThresholdDb = bundle.GateThresholdDb;
             GateHoldMs = bundle.GateHoldMs;
         }
         finally
         {
-            _applyingCharacter = false;
+            _applyingPreset = false;
         }
+        ApplyVoicePresetToEngine();
     }
 
     [RelayCommand]
@@ -292,11 +379,11 @@ public partial class MicChainViewModel : ObservableObject, IDisposable
         GateHoldMs = DefaultGateHoldMs;
     }
 
-    private void ClearCharacterIfManualEdit()
+    private void ClearVoicePresetIfManualEdit()
     {
-        if (_applyingCharacter) return;
-        if (SelectedCharacter == VoiceCharacterPreset.None) return;
-        SelectedCharacter = VoiceCharacterPreset.None;
+        if (_applyingPreset) return;
+        if (SelectedVoicePreset is null) return;
+        SelectedVoicePreset = null;
     }
 
     partial void OnIsPoweredChanged(bool value)

@@ -27,9 +27,13 @@ public sealed class MicChainEngine : IDisposable
     private WasapiCapture? _capture;
     private WasapiOut? _output;
     private BufferedWaveProvider? _captureBuffer;
+    private SpectralDenoise? _denoise;
     private NoiseGate? _noiseGate;
     private VoiceEq? _voiceEq;
+    private DeEsser? _deEsser;
+    private Compressor? _compressor;
     private PitchShifter? _pitchShifter;
+    private VoiceReverb? _reverb;
     private SoftLimiter? _softLimiter;
     private PeakMonitor? _outputMonitor;
     private bool _disposed;
@@ -41,14 +45,26 @@ public sealed class MicChainEngine : IDisposable
     public int CaptureChannels { get; private set; }
     public int RenderSampleRate { get; private set; }
 
+    /// <summary>Spectral noise suppressor stage exposed for UI binding (preset). Null while stopped.</summary>
+    public SpectralDenoise? Denoise => _denoise;
+
     /// <summary>Gate stage exposed for UI binding (threshold/hold). Null while stopped.</summary>
     public NoiseGate? NoiseGate => _noiseGate;
 
     /// <summary>Voice EQ stage exposed for UI binding (preset). Null while stopped.</summary>
     public VoiceEq? VoiceEq => _voiceEq;
 
+    /// <summary>De-esser stage exposed for UI binding (threshold/reduction). Null while stopped.</summary>
+    public DeEsser? DeEsser => _deEsser;
+
+    /// <summary>Compressor stage exposed for UI binding (threshold/ratio/makeup). Null while stopped.</summary>
+    public Compressor? Compressor => _compressor;
+
     /// <summary>Pitch shifter stage exposed for UI binding (semitones). Null while stopped.</summary>
     public PitchShifter? PitchShifter => _pitchShifter;
+
+    /// <summary>Reverb stage exposed for UI binding (preset/wet/room). Null while stopped.</summary>
+    public VoiceReverb? Reverb => _reverb;
 
     /// <summary>Soft limiter stage exposed for diagnostics. Null while stopped.</summary>
     public SoftLimiter? SoftLimiter => _softLimiter;
@@ -96,12 +112,20 @@ public sealed class MicChainEngine : IDisposable
                 };
 
                 ISampleProvider chain = _captureBuffer.ToSampleProvider();
+                _denoise = new SpectralDenoise(chain) { Enabled = false };
+                chain = _denoise;
                 _noiseGate = new NoiseGate(chain);
                 chain = _noiseGate;
                 _voiceEq = new VoiceEq(chain);
                 chain = _voiceEq;
+                _deEsser = new DeEsser(chain) { Enabled = false };
+                chain = _deEsser;
+                _compressor = new Compressor(chain) { Enabled = false };
+                chain = _compressor;
                 _pitchShifter = new PitchShifter(chain);
                 chain = _pitchShifter;
+                _reverb = new VoiceReverb(chain) { Enabled = false, WetMix = 0f };
+                chain = _reverb;
                 _softLimiter = new SoftLimiter(chain);
                 chain = _softLimiter;
                 _outputMonitor = new PeakMonitor(chain);
@@ -161,9 +185,13 @@ public sealed class MicChainEngine : IDisposable
         _output = null;
 
         _captureBuffer = null;
+        _denoise = null;
         _noiseGate = null;
         _voiceEq = null;
+        _deEsser = null;
+        _compressor = null;
         _pitchShifter = null;
+        _reverb = null;
         _softLimiter = null;
         _outputMonitor = null;
         _inputPeak = 0f;

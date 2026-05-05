@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using KhurramAudioRoute.Core.Spatial;
 using KhurramAudioRoute.Core.SyncCalibration;
@@ -95,9 +96,26 @@ namespace KhurramAudioRoute.Core
             public bool MicChainEnabled { get; set; }
             public float MicChainGateThresholdDb { get; set; } = -40f;
             public float MicChainGateHoldMs { get; set; } = 80f;
-            public string MicChainVoiceEqPreset { get; set; } = "Off";
+            public string MicChainVoicePreset { get; set; } = "None";
             public float MicChainPitchSemitones { get; set; } = 0f;
-            public string MicChainCharacterPreset { get; set; } = "None";
+            public string MicChainStudioPolish { get; set; } = "None";
+            public string MicChainReverb { get; set; } = "None";
+            public string MicChainNoiseReduction { get; set; } = "Off";
+
+            /// <summary>
+            /// Set of device endpoint IDs that the user has marked ACTIVE (in
+            /// the master bridge fan-out). Persists across app restarts so the
+            /// previously-selected group is restored on launch. Empty set =
+            /// no auto-restored selection (defaults applied at runtime).
+            /// </summary>
+            public List<string> ActiveBridgeTargetIds { get; set; } = new();
+
+            /// <summary>
+            /// True once the user has explicitly toggled an ACTIVE chip at
+            /// least once. Used to distinguish "fresh install" (no signal)
+            /// from "explicitly chose nothing" (empty list is the answer).
+            /// </summary>
+            public bool ActiveBridgeTargetsExplicit { get; set; }
         }
 
         private static readonly object _gate = new();
@@ -547,20 +565,21 @@ namespace KhurramAudioRoute.Core
             }
         }
 
-        public static VoiceEqPreset GetMicChainVoiceEqPreset()
+        public static VoicePreset? GetMicChainVoicePreset()
         {
             var s = LoadCached();
-            return Enum.TryParse<VoiceEqPreset>(s.MicChainVoiceEqPreset, out var p) ? p : VoiceEqPreset.Off;
+            if (string.IsNullOrWhiteSpace(s.MicChainVoicePreset)) return null;
+            return Enum.TryParse<VoicePreset>(s.MicChainVoicePreset, out var p) ? p : (VoicePreset?)null;
         }
 
-        public static void SetMicChainVoiceEqPreset(VoiceEqPreset preset)
+        public static void SetMicChainVoicePreset(VoicePreset? preset)
         {
             lock (_gate)
             {
                 var s = LoadCachedLocked();
-                var name = preset.ToString();
-                if (string.Equals(s.MicChainVoiceEqPreset, name, StringComparison.Ordinal)) return;
-                s.MicChainVoiceEqPreset = name;
+                string name = preset?.ToString() ?? string.Empty;
+                if (string.Equals(s.MicChainVoicePreset, name, StringComparison.Ordinal)) return;
+                s.MicChainVoicePreset = name;
                 SaveLocked(s);
             }
         }
@@ -583,20 +602,77 @@ namespace KhurramAudioRoute.Core
             }
         }
 
-        public static VoiceCharacterPreset GetMicChainCharacterPreset()
+        public static StudioPolishPreset GetMicChainStudioPolish()
         {
             var s = LoadCached();
-            return Enum.TryParse<VoiceCharacterPreset>(s.MicChainCharacterPreset, out var p) ? p : VoiceCharacterPreset.None;
+            return Enum.TryParse<StudioPolishPreset>(s.MicChainStudioPolish, out var p) ? p : StudioPolishPreset.None;
         }
 
-        public static void SetMicChainCharacterPreset(VoiceCharacterPreset preset)
+        public static void SetMicChainStudioPolish(StudioPolishPreset preset)
         {
             lock (_gate)
             {
                 var s = LoadCachedLocked();
                 var name = preset.ToString();
-                if (string.Equals(s.MicChainCharacterPreset, name, StringComparison.Ordinal)) return;
-                s.MicChainCharacterPreset = name;
+                if (string.Equals(s.MicChainStudioPolish, name, StringComparison.Ordinal)) return;
+                s.MicChainStudioPolish = name;
+                SaveLocked(s);
+            }
+        }
+
+        public static ReverbPreset GetMicChainReverb()
+        {
+            var s = LoadCached();
+            return Enum.TryParse<ReverbPreset>(s.MicChainReverb, out var p) ? p : ReverbPreset.None;
+        }
+
+        public static void SetMicChainReverb(ReverbPreset preset)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                var name = preset.ToString();
+                if (string.Equals(s.MicChainReverb, name, StringComparison.Ordinal)) return;
+                s.MicChainReverb = name;
+                SaveLocked(s);
+            }
+        }
+
+        public static IReadOnlySet<string> GetActiveBridgeTargetIds()
+        {
+            var s = LoadCached();
+            return new HashSet<string>(s.ActiveBridgeTargetIds ?? new List<string>(), StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static bool GetActiveBridgeTargetsExplicit() => LoadCached().ActiveBridgeTargetsExplicit;
+
+        public static void SetActiveBridgeTargetIds(IEnumerable<string> ids)
+        {
+            var list = ids?.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+                       ?? new List<string>();
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                s.ActiveBridgeTargetIds = list;
+                s.ActiveBridgeTargetsExplicit = true;
+                SaveLocked(s);
+            }
+        }
+
+        public static NoiseReductionPreset GetMicChainNoiseReduction()
+        {
+            var s = LoadCached();
+            return Enum.TryParse<NoiseReductionPreset>(s.MicChainNoiseReduction, out var p) ? p : NoiseReductionPreset.Off;
+        }
+
+        public static void SetMicChainNoiseReduction(NoiseReductionPreset preset)
+        {
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                var name = preset.ToString();
+                if (string.Equals(s.MicChainNoiseReduction, name, StringComparison.Ordinal)) return;
+                s.MicChainNoiseReduction = name;
                 SaveLocked(s);
             }
         }

@@ -76,7 +76,7 @@ public partial class MainWindow : FluentWindow
             if (item is System.Windows.Controls.MenuItem mi
                 && mi.Name == nameof(TrayPowerMenuItem))
             {
-                mi.Header = isActive ? "Turn audio bus OFF" : "Turn audio bus ON";
+                mi.Header = isActive ? "Turn Application OFF" : "Turn Application ON";
                 return;
             }
         }
@@ -355,26 +355,48 @@ public partial class MainWindow : FluentWindow
         vm.MasterSpatialPreset = preset;
     }
 
-    private void OnVoiceEqRadioClick(object sender, RoutedEventArgs e)
+    private void OnVoicePresetRadioClick(object sender, RoutedEventArgs e)
     {
         if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
             return;
-        if (!Enum.TryParse<VoiceEqPreset>(tag, ignoreCase: false, out var preset))
+        if (!Enum.TryParse<VoicePreset>(tag, ignoreCase: false, out var preset))
             return;
         if (DataContext is not MainViewModel vm)
             return;
         vm.MicChain.SelectedVoicePreset = preset;
     }
 
-    private void OnVoiceCharacterRadioClick(object sender, RoutedEventArgs e)
+    private void OnStudioPolishRadioClick(object sender, RoutedEventArgs e)
     {
         if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
             return;
-        if (!Enum.TryParse<VoiceCharacterPreset>(tag, ignoreCase: false, out var preset))
+        if (!Enum.TryParse<StudioPolishPreset>(tag, ignoreCase: false, out var preset))
             return;
         if (DataContext is not MainViewModel vm)
             return;
-        vm.MicChain.SelectedCharacter = preset;
+        vm.MicChain.SelectedStudioPolish = preset;
+    }
+
+    private void OnReverbRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+            return;
+        if (!Enum.TryParse<ReverbPreset>(tag, ignoreCase: false, out var preset))
+            return;
+        if (DataContext is not MainViewModel vm)
+            return;
+        vm.MicChain.SelectedReverb = preset;
+    }
+
+    private void OnNoiseReductionRadioClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton rb || !IsLoaded || rb.Tag is not string tag || string.IsNullOrWhiteSpace(tag))
+            return;
+        if (!Enum.TryParse<NoiseReductionPreset>(tag, ignoreCase: false, out var preset))
+            return;
+        if (DataContext is not MainViewModel vm)
+            return;
+        vm.MicChain.SelectedNoiseReduction = preset;
     }
 
     private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e) => ShowWindow();
@@ -511,15 +533,16 @@ public class SpatialPresetEnumMatchConverter : IValueConverter
         => Binding.DoNothing;
 }
 
-public class VoiceEqPresetEnumMatchConverter : IValueConverter
+public class VoicePresetEnumMatchConverter : IValueConverter
 {
+    // value can be VoicePreset?, VoicePreset, or null. Null = no pill highlighted.
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (parameter is not string paramStr || !Enum.TryParse<VoiceEqPreset>(paramStr, out var needle))
+        if (parameter is not string paramStr || !Enum.TryParse<VoicePreset>(paramStr, out var needle))
             return false;
-        if (value is VoiceEqPreset vp)
+        if (value is VoicePreset vp)
             return vp == needle;
-        if (value != null && Enum.TryParse<VoiceEqPreset>(value.ToString(), out var parsed))
+        if (value != null && Enum.TryParse<VoicePreset>(value.ToString(), out var parsed))
             return parsed == needle;
         return false;
     }
@@ -528,15 +551,49 @@ public class VoiceEqPresetEnumMatchConverter : IValueConverter
         => Binding.DoNothing;
 }
 
-public class VoiceCharacterPresetEnumMatchConverter : IValueConverter
+public class StudioPolishPresetEnumMatchConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (parameter is not string paramStr || !Enum.TryParse<VoiceCharacterPreset>(paramStr, out var needle))
+        if (parameter is not string paramStr || !Enum.TryParse<StudioPolishPreset>(paramStr, out var needle))
             return false;
-        if (value is VoiceCharacterPreset vp)
+        if (value is StudioPolishPreset vp)
             return vp == needle;
-        if (value != null && Enum.TryParse<VoiceCharacterPreset>(value.ToString(), out var parsed))
+        if (value != null && Enum.TryParse<StudioPolishPreset>(value.ToString(), out var parsed))
+            return parsed == needle;
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+public class ReverbPresetEnumMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter is not string paramStr || !Enum.TryParse<ReverbPreset>(paramStr, out var needle))
+            return false;
+        if (value is ReverbPreset vp)
+            return vp == needle;
+        if (value != null && Enum.TryParse<ReverbPreset>(value.ToString(), out var parsed))
+            return parsed == needle;
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => Binding.DoNothing;
+}
+
+public class NoiseReductionPresetEnumMatchConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (parameter is not string paramStr || !Enum.TryParse<NoiseReductionPreset>(paramStr, out var needle))
+            return false;
+        if (value is NoiseReductionPreset vp)
+            return vp == needle;
+        if (value != null && Enum.TryParse<NoiseReductionPreset>(value.ToString(), out var parsed))
             return parsed == needle;
         return false;
     }

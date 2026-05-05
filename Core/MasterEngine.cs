@@ -65,6 +65,9 @@ public static class MasterEngine
                 Bass.FXSetParameters(handles[i], dx);
             }
 
+            int attachedDx = 0;
+            for (int k = 0; k < handles.Length; k++) if (handles[k] != 0) attachedDx++;
+            Debug.WriteLine($"MasterEngine.AttachIsoPeakEq: mixer={mixerStream}, mode=DX8 ParamEQ, bands attached={attachedDx}/{IsoCenterFrequencies.Length}");
             return handles;
         }
 
@@ -80,6 +83,9 @@ public static class MasterEngine
             SetIsoPeakEqBand(handles[i], i, i < gains.Length ? gains[i] : 0f);
         }
 
+        int attached = 0;
+        for (int i = 0; i < handles.Length; i++) if (handles[i] != 0) attached++;
+        Debug.WriteLine($"MasterEngine.AttachIsoPeakEq: mixer={mixerStream}, mode={(usesDxParamEq ? "DX8 ParamEQ" : "BASS_FX PeakEQ")}, bands attached={attached}/{IsoCenterFrequencies.Length}");
         return handles;
     }
 
