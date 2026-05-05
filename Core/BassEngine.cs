@@ -231,17 +231,26 @@ namespace KhurramAudioRoute.Core
                     return false;
                 }
 
+                // Clear the failed-device cache for the indices we are about to
+                // try. Earlier in the process, legacy per-device init paths can
+                // call InitializeDevice on these indices and fail (e.g. when a
+                // WASAPI session was held by a previous app instance), which
+                // poisons the cache for the rest of the process lifetime. The
+                // bridge must always be allowed to retry on each engage.
+                _bassInitFailedDevices.Remove(sourceIndex);
+                _bassInitFailedDevices.Remove(0);
+
                 // VB-CABLE / some loopback endpoints don’t expose a usable DirectSound device for
                 // BASS_Init(deviceIndex), which breaks Bass.CurrentDevice + stream creation. WASAPI
                 // loopback still works via BassWasapi indices — build decode-only streams on device 0.
                 int graphDeviceIndex = sourceIndex;
                 if (!InitializeDevice(sourceIndex))
                 {
-                    Debug.WriteLine($"BASS BRIDGE: BASS.Init({sourceIndex}) failed for capture endpoint — decode graph on device 0");
+                    Debug.WriteLine($"BASS BRIDGE: BASS.Init({sourceIndex}) failed (LastError={Bass.LastError}) — decode graph on device 0");
                     graphDeviceIndex = 0;
                     if (!InitializeDevice(0))
                     {
-                        Debug.WriteLine("BASS BRIDGE: BASS.Init(0) failed");
+                        Debug.WriteLine($"BASS BRIDGE: BASS.Init(0) failed (LastError={Bass.LastError})");
                         StopBridge();
                         return false;
                     }
