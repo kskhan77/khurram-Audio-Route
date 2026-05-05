@@ -172,6 +172,19 @@ namespace KhurramAudioRoute.Core
         private static long _bridgeSourceFrames;
         private static float _bridgeSourceMaxAbsSample;
 
+        // Diagnostic counters for Bass.StreamPutData on the push stream.
+        // _bridgePushOk: number of successful StreamPutData calls.
+        // _bridgePushFailures: number of calls that returned -1 or queued less
+        //   than the requested length.
+        // _bridgePushLastError: the most recent Bass.LastError after a failed
+        //   StreamPutData; lets us tell BUFLOST from HANDLE from MEM, etc.
+        // _bridgePushBytesAttempted / _bridgePushBytesQueued: cumulative counts.
+        private static long _bridgePushOk;
+        private static long _bridgePushFailures;
+        private static long _bridgePushBytesAttempted;
+        private static long _bridgePushBytesQueued;
+        private static int _bridgePushLastError;
+
         // Circuit breakers: UpdateEqualizer is called at the meter-tick interval
         // (~5/sec). Without these, a missing basswasapi.dll or a device that won't
         // init floods the debug console with the same error every tick.
@@ -202,6 +215,11 @@ namespace KhurramAudioRoute.Core
                 System.Threading.Interlocked.Exchange(ref _bridgeSourceCallbacks, 0);
                 System.Threading.Interlocked.Exchange(ref _bridgeSourceFrames, 0);
                 _bridgeSourceMaxAbsSample = 0f;
+                System.Threading.Interlocked.Exchange(ref _bridgePushOk, 0);
+                System.Threading.Interlocked.Exchange(ref _bridgePushFailures, 0);
+                System.Threading.Interlocked.Exchange(ref _bridgePushBytesAttempted, 0);
+                System.Threading.Interlocked.Exchange(ref _bridgePushBytesQueued, 0);
+                _bridgePushLastError = 0;
 
                 _bridgeMatrixChannelOrder = UserSettings.GetMatrixBridgeChannelOrder();
 
@@ -568,7 +586,30 @@ namespace KhurramAudioRoute.Core
                 if (sourceId != null)
                     ApplySpatialIfActive(sourceId, buffer, length);
 
-                Bass.StreamPutData(push, buffer, length);
+                int queued = Bass.StreamPutData(push, buffer, length);
+                if (length > 0)
+                    System.Threading.Interlocked.Add(ref _bridgePushBytesAttempted, length);
+                if (queued < 0)
+                {
+                    // Failure — most commonly BASS_ERROR_BUFLOST when the stream's
+                    // queue is full because nothing downstream pulled. The data is
+                    // dropped on the floor and the splits read silence.
+                    System.Threading.Interlocked.Increment(ref _bridgePushFailures);
+                    _bridgePushLastError = (int)Bass.LastError;
+                }
+                else
+                {
+                    System.Threading.Interlocked.Increment(ref _bridgePushOk);
+                    if (queued > 0)
+                        System.Threading.Interlocked.Add(ref _bridgePushBytesQueued, queued);
+                    if (queued < length)
+                    {
+                        // Partial queue — buffer was nearly full. Treat as a soft
+                        // failure for diagnostics so we notice it.
+                        System.Threading.Interlocked.Increment(ref _bridgePushFailures);
+                        _bridgePushLastError = (int)Bass.LastError;
+                    }
+                }
 
                 // Nudge the decoding mixer so FX (peak EQ, limiter) stay aligned with the push cadence;
                 // downstream WASAPI targets still drive the real pull.
@@ -672,6 +713,26 @@ namespace KhurramAudioRoute.Core
             sb.AppendLine($"  Source loopback hits : {System.Threading.Interlocked.Read(ref _bridgeSourceCallbacks)} (must be > 0 — if 0, WASAPI loopback isn't delivering)");
             sb.AppendLine($"  Source loopback frms : {System.Threading.Interlocked.Read(ref _bridgeSourceFrames)}");
             sb.AppendLine($"  Source peak |sample| : {_bridgeSourceMaxAbsSample:0.000000} (near 0 = silence captured; ≥ 0.001 = real audio captured)");
+            sb.AppendLine($"  StreamPutData ok     : {System.Threading.Interlocked.Read(ref _bridgePushOk)}");
+            sb.AppendLine($"  StreamPutData fail   : {System.Threading.Interlocked.Read(ref _bridgePushFailures)} (last Bass.LastError = {(Errors)_bridgePushLastError})");
+            sb.AppendLine($"  Push bytes attempted : {System.Threading.Interlocked.Read(ref _bridgePushBytesAttempted)}");
+            sb.AppendLine($"  Push bytes queued    : {System.Threading.Interlocked.Read(ref _bridgePushBytesQueued)} (gap from attempted = bytes dropped)");
+            try
+            {
+                int pushQueued = _bridgePushStream != 0
+                    ? Bass.ChannelGetData(_bridgePushStream, IntPtr.Zero, (int)DataFlags.Available)
+                    : -1;
+                sb.AppendLine($"  Push queued now      : {pushQueued} bytes (instantaneous; high & growing = nothing downstream pulling)");
+            }
+            catch (Exception ex) { sb.AppendLine($"  Push queued now      : (error: {ex.Message})"); }
+            try
+            {
+                int mixQueued = _bridgeMasterMixer != 0
+                    ? Bass.ChannelGetData(_bridgeMasterMixer, IntPtr.Zero, (int)DataFlags.Available)
+                    : -1;
+                sb.AppendLine($"  Mixer queued now     : {mixQueued} bytes");
+            }
+            catch (Exception ex) { sb.AppendLine($"  Mixer queued now     : (error: {ex.Message})"); }
             sb.AppendLine($"  Push stream handle   : {_bridgePushStream}");
             sb.AppendLine($"  Master mixer handle  : {_bridgeMasterMixer}");
             sb.AppendLine($"  Limiter FX handle    : {_bridgeLimiterFx}");
