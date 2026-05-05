@@ -29,7 +29,7 @@ pages stay in the shell for later milestones; feature plans live under
 `docs/`.
 
 ---
-
+au
 ### v1 — DONE (earlier milestones)
 
 - [x] WPF dashboard shell with dark styling; left navigation
