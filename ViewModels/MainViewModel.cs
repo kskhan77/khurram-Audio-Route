@@ -320,7 +320,16 @@ namespace KhurramAudioRoute.ViewModels
         public void ApplyMasterEqPreset(string? key)
         {
             var canonical = EqualizerPresets.Canonical(key);
-            var gains = EqualizerPresets.Get(canonical);
+            // Custom slots are persisted in UserSettings, not in the static
+            // preset table — load them dynamically so the user's saved curves
+            // come back across restarts.
+            float[] gains = canonical switch
+            {
+                EqualizerPresets.Custom1 => UserSettings.GetCustomEqSlot(1),
+                EqualizerPresets.Custom2 => UserSettings.GetCustomEqSlot(2),
+                EqualizerPresets.Custom3 => UserSettings.GetCustomEqSlot(3),
+                _ => EqualizerPresets.Get(canonical),
+            };
             // Suppress chip clearing while we set bands programmatically.
             _suppressEqPresetClear = true;
             try
@@ -332,6 +341,30 @@ namespace KhurramAudioRoute.ViewModels
                 _suppressEqPresetClear = false;
             }
             SelectedMasterEqPresetKey = canonical;
+        }
+
+        /// <summary>
+        /// Snapshot the current 10-band master EQ into one of the three user
+        /// custom slots and persist it. After saving, the slot becomes the
+        /// active selection so the chip lights up to confirm the save.
+        /// Bound from the chip strip's "Save" buttons via
+        /// <c>{Binding SaveCurrentToCustomSlotCommand}</c>.
+        /// </summary>
+        [RelayCommand]
+        public void SaveCurrentToCustomSlot(string? slotParam)
+        {
+            if (!int.TryParse(slotParam, out var slot)) return;
+            if (slot < 1 || slot > 3) return;
+
+            var gains = GetMasterEqualizerGains();
+            UserSettings.SetCustomEqSlot(slot, gains);
+            SelectedMasterEqPresetKey = slot switch
+            {
+                1 => EqualizerPresets.Custom1,
+                2 => EqualizerPresets.Custom2,
+                3 => EqualizerPresets.Custom3,
+                _ => SelectedMasterEqPresetKey,
+            };
         }
 
         // Set during preset application so the band PropertyChanged handlers

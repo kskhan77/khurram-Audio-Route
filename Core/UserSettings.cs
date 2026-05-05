@@ -116,6 +116,15 @@ namespace KhurramAudioRoute.Core
             /// from "explicitly chose nothing" (empty list is the answer).
             /// </summary>
             public bool ActiveBridgeTargetsExplicit { get; set; }
+
+            /// <summary>
+            /// Three user-saveable EQ slots. Each is 10 floats (one per ISO band).
+            /// Empty / wrong-length arrays fall back to flat. Saved via the
+            /// "Save current to Custom N" command on the master EQ chip strip.
+            /// </summary>
+            public float[] CustomEqSlot1 { get; set; } = new float[10];
+            public float[] CustomEqSlot2 { get; set; } = new float[10];
+            public float[] CustomEqSlot3 { get; set; } = new float[10];
         }
 
         private static readonly object _gate = new();
@@ -266,6 +275,48 @@ namespace KhurramAudioRoute.Core
             {
                 var s = LoadCachedLocked();
                 s.MasterEqualizerGains = (float[])gains.Clone();
+                SaveLocked(s);
+            }
+        }
+
+        /// <summary>
+        /// Returns the 10-band gains stored in user-custom EQ slot N (1-3).
+        /// Falls back to flat for missing or malformed entries so callers can
+        /// always apply the result safely.
+        /// </summary>
+        public static float[] GetCustomEqSlot(int slot)
+        {
+            var s = LoadCached();
+            float[]? raw = slot switch
+            {
+                1 => s.CustomEqSlot1,
+                2 => s.CustomEqSlot2,
+                3 => s.CustomEqSlot3,
+                _ => null,
+            };
+            if (raw == null || raw.Length != 10)
+            {
+                var fixedUp = new float[10];
+                if (raw != null) Array.Copy(raw, fixedUp, Math.Min(raw.Length, 10));
+                return fixedUp;
+            }
+            return (float[])raw.Clone();
+        }
+
+        public static void SetCustomEqSlot(int slot, float[] gains)
+        {
+            if (gains == null || gains.Length != 10) return;
+            if (slot < 1 || slot > 3) return;
+            lock (_gate)
+            {
+                var s = LoadCachedLocked();
+                var clone = (float[])gains.Clone();
+                switch (slot)
+                {
+                    case 1: s.CustomEqSlot1 = clone; break;
+                    case 2: s.CustomEqSlot2 = clone; break;
+                    case 3: s.CustomEqSlot3 = clone; break;
+                }
                 SaveLocked(s);
             }
         }
