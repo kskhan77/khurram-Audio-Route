@@ -683,6 +683,8 @@ namespace KhurramAudioRoute.Core
                 sb.AppendLine($"  EQ DSP total frames  : {_bridgeEqDsp.TotalFrameCount}");
                 foreach (var (ch, cb, fr) in _bridgeEqDsp.AttachmentStats())
                     sb.AppendLine($"    split={ch}: callbacks={cb}, frames={fr}");
+                foreach (var (ch, pin, pout, nans) in _bridgeEqDsp.AmplitudeStats())
+                    sb.AppendLine($"    split={ch}: peakIn={pin:0.000000}, peakOut={pout:0.000000}, nanResets={nans} (peakOut near 0 with peakIn > 0 means EQ killed the audio)");
                 sb.AppendLine($"  EQ TestKillFactor    : {_bridgeEqDsp.TestKillFactor:F2} (1.0 = no test override)");
             }
             sb.AppendLine($"  Last gain signature  : [{_bridgeEqLastSig}]");

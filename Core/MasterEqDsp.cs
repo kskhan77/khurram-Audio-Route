@@ -41,6 +41,9 @@ public sealed class MasterEqDsp : IDisposable
         public BiQuadFilter[][] Filters = Array.Empty<BiQuadFilter[]>();
         public long CallbackCount;
         public long FrameCount;
+        public long NanResets;          // bumped when biquad state is reset due to NaN/Inf
+        public float PeakInputAbs;      // peak |sample| of buffer entering ProcessInline
+        public float PeakOutputAbs;     // peak |sample| of buffer leaving ProcessInline
     }
 
     /// <summary>
@@ -126,6 +129,9 @@ public sealed class MasterEqDsp : IDisposable
         Interlocked.Add(ref s.FrameCount, frames);
 
         float kill = TestKillFactor;
+        float peakIn = 0f;
+        float peakOut = 0f;
+        bool resetNeeded = false;
 
         unsafe
         {
@@ -135,13 +141,59 @@ public sealed class MasterEqDsp : IDisposable
                 int i = f * channels;
                 for (int c = 0; c < channels; c++)
                 {
-                    float v = data[i + c] * kill;
+                    float input = data[i + c];
+
+                    // Track input peak before processing.
+                    float ai = input < 0 ? -input : input;
+                    if (ai > peakIn) peakIn = ai;
+
+                    float v = input * kill;
                     var bands = filters[c];
                     for (int b = 0; b < bands.Length; b++)
                         v = bands[b].Transform(v);
+
+                    // NaN/Inf detection: a single overflow in any biquad
+                    // poisons that channel's state forever. When detected,
+                    // emit silence for this sample and flag the chain for
+                    // reset after the buffer pass — rebuilding filters
+                    // outside the inner loop keeps the hot path branch-light.
+                    if (float.IsNaN(v) || float.IsInfinity(v))
+                    {
+                        v = 0f;
+                        resetNeeded = true;
+                    }
+                    else
+                    {
+                        // Hard clamp to legal float-PCM range. Prevents the
+                        // biquad recurrence from drifting toward overflow on
+                        // sustained heavy-gain content.
+                        if (v > 1.0f) v = 1.0f;
+                        else if (v < -1.0f) v = -1.0f;
+                    }
+
+                    float ao = v < 0 ? -v : v;
+                    if (ao > peakOut) peakOut = ao;
+
                     data[i + c] = v;
                 }
             }
+        }
+
+        // Update peak meters with light decay so steady audio holds the
+        // value but a gap of silence eventually drains it to 0.
+        s.PeakInputAbs = peakIn > s.PeakInputAbs * 0.995f ? peakIn : s.PeakInputAbs * 0.995f;
+        s.PeakOutputAbs = peakOut > s.PeakOutputAbs * 0.995f ? peakOut : s.PeakOutputAbs * 0.995f;
+
+        if (resetNeeded)
+        {
+            // Rebuild every filter for this target so the NaN-poisoned
+            // delay state is cleared. New filters use the current gains.
+            lock (_lock)
+            {
+                if (s.Channels > 0 && s.SampleRate > 0)
+                    s.Filters = BuildFilters(s.Channels, s.SampleRate, _gains);
+            }
+            Interlocked.Increment(ref s.NanResets);
         }
     }
 
@@ -182,6 +234,21 @@ public sealed class MasterEqDsp : IDisposable
                 list.Add((kvp.Key,
                     Interlocked.Read(ref kvp.Value.CallbackCount),
                     Interlocked.Read(ref kvp.Value.FrameCount)));
+        }
+        return list;
+    }
+
+    /// <summary>Per-target (splitHandle, peakInputAbs, peakOutputAbs, nanResets) for diagnostics.</summary>
+    public IReadOnlyList<(int Split, float PeakIn, float PeakOut, long NanResets)> AmplitudeStats()
+    {
+        var list = new List<(int, float, float, long)>();
+        lock (_lock)
+        {
+            foreach (var kvp in _targets)
+                list.Add((kvp.Key,
+                    kvp.Value.PeakInputAbs,
+                    kvp.Value.PeakOutputAbs,
+                    Interlocked.Read(ref kvp.Value.NanResets)));
         }
         return list;
     }
