@@ -1265,54 +1265,99 @@
                                                          IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Dance}"/>
                                         </WrapPanel>
 
-                                        <!-- Three custom slots. Click chip = recall slot; click ⤓ = save current curve to that slot. -->
-                                        <UniformGrid Columns="3" Rows="1" Margin="0,6,0,0">
-                                            <Grid Margin="3">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <RadioButton Grid.Column="0" Style="{StaticResource SonicEqPresetRadioCompact}"
-                                                             Content="Custom 1" Tag="Custom1"
-                                                             GroupName="{Binding MasterEqPresetGroupToken}"
-                                                             Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Custom1"
-                                                             IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}"/>
-                                                <ui:Button Grid.Column="1" Margin="3,0,0,0" MinHeight="24" MaxHeight="24" Padding="6,0"
-                                                           Appearance="Secondary" FontSize="11" Content="⤓"
-                                                           ToolTip="Save the current EQ curve to Custom 1"
-                                                           Command="{Binding SaveCurrentToCustomSlotCommand}" CommandParameter="1"/>
-                                            </Grid>
-                                            <Grid Margin="3">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <RadioButton Grid.Column="0" Style="{StaticResource SonicEqPresetRadioCompact}"
-                                                             Content="Custom 2" Tag="Custom2"
-                                                             GroupName="{Binding MasterEqPresetGroupToken}"
-                                                             Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Custom2"
-                                                             IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom2}"/>
-                                                <ui:Button Grid.Column="1" Margin="3,0,0,0" MinHeight="24" MaxHeight="24" Padding="6,0"
-                                                           Appearance="Secondary" FontSize="11" Content="⤓"
-                                                           ToolTip="Save the current EQ curve to Custom 2"
-                                                           Command="{Binding SaveCurrentToCustomSlotCommand}" CommandParameter="2"/>
-                                            </Grid>
-                                            <Grid Margin="3">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <RadioButton Grid.Column="0" Style="{StaticResource SonicEqPresetRadioCompact}"
-                                                             Content="Custom 3" Tag="Custom3"
-                                                             GroupName="{Binding MasterEqPresetGroupToken}"
-                                                             Command="{Binding ApplyMasterEqPresetCommand}" CommandParameter="Custom3"
-                                                             IsChecked="{Binding SelectedMasterEqPresetKey, Mode=OneWay, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom3}"/>
-                                                <ui:Button Grid.Column="1" Margin="3,0,0,0" MinHeight="24" MaxHeight="24" Padding="6,0"
-                                                           Appearance="Secondary" FontSize="11" Content="⤓"
-                                                           ToolTip="Save the current EQ curve to Custom 3"
-                                                           Command="{Binding SaveCurrentToCustomSlotCommand}" CommandParameter="3"/>
-                                            </Grid>
-                                        </UniformGrid>
+                                        <!-- Single dual-mode Custom button:
+                                               clean state ("Custom"): clicking recalls the saved slot.
+                                               dirty state ("Save Custom"): clicking saves the live
+                                               curve into slot 1. The visual swap (icon + colour) is
+                                               driven by IsCustomEqDirty so the user always knows
+                                               which action a click will perform. -->
+                                        <Button HorizontalAlignment="Stretch" Margin="3,8,3,2" Padding="0"
+                                                Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                Command="{Binding ToggleCustomEqCommand}">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="ToolTip" Value="Click to recall your saved Custom EQ curve."/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
+                                                            <Setter Property="ToolTip" Value="You have changed the EQ. Click to save the current curve as your Custom preset."/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="Outer" CornerRadius="6" Padding="10,5" BorderThickness="1">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <!-- Clean/recall state: same chrome as built-in chips at rest. -->
+                                                                <Setter Property="Background" Value="#1A1F26"/>
+                                                                <Setter Property="BorderBrush" Value="#2A323C"/>
+                                                                <Style.Triggers>
+                                                                    <!-- Clean + currently selected: highlight as primary. -->
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
+                                                                            <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Background" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                        <Setter Property="BorderBrush" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                    </MultiDataTrigger>
+                                                                    <!-- Dirty/save state: secondary green to invite the save click. -->
+                                                                    <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
+                                                                        <Setter Property="Background" Value="#1F3A1F"/>
+                                                                        <Setter Property="BorderBrush" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <ui:SymbolIcon FontSize="13" Margin="0,0,6,0">
+                                                                <ui:SymbolIcon.Style>
+                                                                    <Style TargetType="ui:SymbolIcon">
+                                                                        <Setter Property="Symbol" Value="Star24"/>
+                                                                        <Setter Property="Foreground" Value="#9CA8B3"/>
+                                                                        <Style.Triggers>
+                                                                            <MultiDataTrigger>
+                                                                                <MultiDataTrigger.Conditions>
+                                                                                    <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
+                                                                                    <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
+                                                                                </MultiDataTrigger.Conditions>
+                                                                                <Setter Property="Foreground" Value="#0A1218"/>
+                                                                            </MultiDataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
+                                                                                <Setter Property="Symbol" Value="Save24"/>
+                                                                                <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </ui:SymbolIcon.Style>
+                                                            </ui:SymbolIcon>
+                                                            <TextBlock Text="{Binding CustomEqButtonContent}"
+                                                                       FontSize="10" FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Foreground" Value="#9CA8B3"/>
+                                                                        <Style.Triggers>
+                                                                            <MultiDataTrigger>
+                                                                                <MultiDataTrigger.Conditions>
+                                                                                    <Condition Binding="{Binding IsCustomEqDirty}" Value="False"/>
+                                                                                    <Condition Binding="{Binding SelectedMasterEqPresetKey, Converter={StaticResource EqPresetKeyMatchConverter}, ConverterParameter=Custom1}" Value="True"/>
+                                                                                </MultiDataTrigger.Conditions>
+                                                                                <Setter Property="Foreground" Value="#0A1218"/>
+                                                                            </MultiDataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsCustomEqDirty}" Value="True">
+                                                                                <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
                                     </StackPanel>
                                 </Border>
 
@@ -2024,24 +2069,103 @@
                                                                     BarCount="14"
                                                                     ToolTip="Live output level for this device"/>
 
-                                                <Button Grid.Column="3" Style="{StaticResource SonicIconFrameButton}" Margin="0,0,0,0"
-                                                        ToolTip="Set as default playback"
-                                                        Command="{Binding DataContext.SetDefaultDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}"
-                                                        Visibility="{Binding IsDefault, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                                                    <ui:SymbolIcon Symbol="Star24" FontSize="16"/>
+                                                <!-- Dual-mode star button. Always visible:
+                                                       Bus OFF → Set as Windows default playback (Star icon, filled blue when this device IS the default).
+                                                       Bus ON  → Toggle ACTIVE on the bridge fan-out (Speaker icon, filled green when this device is ACTIVE).
+                                                     A single click never disappears the button or routes audio away from the bridge by accident. -->
+                                                <Button Grid.Column="3" Margin="0,0,0,0"
+                                                        Command="{Binding DataContext.DeviceStarToggleCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource SonicIconFrameButton}">
+                                                            <Setter Property="ToolTip" Value="Set as default Windows playback device."/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding DataContext.Power.IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                                    <Setter Property="ToolTip" Value="Application is ON — click to include or exclude this device from the master bridge fan-out (ACTIVE on/off). When green, this output receives the processed audio."/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <ui:SymbolIcon FontSize="16">
+                                                        <ui:SymbolIcon.Style>
+                                                            <Style TargetType="ui:SymbolIcon">
+                                                                <!-- Default state (bus off, not default): hollow star, dim. -->
+                                                                <Setter Property="Symbol" Value="Star24"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
+                                                                <Style.Triggers>
+                                                                    <!-- Bus off, IS default: filled star, primary blue. -->
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding DataContext.Power.IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                                            <Condition Binding="{Binding IsDefault}" Value="True"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Symbol" Value="Star24"/>
+                                                                        <Setter Property="Foreground" Value="{StaticResource SonicPrimaryBrush}"/>
+                                                                    </MultiDataTrigger>
+                                                                    <!-- Bus on, NOT active: hollow speaker, dim. -->
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding DataContext.Power.IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                                            <Condition Binding="{Binding IsActiveOutput}" Value="False"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Symbol" Value="Speaker224"/>
+                                                                        <Setter Property="Foreground" Value="{StaticResource SonicOutlineBrush}"/>
+                                                                    </MultiDataTrigger>
+                                                                    <!-- Bus on, IS active: filled speaker, secondary green. -->
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding DataContext.Power.IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                                            <Condition Binding="{Binding IsActiveOutput}" Value="True"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Symbol" Value="Speaker224"/>
+                                                                        <Setter Property="Foreground" Value="{StaticResource SonicSecondaryBrush}"/>
+                                                                    </MultiDataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ui:SymbolIcon.Style>
+                                                    </ui:SymbolIcon>
                                                 </Button>
                                             </Grid>
 
-                                            <Grid Margin="14,0,14,8">
+                                            <!-- Optional re-calibration / drift / auto-sync banner.
+                                                 Each child is collapsed by default; it expands only when its
+                                                 own visibility data trigger fires, so the row is invisible most
+                                                 of the time and doesn't waste vertical space. -->
+                                            <StackPanel Orientation="Horizontal" Margin="14,0,14,4">
+                                                <ui:Button Margin="0,0,8,0" Padding="6,2" FontSize="9" Appearance="Transparent"
+                                                           Content="RE-CAL?"
+                                                           Visibility="{Binding SyncCalibrationStale, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                           ToolTip="Your last Sync wizard run used a different mix format than Windows is using now. Click to open the Sync wizard."
+                                                           VerticalAlignment="Center"
+                                                           Command="{Binding DataContext.OpenSyncCalibrationWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                <ui:Button Margin="0,0,8,0" Padding="6,2" FontSize="9" Appearance="Transparent"
+                                                           Content="DRIFT?"
+                                                           Visibility="{Binding AutoSyncDrift, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                           ToolTip="Mix format changed since the last Auto-sync. Click to re-run."
+                                                           VerticalAlignment="Center"
+                                                           Command="{Binding DataContext.OpenAutoSyncWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                <TextBlock FontSize="9" Foreground="#74D1FF" VerticalAlignment="Center"
+                                                           Text="{Binding AutoSyncCaption}"
+                                                           Visibility="{Binding HasAutoSyncCaption, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                           ToolTip="Last mic-based auto-sync calibration timestamp for this output."/>
+                                            </StackPanel>
+
+                                            <!-- Volume + Sync inline. Single row keeps each device card tight:
+                                                 [mute] [volume slider] [%] | [sync icon] [sync slider] [ms]
+                                                 Each control has a tooltip explaining its role. -->
+                                            <Grid Margin="14,0,14,10">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="14"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="0" Style="{StaticResource SonicIconFrameButton}" Click="OnDeviceMuteClicked" Margin="0,0,8,0" Padding="6"
+                                                <Button Grid.Column="0" Style="{StaticResource SonicIconFrameButton}" Click="OnDeviceMuteClicked" Margin="0,0,6,0" Padding="6"
                                                         ToolTip="Mute / unmute this device">
-                                                    <ui:SymbolIcon FontSize="16">
+                                                    <ui:SymbolIcon FontSize="14">
                                                         <ui:SymbolIcon.Style>
                                                             <Style TargetType="ui:SymbolIcon">
                                                                 <Setter Property="Symbol" Value="Speaker224"/>
@@ -2058,52 +2182,26 @@
                                                 </Button>
                                                 <Slider Grid.Column="1" Style="{StaticResource SonicVolumeSlider}" Value="{Binding Volume, Mode=TwoWay}" Minimum="0" Maximum="1" IsEnabled="{Binding IsMuted, Converter={StaticResource InverseBooleanConverter}}" ValueChanged="OnOutputDeviceVolumeChanged" VerticalAlignment="Center"
                                                         ToolTip="Output volume for this device (independent of Windows volume)"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="11" FontWeight="SemiBold" Width="38" TextAlignment="Right" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                                            </Grid>
+                                                <TextBlock Grid.Column="2" Text="{Binding Volume, StringFormat={}{0:P0}}" Foreground="White" FontSize="10" FontWeight="SemiBold" Width="32" TextAlignment="Right" VerticalAlignment="Center" Margin="6,0,0,0"/>
 
-                                            <!-- Sync offset: tunes how far behind the master bus this device plays.
-                                                 Range is intentionally small (0..120 ms) for the L1 baseline; mic
-                                                 auto-sync (L3) will replace this with one-tap calibration. -->
-                                            <Grid Margin="14,0,14,8">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
-                                                    <TextBlock Text="Sync" Foreground="{StaticResource SonicOutlineBrush}"
-                                                               FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"
-                                                               ToolTip="Adds latency before this output. Use to keep multiple speakers in sync."/>
-                                                    <ui:Button Margin="8,0,0,0" Padding="8,4" FontSize="9" Appearance="Transparent"
-                                                               Content="RE-CAL?"
-                                                               Visibility="{Binding SyncCalibrationStale, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                               ToolTip="Your last Sync wizard run used a different mix format than Windows is using now. Open Sync wizard (Outputs tab) to re-calibrate."
-                                                               VerticalAlignment="Center"
-                                                               Command="{Binding DataContext.OpenSyncCalibrationWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                                    <ui:Button Margin="8,0,0,0" Padding="8,4" FontSize="9" Appearance="Transparent"
-                                                               Content="DRIFT?"
-                                                               Visibility="{Binding AutoSyncDrift, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                               ToolTip="Mix format changed since the last Auto-sync. Re-run to refresh the offset."
-                                                               VerticalAlignment="Center"
-                                                               Command="{Binding DataContext.OpenAutoSyncWizardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                                    <TextBlock Margin="8,0,0,0" FontSize="9" Foreground="#74D1FF" VerticalAlignment="Center"
-                                                               Text="{Binding AutoSyncCaption}"
-                                                               Visibility="{Binding HasAutoSyncCaption, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                               ToolTip="Last L3 mic-based auto-sync timestamp for this output."/>
-                                                </StackPanel>
-                                                <Slider Grid.Column="1"
+                                                <!-- Sync offset (per-target latency). 0–120 ms range for L1 baseline. -->
+                                                <ui:SymbolIcon Grid.Column="4" Symbol="Timer24" FontSize="14"
+                                                               Foreground="{StaticResource SonicOutlineBrush}" VerticalAlignment="Center" Margin="0,0,6,0"
+                                                               ToolTip="Sync delay — adds latency before this output. Use to keep multiple speakers playing in time. 0 ms = no delay."/>
+                                                <Slider Grid.Column="5"
                                                         Minimum="0" Maximum="120"
                                                         TickFrequency="10" IsSnapToTickEnabled="False"
                                                         SmallChange="1" LargeChange="5"
                                                         Value="{Binding TargetLatencyOffsetMs, Mode=TwoWay}"
                                                         IsEnabled="{Binding IsActiveOutput}"
+                                                        ToolTip="Drag to add latency before this device plays the master mix. Greyed out when this output is not ACTIVE."
                                                         VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="2"
+                                                <TextBlock Grid.Column="6"
                                                            Text="{Binding TargetLatencyOffsetMs, StringFormat={}{0} ms}"
                                                            Foreground="{StaticResource SonicOnSurfaceBrush}"
-                                                           FontSize="10.5" FontWeight="SemiBold"
-                                                           Width="56" TextAlignment="Right"
-                                                           VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                                           FontSize="10" FontWeight="SemiBold"
+                                                           Width="44" TextAlignment="Right"
+                                                           VerticalAlignment="Center" Margin="6,0,0,0"/>
                                             </Grid>
 
                                         </StackPanel>

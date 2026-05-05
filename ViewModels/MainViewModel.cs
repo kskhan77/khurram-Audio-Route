@@ -365,6 +365,52 @@ namespace KhurramAudioRoute.ViewModels
                 3 => EqualizerPresets.Custom3,
                 _ => SelectedMasterEqPresetKey,
             };
+            OnPropertyChanged(nameof(IsCustomEqDirty));
+            OnPropertyChanged(nameof(CustomEqButtonContent));
+        }
+
+        /// <summary>
+        /// True when the live EQ curve does not match what's saved in
+        /// <c>UserSettings.CustomEqSlot1</c>. Drives the dual-mode Custom
+        /// button on the master EQ strip: dirty = "Save Custom" highlight,
+        /// clean = "Custom" recall affordance.
+        /// </summary>
+        public bool IsCustomEqDirty
+        {
+            get
+            {
+                var current = GetMasterEqualizerGains();
+                var saved = UserSettings.GetCustomEqSlot(1);
+                for (int i = 0; i < 10; i++)
+                    if (Math.Abs(current[i] - saved[i]) > 0.01f)
+                        return true;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// "Custom" when the live curve matches the saved slot — clicking
+        /// recalls. "Save Custom" when the user has dragged sliders since
+        /// the last save — clicking persists the live curve into slot 1.
+        /// </summary>
+        public string CustomEqButtonContent => IsCustomEqDirty ? "Save Custom" : "Custom";
+
+        /// <summary>
+        /// Single-click handler for the dual-mode Custom button. Save when
+        /// the live curve differs from the saved Custom slot; recall when
+        /// they match. Removes the need for two separate buttons.
+        /// </summary>
+        [RelayCommand]
+        public void ToggleCustomEq()
+        {
+            if (IsCustomEqDirty)
+            {
+                SaveCurrentToCustomSlot("1");
+            }
+            else
+            {
+                ApplyMasterEqPreset(EqualizerPresets.Custom1);
+            }
         }
 
         // Set during preset application so the band PropertyChanged handlers
@@ -393,6 +439,12 @@ namespace KhurramAudioRoute.ViewModels
 
             // NAudio duplication (any tap): drive every open session from the master EQ strip.
             DuplicationManager.UpdateEqualizerMirrorSessions(gains);
+
+            // The Custom-slot button is dual-mode: when the live curve differs
+            // from the saved Custom slot, the chip relabels to "Save Custom"
+            // and re-themes itself. Notify so the UI re-evaluates.
+            OnPropertyChanged(nameof(IsCustomEqDirty));
+            OnPropertyChanged(nameof(CustomEqButtonContent));
 
             // The user dragged a slider, so the curve is no longer a known
             // preset. Clear the highlight unless a preset application is
@@ -874,6 +926,43 @@ namespace KhurramAudioRoute.ViewModels
                 RefreshData();
             else
                 MessageBox.Show($"Could not set {device.Name} as default.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// The per-device star button is dual-mode based on whether the
+        /// SonicFlow application (master bus) is engaged:
+        ///
+        /// - <b>Bus OFF</b>: clicking sets this device as the Windows default
+        ///   playback. Same as <see cref="SetDefaultDevice"/>.
+        /// - <b>Bus ON</b>: clicking flips this device's
+        ///   <see cref="AudioDevice.IsActiveOutput"/>. Routing the Windows
+        ///   default away from VB-CABLE while the bridge is engaged would
+        ///   bypass every DSP stage and leave the user wondering why their
+        ///   EQ stopped working — so we use the same button to toggle
+        ///   bridge-fan-out membership instead.
+        ///
+        /// Bound from the device card's "star" icon. Always visible
+        /// regardless of <c>IsDefault</c> state — the previous "hide when
+        /// default" behaviour left users no way to switch back.
+        /// </summary>
+        [RelayCommand]
+        public void DeviceStarToggle(AudioDevice device)
+        {
+            if (device?.Id == null) return;
+            if (Power.IsActive)
+            {
+                // Toggle bridge-fan-out membership. The PropertyChanged hook
+                // on IsActiveOutput already triggers RebuildMasterBridge.
+                device.IsActiveOutput = !device.IsActiveOutput;
+            }
+            else
+            {
+                bool ok = AudioRouterNative.SetSystemDefaultDevice(device.Id);
+                if (ok)
+                    RefreshData();
+                else
+                    MessageBox.Show($"Could not set {device.Name} as default.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         [RelayCommand]
